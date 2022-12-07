@@ -17,19 +17,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgerstel.model.RegistrationUser;
+import com.tgerstel.model.User;
 import com.tgerstel.repository.UserRepository;
+import com.tgerstel.service.UserService;
 
 @RestController
 @CrossOrigin(origins="*")
 @RequestMapping(path="api/register", produces=MediaType.APPLICATION_JSON_VALUE)
 public class RegistrationController {
 	
-	private UserRepository userRepo;
+	private UserService userService;
 	private PasswordEncoder passEncoder;
 	
-	public RegistrationController(UserRepository userRepo, PasswordEncoder passEncoder) {
+	public RegistrationController(UserService userService, PasswordEncoder passEncoder) {
 		super();
-		this.userRepo = userRepo;
+		this.userService = userService;
 		this.passEncoder = passEncoder;
 	}
 	
@@ -40,11 +42,11 @@ public class RegistrationController {
 					.map(error -> error.getField() + ": " + error.getDefaultMessage()).collect(Collectors.toList());			
 			return ResponseEntity.unprocessableEntity().body(errorMessage);
 		}
-		if (userRepo.findByUsername(user.getUsername()) != null) {
+		if (userService.userExists(user)) {
 			String mess = "this username already exists";
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(mess);
 		}
-		userRepo.save(user.toUser(passEncoder));		
+		userService.saveUser(user, passEncoder);		
 		return ResponseEntity.ok().build();		
 	}
 	
