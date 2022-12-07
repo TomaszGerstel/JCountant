@@ -1,0 +1,58 @@
+package com.tgerstel.model;
+
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
+
+import jakarta.persistence.Entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@NoArgsConstructor
+public class Receipt {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private LocalDateTime date;
+    @NotNull
+    @Positive(message = "the amount must be a positive value")
+    private Float amount;
+    @Positive
+    private Float netAmount;
+    @Positive
+    private Float vatValue;
+    @Positive
+    private Float vatPercentage;
+    @NotBlank(message = "enter client name")
+    private String client;
+    @NotBlank(message = "enter worker name")
+    private String worker;
+    @NotBlank(message = "add description")
+    private String description;
+    @ManyToOne
+    @JoinColumn(name="`user`")
+    private User user;
+
+    public Receipt(@NotNull LocalDateTime date, @NotNull Float amount, @Nullable Float netAmount,
+                   @Nullable Float vatValue, @Nullable Float vatPercentage, @NotNull String client,
+                   @NotNull String worker, @NotNull String description, @NotNull User user) {
+
+        this.date = date;
+        this.amount = amount;
+        this.netAmount = netAmount;
+        this.vatValue = vatValue;
+        this.vatPercentage = vatPercentage;
+        this.client = client;
+        this.worker = worker;
+        this.description = description;
+        this.user = user;
+    }
+}

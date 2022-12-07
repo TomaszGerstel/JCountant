@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="0003-1" author="tgerstel" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createTable tableName="TRANSFER">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+          <column name="TRANSFER_TYPE" type="ENUM('IN_TRANSFER', 'OUT_TRANSFER',
+          'VAT_OUT_TRANSFER', 'TAX_OUT_TRANSFER', 'SALARY')">
+               <constraints nullable="false"/>
+           </column>
+            <column name="AMOUNT" type="FLOAT"/>
+            <column name="FROM" type="VARCHAR(100)"/>
+            <column name="TO" type="VARCHAR(100)"/>
+            <column name="DATE" type="DATETIME"/>
+            <column name="BASE_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="RECEIPT" type="BIGINT">
+                <constraints foreignKeyName="fk_receipt" referencedTableName="RECEIPT"
+                             referencedColumnNames="ID" nullable="false"/>
+            </column>
+            <column name="USER" type="BIGINT">
+                <constraints foreignKeyName="fk_user_on_transfer" referencedTableName="USERS"
+                             referencedColumnNames="ID" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
