@@ -19,9 +19,9 @@ public class Transfer {
     @NotNull
     private TransferType transferType;
     private Float amount;
-    @Column(name="`from`")
+    @Column(name="from_")
     private String from;
-    @Column(name="`to`")
+    @Column(name="to_")
     private String to;
     private LocalDateTime date;
     private LocalDateTime baseDate;
@@ -29,8 +29,8 @@ public class Transfer {
     @OneToOne
     @JoinColumn(name="receipt", referencedColumnName="id")
     private Receipt receipt;
-    @ManyToOne
-    @JoinColumn(name="`user`", referencedColumnName="id")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_base_id", referencedColumnName="id")
     private User user;
 
     @PrePersist

@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 @Data
-//@AllArgsConstructor
 public class RegistrationUser {
 
     @NotBlank(message = "Enter the name")
@@ -28,12 +27,6 @@ public class RegistrationUser {
     public User toUser(PasswordEncoder passEncoder) {    	
         return new User(username, email, passEncoder.encode(password), lumpSumTaxRate);
     }
-
-//    public RegistrationUser(String username, String email, String password) {
-//        this.username = username;
-//        this.email = email;
-//        this.password = password;
-//    }
 
 	public RegistrationUser(String username, String email, String password, 
 			@Nullable Integer lumpSumTaxRate) {

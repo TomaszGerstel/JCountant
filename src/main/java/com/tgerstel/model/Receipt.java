@@ -37,8 +37,8 @@ public class Receipt {
     private String worker;
     @NotBlank(message = "add description")
     private String description;
-    @ManyToOne
-    @JoinColumn(name="`user`")
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="user_base_id", referencedColumnName = "id")
     private User user;
 
     public Receipt(@NotNull LocalDateTime date, @NotNull Float amount, @Nullable Float netAmount,
@@ -55,4 +55,14 @@ public class Receipt {
         this.description = description;
         this.user = user;
     }
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+    
+    
 }

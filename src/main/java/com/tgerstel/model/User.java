@@ -25,7 +25,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name="`user`")
+@Table(name="user_base")
 @NoArgsConstructor
 public class User implements UserDetails {
 
@@ -39,10 +39,10 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private Integer lumpSumTaxRate;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Receipt> receipts = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Transfer> transfers = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private List<Receipt> receipts = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private List<Transfer> transfers = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
     	joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -69,7 +69,7 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
-    }
+    }      
 
     @Override
     public boolean isAccountNonExpired() {
@@ -89,6 +89,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    }  
 }
 

@@ -4,21 +4,19 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
-    <changeSet id="0001-1" author="tgerstel" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
-        <createTable tableName="user_base">
+    <changeSet id="0003-1" author="tgerstel" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createTable tableName="user_roles">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="username" type="VARCHAR(100)">
-                <constraints nullable="false"/>
+            <column name="user_id" type="BIGINT">
+                <constraints foreignKeyName="fk_user_id" referencedTableName="user_base"
+                             referencedColumnNames="id" nullable="false"/>/>
             </column>
-            <column name="email" type="VARCHAR(100)">
-                <constraints nullable="false"/>
+            <column name="role_id" type="BIGINT">
+                <constraints foreignKeyName="fk_role_id" referencedTableName="user_role"
+                             referencedColumnNames="id" nullable="false"/>/>
             </column>
-            <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="lump_sum_tax_rate" type="INT"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
