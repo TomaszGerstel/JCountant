@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.tgerstel.model.Receipt;
@@ -18,7 +19,8 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Long>{
 	void deleteById(Long id);
 
 	Optional<Receipt> findById(Long id);
-
+	
+	List<Receipt> findAllByClientContainingIgnoreCase(String key);
 
 
 }

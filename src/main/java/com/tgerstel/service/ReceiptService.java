@@ -54,6 +54,30 @@ public class ReceiptService {
 		return false;
 	}
 	
+	public List<Receipt> searchReceiptsByClientName(User user, String key) {
+		
+		List<Receipt> receiptsBase = receiptRepo.findAllByClientContainingIgnoreCase(key);	
+		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
+	}
 	
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

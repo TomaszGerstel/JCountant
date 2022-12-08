@@ -81,5 +81,12 @@ public class ReceiptController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Receipt>> searchReceipts(@RequestParam(defaultValue = "") String key,
+			@AuthenticationPrincipal User user) {
+		
+		List<Receipt> allReceipts = receiptService.searchReceiptsByClientName(user, key);
+		return ResponseEntity.ok(allReceipts);
+	}
 	
 }
