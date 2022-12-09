@@ -11,6 +11,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,7 +23,7 @@ public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime date;
+    private LocalDate date;
     @NotNull
     @Positive(message = "the amount must be a positive value")
     private Float amount;
@@ -41,9 +43,9 @@ public class Receipt {
     @JoinColumn(name="user_base_id", referencedColumnName = "id")
     private User user;
 
-    public Receipt(@NotNull LocalDateTime date, @NotNull Float amount, @Nullable Float netAmount,
+    public Receipt(@NotNull LocalDate date, @NotNull Float amount, @Nullable Float netAmount,
                    @Nullable Float vatValue, @Nullable Float vatPercentage, @NotNull String client,
-                   @NotNull String worker, @NotNull String description, @NotNull User user) {
+                   @NotNull String worker, @NotNull String description, @Nullable User user) {
 
         this.date = date;
         this.amount = amount;

@@ -16,7 +16,7 @@
             <column name="amount" type="FLOAT"/>
             <column name="from_" type="VARCHAR(100)"/>
             <column name="to_" type="VARCHAR(100)"/>
-            <column name="date" type="DATETIME"/>
+            <column name="date" type="DATE"/>
             <column name="base_date" type="DATETIME">
                 <constraints nullable="false"/>
             </column>

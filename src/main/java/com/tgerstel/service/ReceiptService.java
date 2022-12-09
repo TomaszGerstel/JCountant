@@ -1,5 +1,7 @@
 package com.tgerstel.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,13 +17,14 @@ import com.tgerstel.repository.ReceiptRepository;
 public class ReceiptService {
 	
 	private final ReceiptRepository receiptRepo;
-
 	
 	public ReceiptService(ReceiptRepository receiptRepo) {
 		this.receiptRepo = receiptRepo;
 	}
+	
 
 	public Receipt createReceipt(Receipt receipt, User currentUser) {
+		
 		receipt.setUser(currentUser);		 	
 		return receiptRepo.save(receipt);	
 	}
@@ -41,8 +44,7 @@ public class ReceiptService {
 
 	public void deleteReceipt(User user, Long id) {
 		
-		Optional<Receipt> deletingReceipt = receiptRepo.findById(id);
-		
+		Optional<Receipt> deletingReceipt = receiptRepo.findById(id);		
 		if(deletingReceipt.isPresent() && currentUserOwnsReceipt(user, deletingReceipt)) {
 			receiptRepo.deleteById(id);
 		}
@@ -59,6 +61,17 @@ public class ReceiptService {
 		List<Receipt> receiptsBase = receiptRepo.findAllByClientContainingIgnoreCase(key);	
 		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}
+	
+	public List<Receipt> receiptsInDateRange(User user, LocalDate from, LocalDate to) {
+		List<Receipt> receiptsBase = receiptRepo.findAllByDateAfterAndDateBefore(from, to);
+		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
+	}
+	
+//	public List<Receipt> receiptsNotUsedInTransfer(User user) {
+//		Iterable<Receipt> receiptsBase = receiptRepo.findAll();
+//		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
+//	}
+//	
 	
 	
 }

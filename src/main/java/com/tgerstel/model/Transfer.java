@@ -6,6 +6,8 @@ import org.springframework.lang.Nullable;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,7 +25,7 @@ public class Transfer {
     private String from;
     @Column(name="to_")
     private String to;
-    private LocalDateTime date;
+    private LocalDate date;
     private LocalDateTime baseDate;
     private String description;
     @OneToOne
@@ -39,7 +41,7 @@ public class Transfer {
     }
 
     public Transfer(@NotNull TransferType transferType, @NotNull Float amount, @Nullable String from,
-                    @Nullable String to, @NotNull LocalDateTime date, @Nullable String description,
+                    @Nullable String to, @NotNull LocalDate date, @Nullable String description,
                     @NotNull Receipt receipt, @NotNull User user) {
 
         this.transferType = transferType;

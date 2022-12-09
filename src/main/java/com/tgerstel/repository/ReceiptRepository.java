@@ -1,5 +1,7 @@
 package com.tgerstel.repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,8 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Long>{
 	Optional<Receipt> findById(Long id);
 	
 	List<Receipt> findAllByClientContainingIgnoreCase(String key);
+
+	List<Receipt> findAllByDateAfterAndDateBefore(LocalDate from, LocalDate to);
 
 
 }
