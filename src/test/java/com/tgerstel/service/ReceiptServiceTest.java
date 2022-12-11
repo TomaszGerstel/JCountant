@@ -71,8 +71,7 @@ class ReceiptServiceTest {
 			.thenReturn(new ArrayList<Receipt>());
 		
 		Integer resultSize = 11;
-		User user = new User("Sober", "sobot@a.com", "hardpass", 13);
-		
+		User user = new User("Sober", "sobot@a.com", "hardpass", 13);		
 		
 		ArgumentCaptor<User> argumentCaptorUser = ArgumentCaptor.forClass(User.class);
 		ArgumentCaptor<PageRequest> argumentCaptorPage = ArgumentCaptor.forClass(PageRequest.class);
@@ -129,7 +128,7 @@ class ReceiptServiceTest {
 		User userActual = new User("Sobek", "sobek@a.com", "hardpass", 12);
 		userActual.setId(11L);
 		User userOnReceipt = new User("Sober", "sobot@a.com", "hardpass", 13);
-		userActual.setId(21L);
+		userOnReceipt.setId(21L);
 		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
 				"Albatros", "Stan", "for example", userOnReceipt ));		
 		
@@ -137,16 +136,49 @@ class ReceiptServiceTest {
 		Optional<Receipt> receiptReturned = receiptService.getById(userActual, 1L);
 		
 		Assertions.assertThat(receiptReturned).isEmpty();
-}
+}		
+
+	@Test
+	void testDeleteReceipt() {
+
+		LocalDate dateTime = LocalDate.now();		
+		User user = new User("Sober", "sobot@a.com", "hardpass", 13);
+		user.setId(11L);
+		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
+				"Albatros", "Stan", "for example", user ));		
+		
+		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);
+		
+		receiptService.deleteReceipt(user, 1L);
+		
+		Mockito.verify(receiptRepo, Mockito.times(1)).deleteById(1L);		
+	
+	}
+	
+	@Test
+	void testDeleteReceipt2() {
+
+		LocalDate dateTime = LocalDate.now();		
+		User userActual = new User("Sobek", "sobek@a.com", "hardpass", 12);
+		userActual.setId(11L);
+		User userOnReceipt = new User("Sober", "sobot@a.com", "hardpass", 13);
+		userOnReceipt.setId(21L);
+		
+		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
+				"Albatros", "Stan", "for example", userOnReceipt ));		
+		
+		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);
+		
+		receiptService.deleteReceipt(userActual, 1L);
+		
+		Mockito.verify(receiptRepo, Mockito.times(0)).deleteById(1L);		
+	
+	}
+
 	
 	
 	
-//
-//	@Test
-//	void testDeleteReceipt() {
-//		fail("Not yet implemented");
-//	}
-//
+	
 //	@Test
 //	void testSearchReceiptsByClientName() {
 //		fail("Not yet implemented");
