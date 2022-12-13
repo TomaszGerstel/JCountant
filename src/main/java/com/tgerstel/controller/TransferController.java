@@ -31,11 +31,11 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(path="/api/receipt", produces="application/json")
 @CrossOrigin(origins="*")
-public class ReceiptController {
+public class TransferController {
 	
 	private final ReceiptService receiptService;
 
-	public ReceiptController(ReceiptService receiptService) {		
+	public TransferController(ReceiptService receiptService) {		
 		this.receiptService = receiptService;
 	}
 	

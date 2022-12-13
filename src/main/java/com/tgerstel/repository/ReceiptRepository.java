@@ -25,6 +25,10 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Long>{
 	List<Receipt> findAllByClientContainingIgnoreCase(String key);
 
 	List<Receipt> findAllByDateAfterAndDateBefore(LocalDate from, LocalDate to);
+	
+	List<Receipt> findAll();
+
+	List<Receipt> findAllByUser();
 
 
 }

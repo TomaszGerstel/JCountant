@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,9 +21,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
 import com.tgerstel.model.Receipt;
+import com.tgerstel.model.Transfer;
+import com.tgerstel.model.TransferType;
 import com.tgerstel.model.User;
 import com.tgerstel.repository.ReceiptRepository;
 
@@ -29,7 +34,33 @@ import com.tgerstel.repository.ReceiptRepository;
 class ReceiptServiceTest {
 	
 	@Mock private ReceiptRepository receiptRepo;
+	@Mock private TransferService transferService;
 	@InjectMocks private ReceiptService receiptService;
+	
+	static LocalDate dateTime;
+	static User userActual;
+	static Receipt receipt;
+	static Transfer transfer;
+	static User user2;
+	static Receipt receipt2;
+	static Transfer transfer2;
+	static List<Long> receiptsId;
+	static Receipt receipt3;
+	
+	@BeforeAll
+	static void prepareVariables() {
+		
+		dateTime = LocalDate.now();
+		userActual = new User("Sober", "sobot@a.com", "hardpass", 13);
+		userActual.setId(11L);
+		receipt = new Receipt(dateTime, 810.0f, 200.0f, null, null, "Albatros", "Stan", "for example", userActual );	
+		transfer = new Transfer(TransferType.IN_TRANSFER, 800.0f, "Customer", "Me", dateTime,	null, receipt, userActual);		
+		user2 = new User("Sober", "sobot@a.com", "hardpass", 13);
+		user2.setId(21L);		
+		receipt2 = new Receipt(dateTime, 1000.0f, 250.0f, null, null, "MediaGain", "Ed", "for example", user2 );
+		transfer2 = new Transfer(TransferType.IN_TRANSFER, 1000.0f, "MediaGain", "Me", dateTime, null, receipt2, userActual);		
+		receipt3 = new Receipt(dateTime, 500.0f, null, null, null, "Stratovarius", "Ed", "for app", userActual );
+	}
 
 	@Test
 	@DisplayName("If createReceipt() giving correct values from receipt and with given user to repository method")
@@ -37,12 +68,8 @@ class ReceiptServiceTest {
 	
 		Mockito.when(receiptRepo.save(ArgumentMatchers.any())).thenReturn(new Receipt());
 		ArgumentCaptor<Receipt> argumentCaptor = ArgumentCaptor.forClass(Receipt.class);
-		
-		LocalDate dateTime = LocalDate.now();		
-		User user = new User("Sober", "sobot@a.com", "hardpass", 13);
-		Receipt receipt = new Receipt(dateTime, 810.0f, 200.0f, null, null, "Albatros", "Stan", "for example", null );
-		
-		receiptService.createReceipt(receipt, user);	
+			
+		receiptService.createReceipt(receipt, userActual);	
 				
 		Mockito.verify(receiptRepo).save(argumentCaptor.capture());		
 		Receipt receiptReturned = argumentCaptor.getValue();
@@ -70,13 +97,12 @@ class ReceiptServiceTest {
 		Mockito.when(receiptRepo.findAllByUser(ArgumentMatchers.any(), ArgumentMatchers.any()))
 			.thenReturn(new ArrayList<Receipt>());
 		
-		Integer resultSize = 11;
-		User user = new User("Sober", "sobot@a.com", "hardpass", 13);		
+		Integer resultSize = 11;		
 		
 		ArgumentCaptor<User> argumentCaptorUser = ArgumentCaptor.forClass(User.class);
 		ArgumentCaptor<PageRequest> argumentCaptorPage = ArgumentCaptor.forClass(PageRequest.class);
 		
-		receiptService.getRecentReceipts(user, resultSize);	
+		receiptService.getRecentReceipts(userActual, resultSize);	
 		
 		Mockito.verify(receiptRepo).findAllByUser(argumentCaptorUser.capture(), argumentCaptorPage.capture());		
 		User capturedUser = argumentCaptorUser.getValue();
@@ -92,17 +118,14 @@ class ReceiptServiceTest {
 
 	@Test
 	@DisplayName("If getById() returning proper receipt for current user")
-	void testIfGetByIdRetursReceipt() {
+	void testIfGetByIdRetursReceipt() {		
 		
-		LocalDate dateTime = LocalDate.now();		
-		User user = new User("Sober", "sobot@a.com", "hardpass", 13);
-		user.setId(11L);
 		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
-				"Albatros", "Stan", "for example", user ));		
+				"Albatros", "Stan", "for example", userActual ));		
 		
 		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);
 		
-		Receipt receiptReturned = receiptService.getById(user, 1L).get();
+		Receipt receiptReturned = receiptService.getById(userActual, 1L).get();
 		
 		assertAll(			
 				() -> assertEquals(dateTime, receiptReturned.getDate()),
@@ -122,9 +145,8 @@ class ReceiptServiceTest {
 	
 	@Test
 	@DisplayName("If getById() returning empty optional when current user dosn't own found receipt")
-	void testIfGetByIdReturnsEmptyOptional() {
-		
-		LocalDate dateTime = LocalDate.now();		
+	void testIfGetByIdReturnsEmptyOptional() {		
+			
 		User userActual = new User("Sobek", "sobek@a.com", "hardpass", 12);
 		userActual.setId(11L);
 		User userOnReceipt = new User("Sober", "sobot@a.com", "hardpass", 13);
@@ -140,42 +162,48 @@ class ReceiptServiceTest {
 
 	@Test
 	void testDeleteReceipt() {
-
-		LocalDate dateTime = LocalDate.now();		
-		User user = new User("Sober", "sobot@a.com", "hardpass", 13);
-		user.setId(11L);
-		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
-				"Albatros", "Stan", "for example", user ));		
-		
-		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);
-		
-		receiptService.deleteReceipt(user, 1L);
-		
-		Mockito.verify(receiptRepo, Mockito.times(1)).deleteById(1L);		
 	
+		Mockito.when(receiptRepo.findById(1L)).thenReturn(Optional.of(receipt));
+		Mockito.when(transferService.getByReceipt(ArgumentMatchers.any())).thenReturn(Optional.of(transfer));
+		
+		receiptService.deleteReceipt(userActual, 1L);
+		
+		Mockito.verify(receiptRepo, Mockito.times(1)).deleteById(1L);	
 	}
 	
 	@Test
 	void testDeleteReceipt2() {
-
-		LocalDate dateTime = LocalDate.now();		
-		User userActual = new User("Sobek", "sobek@a.com", "hardpass", 12);
-		userActual.setId(11L);
-		User userOnReceipt = new User("Sober", "sobot@a.com", "hardpass", 13);
-		userOnReceipt.setId(21L);
 		
-		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
-				"Albatros", "Stan", "for example", userOnReceipt ));		
-		
-		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);
+		Mockito.when(receiptRepo.findById(1L)).thenReturn(Optional.of(receipt2));
+		Mockito.when(transferService.getByReceipt(ArgumentMatchers.any())).thenReturn(Optional.of(transfer));
 		
 		receiptService.deleteReceipt(userActual, 1L);
 		
-		Mockito.verify(receiptRepo, Mockito.times(0)).deleteById(1L);		
-	
+		Mockito.verify(receiptRepo, Mockito.times(0)).deleteById(1L);	
 	}
 
-	
+	@Test
+	void testReceiptsNotUsedInTransfer() {
+		
+		receipt.setId(1L);
+		receipt2.setId(77L);
+		receipt3.setId(3L);
+		receiptsId = List.of(1L, 2L, 12L, 15L, 66L);
+		List<Receipt> receipts = List.of(receipt, receipt2, receipt3);
+		
+		Mockito.when(transferService.getAllReceiptsIdInTransfers()).thenReturn(receiptsId);
+		Mockito.when(receiptRepo.findAllByUser()).thenReturn(receipts);
+		
+		List<Receipt> receiptsReturned = receiptService.receiptsNotUsedInTransfer(userActual);
+		 
+		assertAll(				
+				() -> assertEquals(2, receiptsReturned.size()),
+				() -> assertTrue(receiptsReturned.contains(receipt2)),
+				() -> assertTrue(receiptsReturned.contains(receipt3)),
+				() -> assertFalse(receiptsReturned.contains(receipt))			
+			);
+		
+	}
 	
 	
 	

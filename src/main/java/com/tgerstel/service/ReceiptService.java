@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.tgerstel.model.Receipt;
+import com.tgerstel.model.Transfer;
 import com.tgerstel.model.User;
 import com.tgerstel.repository.ReceiptRepository;
 
@@ -17,11 +18,14 @@ import com.tgerstel.repository.ReceiptRepository;
 public class ReceiptService {
 	
 	private final ReceiptRepository receiptRepo;
+	private final TransferService transferService;
 	
-	public ReceiptService(ReceiptRepository receiptRepo) {
+	public ReceiptService(ReceiptRepository receiptRepo, TransferService transferService) {
+		super();
 		this.receiptRepo = receiptRepo;
+		this.transferService = transferService;
 	}
-	
+
 
 	public Receipt createReceipt(Receipt receipt, User currentUser) {
 		
@@ -42,16 +46,17 @@ public class ReceiptService {
 		return Optional.empty();
 	}
 
-	public void deleteReceipt(User user, Long id) {
+	public void deleteReceipt(User user, Long id) {			
 		
-		Optional<Receipt> deletingReceipt = receiptRepo.findById(id);		
+		Optional<Receipt> deletingReceipt = receiptRepo.findById(id);
+		Optional<Transfer> deletingTransfer = transferService.getByReceipt(deletingReceipt);
 		if(deletingReceipt.isPresent() && currentUserOwnsReceipt(user, deletingReceipt)) {
 			receiptRepo.deleteById(id);
 		}
-		// deleting transfer with rec
+		transferService.deleteTransfer(user, deletingTransfer.get().getId());
 	}
 	
-	private boolean currentUserOwnsReceipt(User user, Optional<Receipt> receipt) {
+	boolean currentUserOwnsReceipt(User user, Optional<Receipt> receipt) {
 		if(receipt.get().getUser().getId() == user.getId()) return true;
 		return false;
 	}
@@ -67,11 +72,14 @@ public class ReceiptService {
 		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}
 	
-//	public List<Receipt> receiptsNotUsedInTransfer(User user) {
-//		Iterable<Receipt> receiptsBase = receiptRepo.findAll();
-//		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
-//	}
-//	
+	public List<Receipt> receiptsNotUsedInTransfer(User user) {
+		
+		List<Long> receiptsId = transferService.getAllReceiptsIdInTransfers();
+		List<Receipt> allReceipts = receiptRepo.findAllByUser();
+		
+		return allReceipts.stream().filter(rec -> !receiptsId.contains(rec.getId())).toList();
+	}
+	
 	
 	
 }
