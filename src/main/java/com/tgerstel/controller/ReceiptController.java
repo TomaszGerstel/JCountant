@@ -42,7 +42,7 @@ public class ReceiptController {
 	@PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> addReceipt(@RequestBody @Valid Receipt receipt, Errors errors,
 			@AuthenticationPrincipal User user) {
-		System.out.println("w kontro");
+
 		if (errors.hasErrors()) {
 			List<String> errorMessage = errors.getFieldErrors().stream()
 					.map(error -> error.getField() + ": " + error.getDefaultMessage()).collect(Collectors.toList());			
@@ -65,6 +65,14 @@ public class ReceiptController {
 		List<Receipt> allReceipts = receiptService.getRecentReceipts(user, resultSize);
 		return ResponseEntity.ok(allReceipts);
 	}
+	
+	@GetMapping(path = "/no_transfer_receipts", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Receipt>> allReceiptsWithoutTransfer(@AuthenticationPrincipal User user) {
+		
+		List<Receipt> allReceipts = receiptService.receiptsNotUsedInTransfer(user);
+		return ResponseEntity.ok(allReceipts);
+	}
+
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Receipt> getReceiptById(@PathVariable Long id, @AuthenticationPrincipal User user) {

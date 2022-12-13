@@ -60,7 +60,7 @@ public class ReceiptService {
 		if(receipt.get().getUser().getId() == user.getId()) return true;
 		return false;
 	}
-	
+	//test
 	public List<Receipt> searchReceiptsByClientName(User user, String key) {
 		
 		List<Receipt> receiptsBase = receiptRepo.findAllByClientContainingIgnoreCase(key);	

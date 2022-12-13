@@ -74,8 +74,7 @@ class TransferServiceTest {
 				() -> assertEquals(1200f, transferReturned.getAmount()),
 				() -> assertEquals("Bob", transferReturned.getUser().getUsername()),
 				() -> assertNotNull(transferReturned.getUser()),
-				() -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType()),
-				() -> assertNull(transferReturned.getDescription()),
+				() -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType()),				
 				() -> assertEquals("Customer", transferReturned.getFrom()),
 				() -> assertEquals("Me", transferReturned.getTo()),
 				() -> assertEquals(1200f, transferReturned.getReceipt().getAmount()),
@@ -130,8 +129,7 @@ class TransferServiceTest {
 				() -> assertEquals(dateTime, transferReturned.getDate()),
 				() -> assertEquals(1200f, transferReturned.getAmount()),
 				() -> assertEquals("Bob", transferReturned.getUser().getUsername()),
-				() -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType()),	
-				() -> assertNull(transferReturned.getDescription())
+				() -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType())
 	
 			);	
 	}

@@ -36,14 +36,19 @@ public class TransferService {
 	
 	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {
 		
-		PageRequest page = PageRequest.of(0, resultSize, Sort.by("date").descending());		
-		return transferRepo.findAllByUser(user, page);
+		PageRequest page = PageRequest.of(0, resultSize, Sort.by("date").descending());
+		List<Transfer> transfers = transferRepo.findAllByUser(user, page);
+		return completeListTransfersDataFromReceipts(transfers);
 	}
 
 	public Optional<Transfer> getById(User user, Long id) {
 		
 		Optional<Transfer> result = transferRepo.findById(id);		
-		if (result.isPresent() && currentUserOwnsTransfer(user, result)) return result;
+		if (result.isPresent() && currentUserOwnsTransfer(user, result)) {
+			completeTransferDataFromReceipt(result.get());			
+			return result;			
+		}
+			
 		return Optional.empty();
 	}
 	
@@ -76,6 +81,13 @@ public class TransferService {
 		
 	}
 	
+	//test	
+	private List<Transfer> completeListTransfersDataFromReceipts(List<Transfer> transfers) {
+		
+		for(Transfer t : transfers) completeTransferDataFromReceipt(t);		
+		return transfers;
+	}
+	
 	//test
 	private Optional<Transfer> completeTransferDataFromReceipt(Transfer transfer) {		
 		
@@ -85,6 +97,13 @@ public class TransferService {
 		if(transfer.getFrom() == null) transfer.setFrom(transfer.getReceipt().getClient());
 		if(transfer.getTo() == null) transfer.setTo(transfer.getReceipt().getWorker());
 		return Optional.of(transfer);
+	}
+	//test
+	public List<Transfer> searchReceiptsByFromName(User user, String key) {
+		
+		List<Transfer> transferBase = transferRepo.findAllByFromContainingIgnoreCase(key);	
+		//method
+		return transferBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}
 	
 }
