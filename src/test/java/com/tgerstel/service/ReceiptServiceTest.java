@@ -29,12 +29,13 @@ import com.tgerstel.model.Transfer;
 import com.tgerstel.model.TransferType;
 import com.tgerstel.model.User;
 import com.tgerstel.repository.ReceiptRepository;
+import com.tgerstel.repository.TransferRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ReceiptServiceTest {
 	
 	@Mock private ReceiptRepository receiptRepo;
-	@Mock private TransferService transferService;
+	@Mock private TransferRepository transferRepo;
 	@InjectMocks private ReceiptService receiptService;
 	
 	static LocalDate dateTime;
@@ -53,17 +54,20 @@ class ReceiptServiceTest {
 		dateTime = LocalDate.now();
 		userActual = new User("Sober", "sobot@a.com", "hardpass", 13);
 		userActual.setId(11L);
-		receipt = new Receipt(dateTime, 810.0f, 200.0f, null, null, "Albatros", "Stan", "for example", userActual );	
+		receipt = new Receipt(dateTime, 810.0f, 200.0f, null, null, "Albatros", "Stan", "for example", userActual);	
 		transfer = new Transfer(TransferType.IN_TRANSFER, 800.0f, "Customer", "Me", dateTime,	null, receipt, userActual);		
 		user2 = new User("Sober", "sobot@a.com", "hardpass", 13);
 		user2.setId(21L);		
-		receipt2 = new Receipt(dateTime, 1000.0f, 250.0f, null, null, "MediaGain", "Ed", "for example", user2 );
+		receipt2 = new Receipt(dateTime, 1000.0f, 250.0f, null, null, "MediaGain", "Ed", "for example", user2);
 		transfer2 = new Transfer(TransferType.IN_TRANSFER, 1000.0f, "MediaGain", "Me", dateTime, null, receipt2, userActual);		
-		receipt3 = new Receipt(dateTime, 500.0f, null, null, null, "Stratovarius", "Ed", "for app", userActual );
+		receipt3 = new Receipt(dateTime, 500.0f, null, null, null, "Stratovarius", "Ed", "for app", userActual);
+		receipt.setId(1L);
+		receipt2.setId(77L);
+		receipt3.setId(3L);
 	}
 
 	@Test
-	@DisplayName("If createReceipt() giving correct values from receipt and with given user to repository method")
+	@DisplayName("createReceipt() shoud giving correct values from receipt and with given user to repository method")
 	void testCreateReceipt() {		
 	
 		Mockito.when(receiptRepo.save(ArgumentMatchers.any())).thenReturn(new Receipt());
@@ -161,12 +165,12 @@ class ReceiptServiceTest {
 }		
 
 	@Test
-	void testDeleteReceipt() {
+	void testdeleteReceiptAndRelatedTransfer() {
 	
 		Mockito.when(receiptRepo.findById(1L)).thenReturn(Optional.of(receipt));
-		Mockito.when(transferService.getByReceipt(ArgumentMatchers.any())).thenReturn(Optional.of(transfer));
+		Mockito.when(transferRepo.findByReceipt(ArgumentMatchers.any())).thenReturn(Optional.of(transfer));
 		
-		receiptService.deleteReceipt(userActual, 1L);
+		receiptService.deleteReceiptAndRelatedTransfer(userActual, 1L);
 		
 		Mockito.verify(receiptRepo, Mockito.times(1)).deleteById(1L);	
 	}
@@ -175,36 +179,36 @@ class ReceiptServiceTest {
 	void testDeleteReceipt2() {
 		
 		Mockito.when(receiptRepo.findById(1L)).thenReturn(Optional.of(receipt2));
-		Mockito.when(transferService.getByReceipt(ArgumentMatchers.any())).thenReturn(Optional.of(transfer));
+		Mockito.when(transferRepo.findByReceipt(ArgumentMatchers.any())).thenReturn(Optional.of(transfer));
 		
-		receiptService.deleteReceipt(userActual, 1L);
+		receiptService.deleteReceiptAndRelatedTransfer(userActual, 1L);
 		
 		Mockito.verify(receiptRepo, Mockito.times(0)).deleteById(1L);	
 	}
 
 	@Test
-	void testReceiptsNotUsedInTransfer() {
+	void testReceiptsNotUsedInTransfer() {	
+
+		Transfer transfer = new Transfer();
+		Transfer transfer2 = new Transfer();
+		transfer.setReceipt(receipt);
+		transfer2.setReceipt(receipt3);		
 		
-		receipt.setId(1L);
-		receipt2.setId(77L);
-		receipt3.setId(3L);
-		receiptsId = List.of(1L, 2L, 12L, 15L, 66L);
 		List<Receipt> receipts = List.of(receipt, receipt2, receipt3);
-		
-		Mockito.when(transferService.getAllReceiptsIdInTransfers()).thenReturn(receiptsId);
-		Mockito.when(receiptRepo.findAllByUser()).thenReturn(receipts);
+		List<Transfer> transfers = List.of(transfer, transfer2);
+
+		Mockito.when(transferRepo.findAllByUser(ArgumentMatchers.any())).thenReturn(transfers);
+		Mockito.when(receiptRepo.findAllByUser(ArgumentMatchers.any())).thenReturn(receipts);
 		
 		List<Receipt> receiptsReturned = receiptService.receiptsNotUsedInTransfer(userActual);
 		 
 		assertAll(				
-				() -> assertEquals(2, receiptsReturned.size()),
+				() -> assertEquals(1, receiptsReturned.size()),
 				() -> assertTrue(receiptsReturned.contains(receipt2)),
-				() -> assertTrue(receiptsReturned.contains(receipt3)),
+				() -> assertFalse(receiptsReturned.contains(receipt3)),
 				() -> assertFalse(receiptsReturned.contains(receipt))			
-			);
-		
+			);		
 	}
-	
 	
 	
 //	@Test

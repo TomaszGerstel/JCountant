@@ -85,7 +85,7 @@ public class ReceiptController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
-		receiptService.deleteReceipt(user, id);
+		receiptService.deleteReceiptAndRelatedTransfer(user, id);
 		return ResponseEntity.noContent().build();
 	}
 	

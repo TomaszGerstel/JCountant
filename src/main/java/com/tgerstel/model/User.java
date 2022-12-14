@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,6 +37,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(unique = true)
     private String username;
+    @Basic(fetch = FetchType.LAZY)
     private String password;
     private String email;
     private Integer lumpSumTaxRate;

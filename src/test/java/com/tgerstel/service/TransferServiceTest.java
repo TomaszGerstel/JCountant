@@ -31,7 +31,7 @@ import com.tgerstel.repository.TransferRepository;
 class TransferServiceTest {
 	
 	@Mock private TransferRepository transferRepo;
-	@Mock private ReceiptService receiptService;
+	@Mock private ReceiptRepository receiptRepo;
 	@InjectMocks private TransferService transferService;
 	
 	static LocalDate dateTime;
@@ -61,10 +61,10 @@ class TransferServiceTest {
 	void testCreateTransferShouldPassProperTransferAndUserToSaveMethod() {	
 		
 		Mockito.when(transferRepo.save(ArgumentMatchers.any())).thenReturn(new Transfer());
-		Mockito.when(receiptService.getById(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Optional.of(receipt));
+		Mockito.when(receiptRepo.findById(ArgumentMatchers.any())).thenReturn(Optional.of(receipt));
 		ArgumentCaptor<Transfer> argumentCaptor = ArgumentCaptor.forClass(Transfer.class);		
 		
-		transferService.createTransfer(transfer, userActual);	
+		transferService.createTransfer(transfer, 22L, userActual);	
 				
 		Mockito.verify(transferRepo).save(argumentCaptor.capture());		
 		Transfer transferReturned = argumentCaptor.getValue();
@@ -86,8 +86,8 @@ class TransferServiceTest {
 	@Test
 	void testCreateTransferShouldReturnEmptyOptionalForNotFoundReceipt() {	
 
-		Mockito.when(receiptService.getById(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Optional.empty());		
-		Optional<Transfer> transferReturned = transferService.createTransfer(transferWithReceipt2, userActual);	
+		Mockito.when(receiptRepo.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());		
+		Optional<Transfer> transferReturned = transferService.createTransfer(transferWithReceipt2, 34L, userActual);	
 		
 		Assertions.assertThat(transferReturned).isEmpty();	
 	}

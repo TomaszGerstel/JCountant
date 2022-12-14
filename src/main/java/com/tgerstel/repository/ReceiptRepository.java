@@ -28,7 +28,7 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Long>{
 	
 	List<Receipt> findAll();
 
-	List<Receipt> findAllByUser();
+	List<Receipt> findAllByUser(User user);
 
 
 }

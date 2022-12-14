@@ -18,9 +18,9 @@ public interface TransferRepository extends CrudRepository<Transfer, Long>{
 	
 	List<Transfer> findAll();
 
-	List<Transfer> findAllByUser();
-
 	List<Transfer> findAllByFromContainingIgnoreCase(String key);
+
+	List<Transfer> findAllByUser(User user);
 
 	
 

@@ -18,42 +18,38 @@ import com.tgerstel.repository.TransferRepository;
 public class TransferService {
 	
 	private final TransferRepository transferRepo;
-	private final ReceiptService receiptService;
+	private final ReceiptRepository receiptRepo;
 
-	public TransferService(TransferRepository transferRepo, ReceiptService receiptService) {
+	public TransferService(TransferRepository transferRepo, ReceiptRepository receiptRepo) {
 		super();
 		this.transferRepo = transferRepo;
-		this.receiptService = receiptService;
+		this.receiptRepo = receiptRepo;
 	}
 	
-	public Optional<Transfer> createTransfer(Transfer transfer, User user) {
-		
+	public Optional<Transfer> createTransfer(Transfer transfer, Long receiptId, User user) {		
 		transfer.setUser(user);
-		Optional<Receipt> receipt = receiptService.getById(user, transfer.getReceipt().getId());
-		if(receipt.isEmpty()) return Optional.empty();
+		Optional<Receipt> result = receiptRepo.findById(receiptId);
+		if(result.isEmpty() || !currentUserOwnsReceipt(user, result)) return Optional.empty();
+		transfer.setReceipt(result.get());
 		return Optional.of(transferRepo.save(transfer));		
 	}
 	
-	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {
-		
+	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {		
 		PageRequest page = PageRequest.of(0, resultSize, Sort.by("date").descending());
 		List<Transfer> transfers = transferRepo.findAllByUser(user, page);
 		return completeListTransfersDataFromReceipts(transfers);
 	}
 
-	public Optional<Transfer> getById(User user, Long id) {
-		
+	public Optional<Transfer> getById(User user, Long id) {		
 		Optional<Transfer> result = transferRepo.findById(id);		
 		if (result.isPresent() && currentUserOwnsTransfer(user, result)) {
 			completeTransferDataFromReceipt(result.get());			
 			return result;			
-		}
-			
+		}			
 		return Optional.empty();
 	}
 	
-	public void deleteTransfer(User user, Long id) {
-		
+	public void deleteTransfer(User user, Long id) {		
 		Optional<Transfer> deletingTransfer = transferRepo.findById(id);		
 		if(deletingTransfer.isPresent() && currentUserOwnsTransfer(user, deletingTransfer)) {
 			transferRepo.deleteById(id);
@@ -61,36 +57,31 @@ public class TransferService {
 	}
 
 	//test
-	boolean currentUserOwnsTransfer(User user, Optional<Transfer> transfer) {
-		
+	boolean currentUserOwnsTransfer(User user, Optional<Transfer> transfer) {		
 		if(transfer.get().getUser().getId() == user.getId()) return true;
 		return false;
 	}
-
-	public Optional<Transfer> getByReceipt(Optional<Receipt> receipt) {
-
-		Optional<Transfer> transfer = transferRepo.findByReceipt(receipt);
-		if(transfer.isEmpty()) return Optional.empty();		
-		return transfer;		
-	}
 	
-	public List<Long> getAllReceiptsIdInTransfers() {		
-		
-		List<Transfer> allTransfers = transferRepo.findAllByUser();
-		return allTransfers.stream().map(t -> t.getReceipt().getId()).toList();		
-		
+	boolean currentUserOwnsReceipt(User user, Optional<Receipt> receipt) {
+		if(receipt.get().getUser().getId() == user.getId()) return true;
+		return false;
 	}
+	//byREceiptId? del?
+//	public Optional<Transfer> getByReceipt(Optional<Receipt> receipt) {
+//		Optional<Transfer> transfer = transferRepo.findByReceipt(receipt);
+//		if(transfer.isEmpty()) return Optional.empty();		
+//		return transfer;		
+//	}
+
 	
 	//test	
-	private List<Transfer> completeListTransfersDataFromReceipts(List<Transfer> transfers) {
-		
+	private List<Transfer> completeListTransfersDataFromReceipts(List<Transfer> transfers) {		
 		for(Transfer t : transfers) completeTransferDataFromReceipt(t);		
 		return transfers;
 	}
 	
 	//test
 	private Optional<Transfer> completeTransferDataFromReceipt(Transfer transfer) {		
-		
 		if(transfer.getReceipt() == null) return Optional.of(transfer);
 		if(transfer.getDate() == null) transfer.setDate(transfer.getReceipt().getDate());
 		if(transfer.getDescription() == null) transfer.setDescription(transfer.getReceipt().getDescription());
@@ -99,8 +90,7 @@ public class TransferService {
 		return Optional.of(transfer);
 	}
 	//test
-	public List<Transfer> searchReceiptsByFromName(User user, String key) {
-		
+	public List<Transfer> searchTransfersByFromName(User user, String key) {		
 		List<Transfer> transferBase = transferRepo.findAllByFromContainingIgnoreCase(key);	
 		//method
 		return transferBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();

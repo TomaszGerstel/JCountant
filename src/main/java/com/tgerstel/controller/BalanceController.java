@@ -38,27 +38,27 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins="*")
 public class BalanceController {
 	
-	private final ReceiptService receiptService;
-
-	public BalanceController(ReceiptService receiptService) {		
-		this.receiptService = receiptService;
-	}
-	
-
-
-	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Receipt>> allReceipts(@RequestParam String from, @RequestParam String to, 
-			@AuthenticationPrincipal User user) {
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");	
-		
-		LocalDate fromd = LocalDate.parse(from, formatter);
-		LocalDate tod = LocalDate.parse(to, formatter);
-		
-		
-		List<Receipt> allReceipts = receiptService.receiptsInDateRange(user, fromd, tod);
-		return ResponseEntity.ok(allReceipts);
-	}
+//	private final ReceiptService receiptService;
+//
+//	public BalanceController(ReceiptService receiptService) {		
+//		this.receiptService = receiptService;
+//	}
+//	
+//
+//
+//	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<List<Receipt>> allReceipts(@RequestParam String from, @RequestParam String to, 
+//			@AuthenticationPrincipal User user) {
+//		
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");	
+//		
+//		LocalDate fromd = LocalDate.parse(from, formatter);
+//		LocalDate tod = LocalDate.parse(to, formatter);
+//		
+//		
+//		List<Receipt> allReceipts = receiptService.receiptsInDateRange(user, fromd, tod);
+//		return ResponseEntity.ok(allReceipts);
+//	}
 
 	
 	

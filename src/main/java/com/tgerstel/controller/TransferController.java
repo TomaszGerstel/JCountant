@@ -43,7 +43,7 @@ public class TransferController {
 	}
 
 	@PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addReceipt(@RequestBody @Valid Transfer transfer, Errors errors,
+	public ResponseEntity<?> addReceipt(@RequestBody @Valid Transfer transfer, Long receiptId, Errors errors,
 			@AuthenticationPrincipal User user) {
 
 		if (errors.hasErrors()) {
@@ -52,7 +52,7 @@ public class TransferController {
 			return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 		
-		Transfer saved = transferService.createTransfer(transfer, user).get();
+		Transfer saved = transferService.createTransfer(transfer, receiptId, user).get();
 		URI savedTransferLocation = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}")
 				.buildAndExpand(saved.getId())
@@ -87,7 +87,7 @@ public class TransferController {
 	public ResponseEntity<List<Transfer>> searchTransfers(@RequestParam(defaultValue = "") String key,
 			@AuthenticationPrincipal User user) {
 		
-		List<Transfer> allTransfers = transferService.searchReceiptsByFromName(user, key);
+		List<Transfer> allTransfers = transferService.searchTransfersByFromName(user, key);
 		return ResponseEntity.ok(allTransfers);
 	}
 	
