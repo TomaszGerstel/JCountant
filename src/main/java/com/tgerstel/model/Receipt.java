@@ -58,13 +58,22 @@ public class Receipt {
         this.user = user;
     }
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public Float getNetAmount() {
+    	if(netAmount == null) {
+    		if(vatValue != null) return amount - vatValue;
+    		if(vatPercentage != null) return amount / (vatPercentage / 100);
+    	}
+  		return netAmount;      	
+      }
+    
+    public Float getVatValue() {
+    	if(vatValue == null) {
+    		if(netAmount != null) return amount - netAmount;
+    		if(vatPercentage != null) return vatPercentage * (amount / 100);
+    	}
+  		return vatValue;
+    	
+    }
     
     
 }

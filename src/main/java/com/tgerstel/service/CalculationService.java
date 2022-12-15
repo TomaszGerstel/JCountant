@@ -33,9 +33,15 @@ public class CalculationService {
 		
 		balanceResults.setCosts(calculateCosts(transactions));
 		balanceResults.setGrossIncome(calculateGrossIncome(transactions));
+		balanceResults.setProfitPaid(calculateProfitPaid(transactions));
+		balanceResults.setNetBalance(calculateNetBalance(transactions));
+		balanceResults.setVatDue(calculateVatDue(transactions));
+		balanceResults.setFlatTaxDue(calculateFlatTaxDue(balanceResults.getNetBalance()));
 		
 		return balanceResults;
 	}
+
+
 
 	private List<TransactionModel> createTransactionObjects(List<Transfer> transfers) {
 		List<TransactionModel> transactions = new ArrayList<>();
@@ -73,20 +79,65 @@ public class CalculationService {
 	private Float calculateCosts(List<TransactionModel> transactions) {
 		float sum = 0;		
 		for(TransactionModel t : transactions) {
-			if(t.getTransferType() == TransferType.OUT_TRANSFER) {
-				float vat = 0;
-				if(t.getVatValue() != null) vat = t.getVatValue();
-				else
-					if(t.getVatPercentage() != null) vat = t.getAmount() / (t.getVatPercentage() / 100);
-				sum += t.getAmount() - vat;				
+			if(t.getTransferType() == TransferType.OUT_TRANSFER) {			 
+				if(t.getVatValue() != null) sum += t.getAmount() - t.getVatValue();
+				else sum += t.getAmount();				
 			}
 		}		
 		return sum;
 	}
 	
 	private Float calculateGrossIncome(List<TransactionModel> transactions) {
-		// TODO Auto-generated method stub
+		float sum = 0;
+		for(TransactionModel t : transactions) {
+			if(t.getTransferType() == TransferType.IN_TRANSFER) {
+				if(t.getVatValue() != null) sum += t.getAmount() - t.getVatValue();
+				else sum += t.getAmount();	
+			}
+		}		
 		return null;
 	}
 	
+	private Float calculateProfitPaid(List<TransactionModel> transactions) {
+		float sum = 0;
+		for(TransactionModel t : transactions) {
+			if(t.getTransferType() == TransferType.SALARY) sum += t.getAmount();
+			}
+		return sum;
+	}
+	
+	private Float calculateNetBalance(List<TransactionModel> transactions) {
+		float sum = 0;
+		for(TransactionModel t : transactions) {
+			if(t.getTransferType() == TransferType.IN_TRANSFER) sum += t.getNetAmount();
+			if(t.getTransferType() == TransferType.OUT_TRANSFER) sum -= t.getNetAmount();			
+		}
+		return sum;
+	}
+	
+	
+	
+	private Float calculateVatDue(List<TransactionModel> transactions) {
+		float sum = 0;
+		for(TransactionModel t : transactions) {
+			if(t.getTransferType() == TransferType.IN_TRANSFER) sum += t.getVatValue();
+			if(t.getTransferType() == TransferType.OUT_TRANSFER) sum -= t.getVatValue();		
+		}
+		return sum;
+	}
+
+	
+	
+	private Float calculateFlatTaxDue(Float netBalance) {
+		// stała?
+		return (netBalance * 19 / 100);
+	}
+	
 }
+
+
+
+
+
+
+
