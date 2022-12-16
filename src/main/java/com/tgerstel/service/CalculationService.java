@@ -29,19 +29,20 @@ public class CalculationService {
 	
 	private BalanceResults calculateBalance (List<Transfer> transfers, User user) {
 		List<TransactionModel> transactions = createTransactionObjects(transfers);
-		BalanceResults balanceResults = new BalanceResults();
 		
-		balanceResults.setCosts(calculateCosts(transactions));
-		balanceResults.setGrossIncome(calculateGrossIncome(transactions));
-		balanceResults.setProfitPaid(calculateProfitPaid(transactions));
-		balanceResults.setNetBalance(calculateNetBalance(transactions));
-		balanceResults.setVatDue(calculateVatDue(transactions));
-		balanceResults.setFlatTaxDue(calculateFlatTaxDue(balanceResults.getNetBalance()));
+		BalanceResults balanceResults = 
+				new BalanceResults(
+						calculateCosts(transactions),
+						calculateGrossIncome(transactions),
+						calculateNetBalance(transactions),
+						calculateVatDue(transactions),
+						calculateProfitPaid(transactions),
+						calculateVatPaid(transactions),
+						calculateTaxPaid(transactions),
+						user.getLumpSumTaxRate());		
 		
 		return balanceResults;
 	}
-
-
 
 	private List<TransactionModel> createTransactionObjects(List<Transfer> transfers) {
 		List<TransactionModel> transactions = new ArrayList<>();
@@ -113,9 +114,7 @@ public class CalculationService {
 			if(t.getTransferType() == TransferType.OUT_TRANSFER) sum -= t.getNetAmount();			
 		}
 		return sum;
-	}
-	
-	
+	}		
 	
 	private Float calculateVatDue(List<TransactionModel> transactions) {
 		float sum = 0;
@@ -125,14 +124,22 @@ public class CalculationService {
 		}
 		return sum;
 	}
-
 	
-	
-	private Float calculateFlatTaxDue(Float netBalance) {
-		// stała?
-		return (netBalance * 19 / 100);
+	private Float calculateVatPaid(List<TransactionModel> transactions) {
+		float sum = 0;
+		for(TransactionModel t : transactions) {			
+			if(t.getTransferType() == TransferType.VAT_OUT_TRANSFER) sum += t.getAmount();		
+		}
+		return sum;
 	}
 	
+	private Float calculateTaxPaid(List<TransactionModel> transactions) {
+		float sum = 0;
+		for(TransactionModel t : transactions) {			
+			if(t.getTransferType() == TransferType.TAX_OUT_TRANSFER) sum += t.getAmount();		
+		}
+		return sum;
+	}
 }
 
 
