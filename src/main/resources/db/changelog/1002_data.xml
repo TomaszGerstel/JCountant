@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="1002-testdata-1" author="tgerstel" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <insert tableName="receipt">
+            <column name="date" value="2022-12-01"/>
+            <column name="amount" value="1200"/>
+            <column name="net_amount" value="1000"/>
+            <column name="client" value="Samat"/>
+            <column name="worker" value="John"/>
+            <column name="description" value="example"/>
+            <column name="user_base_id" value="1"/>
+        </insert>
+         <insert tableName="transfer">
+            <column name="transfer_type" value="IN_TRANSFER"/>
+             <column name="base_date" value="2022-12-01"/>
+            <column name="amount" value="1200"/>
+            <column name="from_" value="Samat"/>
+            <column name="to_" value="Me"/>           
+            <column name="receipt" value="1"/>
+            <column name="user_base_id" value="1"/>
+        </insert>
+    </changeSet>    
+</databaseChangeLog>

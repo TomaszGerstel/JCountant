@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tgerstel.model.BalanceResults;
 import com.tgerstel.model.Receipt;
@@ -27,6 +28,10 @@ public class CalculationService {
 	}
 	
 	
+	public BalanceResults currentBalance(User user) {
+		return calculateBalance(transferRepo.findAllByUser(user), user);
+	}	
+	
 	private BalanceResults calculateBalance (List<Transfer> transfers, User user) {
 		List<TransactionModel> transactions = createTransactionObjects(transfers);
 		
@@ -43,7 +48,7 @@ public class CalculationService {
 		
 		return balanceResults;
 	}
-
+	
 	private List<TransactionModel> createTransactionObjects(List<Transfer> transfers) {
 		List<TransactionModel> transactions = new ArrayList<>();
 		TransactionModel transaction;
@@ -96,7 +101,7 @@ public class CalculationService {
 				else sum += t.getAmount();	
 			}
 		}		
-		return null;
+		return sum;
 	}
 	
 	private Float calculateProfitPaid(List<TransactionModel> transactions) {

@@ -12,7 +12,6 @@ public class TransactionModel {
 	private Float vatValue;
 	private Float netAmount;
 	private Float vatPercentage;
-	private Float taxPercentage;
 	
 	public TransactionModel() {}
 	

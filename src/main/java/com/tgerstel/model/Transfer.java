@@ -19,6 +19,7 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private TransferType transferType;
     private Float amount;
     @Column(name="from_")
@@ -28,7 +29,7 @@ public class Transfer {
     private LocalDate date;
     private LocalDateTime baseDate;
     private String description;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="receipt", referencedColumnName="id")
     private Receipt receipt;
     @ManyToOne(fetch=FetchType.LAZY)

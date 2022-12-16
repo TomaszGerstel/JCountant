@@ -1,6 +1,8 @@
 package com.tgerstel.controller;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tgerstel.model.User;
+import com.tgerstel.model.BalanceResults;
 import com.tgerstel.model.Receipt;
 import com.tgerstel.service.ReceiptService;
 
@@ -96,5 +99,19 @@ public class ReceiptController {
 		List<Receipt> allReceipts = receiptService.searchReceiptsByClientName(user, key);
 		return ResponseEntity.ok(allReceipts);
 	}
+	
+//	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<> allReceipts(@RequestParam String from, @RequestParam String to, 
+//			@AuthenticationPrincipal User user) {
+//		
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");	
+//		
+//		LocalDate fromd = LocalDate.parse(from, formatter);
+//		LocalDate tod = LocalDate.parse(to, formatter);
+//		
+//		
+//		List<Receipt> allReceipts = receiptService.receiptsInDateRange(user, fromd, tod);
+//		return ResponseEntity.ok(allReceipts);
+//	}
 	
 }

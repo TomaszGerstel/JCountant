@@ -89,8 +89,7 @@ class ReceiptServiceTest {
 				() -> assertEquals("Albatros", receiptReturned.getClient()),
 				() -> assertEquals("Stan", receiptReturned.getWorker()),
 				() -> assertEquals("for example", receiptReturned.getDescription()),
-				() -> assertNull(receiptReturned.getVatPercentage()),
-				() -> assertNull(receiptReturned.getVatValue())
+				() -> assertNull(receiptReturned.getVatPercentage())			
 		);
 	}
 
@@ -142,8 +141,7 @@ class ReceiptServiceTest {
 				() -> assertEquals("Albatros", receiptReturned.getClient()),
 				() -> assertEquals("Stan", receiptReturned.getWorker()),
 				() -> assertEquals("for example", receiptReturned.getDescription()),
-				() -> assertNull(receiptReturned.getVatPercentage()),
-				() -> assertNull(receiptReturned.getVatValue())
+				() -> assertNull(receiptReturned.getVatPercentage())			
 			);	
 	}
 	

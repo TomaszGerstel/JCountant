@@ -91,6 +91,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }  
+    }
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", lumpSumTaxRate=" + lumpSumTaxRate
+				+ ", roles=" + roles + "]";
+	} 
 }
 
