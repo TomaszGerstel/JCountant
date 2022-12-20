@@ -27,6 +27,7 @@ import com.tgerstel.model.Transfer;
 import com.tgerstel.service.ReceiptService;
 import com.tgerstel.service.TransferService;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 
 
@@ -43,7 +44,7 @@ public class TransferController {
 	}
 
 	@PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addReceipt(@RequestBody @Valid Transfer transfer, Long receiptId, Errors errors,
+	public ResponseEntity<?> addTransfer(@RequestBody @Valid Transfer transfer, @Nullable Long receiptId, Errors errors,
 			@AuthenticationPrincipal User user) {
 
 		if (errors.hasErrors()) {

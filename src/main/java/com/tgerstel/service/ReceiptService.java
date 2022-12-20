@@ -71,7 +71,7 @@ public class ReceiptService {
 	public List<Receipt> receiptsNotUsedInTransfer(User user) {
 		
 		List<Long> receiptsId = getAllReceiptsIdInTransfers(user);
-		List<Receipt> allReceipts = receiptRepo.findAllByUser(user);
+		List<Receipt> allReceipts = receiptRepo.findAllByUser(user);		
 		
 		return allReceipts.stream().filter(rec -> !receiptsId.contains(rec.getId())).toList();
 	}

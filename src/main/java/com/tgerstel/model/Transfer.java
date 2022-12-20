@@ -43,7 +43,7 @@ public class Transfer {
 
     public Transfer(@NotNull TransferType transferType, @NotNull Float amount, @Nullable String from,
                     @Nullable String to, @NotNull LocalDate date, @Nullable String description,
-                    @NotNull Receipt receipt, @NotNull User user) {
+                    @Nullable Receipt receipt, @NotNull User user) {
 
         this.transferType = transferType;
         this.amount = amount;

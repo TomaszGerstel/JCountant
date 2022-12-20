@@ -39,7 +39,7 @@ public class Receipt {
     private String worker;
     @NotBlank(message = "add description")
     private String description;
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_base_id", referencedColumnName = "id")
     private User user;
 

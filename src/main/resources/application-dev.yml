@@ -28,4 +28,8 @@ spring:
     user:
       name: admin
       password: pass1
-
+      
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+   
