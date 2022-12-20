@@ -39,7 +39,7 @@ public class TransferService {
 	}
 
 	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {
-		PageRequest page = PageRequest.of(0, resultSize, Sort.by("date").descending());
+		PageRequest page = PageRequest.of(0, resultSize, Sort.by("baseDate").descending());
 		List<Transfer> transfers = transferRepo.findAllByUser(user, page);
 		return completeListTransfersDataFromReceipts(transfers);
 	}
@@ -72,12 +72,6 @@ public class TransferService {
 			return true;
 		return false;
 	}
-	// byREceiptId? del?
-//	public Optional<Transfer> getByReceipt(Optional<Receipt> receipt) {
-//		Optional<Transfer> transfer = transferRepo.findByReceipt(receipt);
-//		if(transfer.isEmpty()) return Optional.empty();		
-//		return transfer;		
-//	}
 
 	// test
 	private List<Transfer> completeListTransfersDataFromReceipts(List<Transfer> transfers) {

@@ -1,11 +1,14 @@
 package com.tgerstel.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgerstel.model.BalanceResults;
@@ -25,11 +28,29 @@ public class BalanceController {
 	}
 
 	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BalanceResults> allReceipts(@AuthenticationPrincipal User user) {		
+	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {		
 		
 		return ResponseEntity.ok(calculationService.currentBalance(user));
 	}
+	
+	@GetMapping(path = "/to_data_range", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<BalanceResults> balanceToDataRange(@RequestParam LocalDate from, @RequestParam LocalDate to,
+			@AuthenticationPrincipal User user) {		
+		
+		return ResponseEntity.ok(calculationService.balanceToDateRange(from, to, user));
+	}
+	
+	@GetMapping(path = "/to_current_month", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<BalanceResults> balanceToCurrentMonth(@AuthenticationPrincipal User user) {		
+		
+		return ResponseEntity.ok(calculationService.balanceToCurrentMonth(user));
+	}
 
+	@GetMapping(path = "/to_last_month", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<BalanceResults> balanceToLastMonth(@AuthenticationPrincipal User user) {		
+		
+		return ResponseEntity.ok(calculationService.balanceToLastMonth( user));
+	}
 	
 	
 }

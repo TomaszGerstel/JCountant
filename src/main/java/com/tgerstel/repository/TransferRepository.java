@@ -1,5 +1,6 @@
 package com.tgerstel.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,6 @@ public interface TransferRepository extends CrudRepository<Transfer, Long>{
 
 	List<Transfer> findAllByUser(User user);
 
-	
+	List<Transfer> findAllByDateAfterAndDateBefore(LocalDate minusDays, LocalDate plusDays);	
 
 }
