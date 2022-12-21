@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,7 +28,7 @@ import com.tgerstel.model.User;
 import com.tgerstel.service.ReceiptService;
 
 
-@WebMvcTest(ReceiptController.class)
+@WebMvcTest(value = ReceiptController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 @ExtendWith(MockitoExtension.class)
 class ReceiptControllerMvcMockTest {
 
@@ -64,14 +66,14 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testAddReceipt() throws Exception {
 		
-		Mockito.when(receiptService.createReceipt(receipt, userActual)).thenReturn(receipt);
+		Mockito.when(receiptService.createReceipt(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(receipt);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt")
 				.content(asJsonString(receipt))
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.receiptId").exists());
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
 	}
 
 	public static String asJsonString(final Object obj) {
@@ -103,16 +105,3 @@ class ReceiptControllerMvcMockTest {
 
 }
 
-//public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
-//    @Override
-//    public void serialize(LocalDateTime arg0, JsonGenerator arg1, SerializerProvider arg2) throws IOException {
-//        arg1.writeString(arg0.toString());
-//    }
-//}
-//
-//public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
-//    @Override
-//    public LocalDateTime deserialize(JsonParser arg0, DeserializationContext arg1) throws IOException {
-//        return LocalDateTime.parse(arg0.getText());
-//    }
-//}

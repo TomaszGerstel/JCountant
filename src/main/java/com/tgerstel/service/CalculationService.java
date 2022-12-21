@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tgerstel.model.BalanceResults;
+import com.tgerstel.model.Receipt;
 import com.tgerstel.model.TransactionModel;
 import com.tgerstel.model.Transfer;
 import com.tgerstel.model.TransferType;
@@ -41,52 +42,51 @@ public class CalculationService {
 	}	
 	
 	public BalanceResults balanceToDateRange(LocalDate from, LocalDate to, User user) {
-		List<Transfer> transfers = transferRepo.findAllByDateAfterAndDateBefore(from.minusDays(1), to.plusDays(1));
+		List<Transfer> transfers = transferRepo.findAllByDateAfterAndDateBeforeAndUser(from.minusDays(1), to.plusDays(1), user);
 		return calculateBalance(transfers, user);
 	}
 
-	private BalanceResults calculateBalance(List<Transfer> transfers, User user) {
+	protected BalanceResults calculateBalance(List<Transfer> transfers, User user) {
 		List<TransactionModel> transactions = createTransactionObjects(transfers);
 
 		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
 				calculateGrossIncome(transactions), calculateNetBalance(transactions), calculateVatDue(transactions),
 				calculateProfitPaid(transactions), calculateVatPaid(transactions), calculateTaxPaid(transactions),
 				user.getLumpSumTaxRate());
-
 		return balanceResults;
 	}
 
-	private List<TransactionModel> createTransactionObjects(List<Transfer> transfers) {
+	protected List<TransactionModel> createTransactionObjects(List<Transfer> transfers) {
 		List<TransactionModel> transactions = new ArrayList<>();
 		TransactionModel transaction;
 
 		for (Transfer t : transfers) {
-			// metoda
-			transaction = new TransactionModel();
-			if (t.getReceipt() != null) {
-				transaction.setTransferType(t.getTransferType());
-				transaction.setAmount(t.getReceipt().getAmount());
-				transaction.setNetAmount(t.getReceipt().getNetAmount());
-				transaction.setVatValue(t.getReceipt().getVatValue());
-				transaction.setVatPercentage(t.getReceipt().getVatPercentage());
-
-				transactions.add(transaction);
+			transaction = new TransactionModel();			
+			if (t.getReceipt() != null) {				
+				transaction = makeTransactionFromReceipt(t.getReceipt());
 			} else if (transferTypeWithoutReceipt(t)) {
-				transaction.setAmount(t.getAmount());
-				transaction.setTransferType(t.getTransferType());
-
-				transactions.add(transaction);
+				transaction.setAmount(t.getAmount());				
 			}
+			transaction.setTransferType(t.getTransferType());
+			transactions.add(transaction);
 		}
 		return transactions;
 	}
+	
+	protected TransactionModel makeTransactionFromReceipt(Receipt receipt) {
+		TransactionModel transaction = new TransactionModel();
+		transaction.setAmount(receipt.getAmount());
+		transaction.setNetAmount(receipt.getNetAmount());
+		transaction.setVatValue(receipt.getVatValue());		
+		return transaction;
+	}
 
-	private boolean transferTypeWithoutReceipt(Transfer transfer) {
+	protected boolean transferTypeWithoutReceipt(Transfer transfer) {
 		TransferType t = transfer.getTransferType();
 		return (t == TransferType.SALARY || t == TransferType.TAX_OUT_TRANSFER || t == TransferType.VAT_OUT_TRANSFER);
 	}
 
-	private Float calculateCosts(List<TransactionModel> transactions) {
+	protected Float calculateCosts(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.OUT_TRANSFER) {
@@ -99,7 +99,7 @@ public class CalculationService {
 		return sum;
 	}
 
-	private Float calculateGrossIncome(List<TransactionModel> transactions) {
+	protected Float calculateGrossIncome(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER) {
@@ -112,7 +112,7 @@ public class CalculationService {
 		return sum;
 	}
 
-	private Float calculateProfitPaid(List<TransactionModel> transactions) {
+	protected Float calculateProfitPaid(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.SALARY)
@@ -121,7 +121,7 @@ public class CalculationService {
 		return sum;
 	}
 
-	private Float calculateNetBalance(List<TransactionModel> transactions) {
+	protected Float calculateNetBalance(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER)
@@ -132,7 +132,7 @@ public class CalculationService {
 		return sum;
 	}
 
-	private Float calculateVatDue(List<TransactionModel> transactions) {
+	protected Float calculateVatDue(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER)
@@ -143,7 +143,7 @@ public class CalculationService {
 		return sum;
 	}
 
-	private Float calculateVatPaid(List<TransactionModel> transactions) {
+	protected Float calculateVatPaid(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.VAT_OUT_TRANSFER)
@@ -152,7 +152,7 @@ public class CalculationService {
 		return sum;
 	}
 
-	private Float calculateTaxPaid(List<TransactionModel> transactions) {
+	protected Float calculateTaxPaid(List<TransactionModel> transactions) {
 		float sum = 0;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.TAX_OUT_TRANSFER)

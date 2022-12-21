@@ -10,8 +10,7 @@ public class TransactionModel {
 	private TransferType transferType;
 	private Float amount;
 	private Float vatValue;
-	private Float netAmount;
-	private Float vatPercentage;
+	private Float netAmount;	
 	
 	public TransactionModel() {}
 	
