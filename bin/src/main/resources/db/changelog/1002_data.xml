@@ -16,7 +16,7 @@
         </insert>
          <insert tableName="transfer">
             <column name="transfer_type" value="IN_TRANSFER"/>
-             <column name="date" value="2022-12-01"/>
+             <column name="base_date" value="2022-12-01"/>
             <column name="amount" value="1200"/>
             <column name="from_" value="Samat"/>
             <column name="to_" value="Me"/>           

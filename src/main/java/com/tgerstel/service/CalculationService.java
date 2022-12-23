@@ -41,7 +41,9 @@ public class CalculationService {
 	}	
 	
 	public BalanceResults balanceToDateRange(LocalDate from, LocalDate to, User user) {
-		List<Transfer> transfers = transferRepo.findAllByDateAfterAndDateBefore(from.minusDays(1), to.plusDays(1));
+		List<Transfer> transfers = transferRepo.findAllByDateAfterAndDateBeforeAndUser(from.minusDays(1), to.plusDays(1), user);
+		System.out.println("tra: "+transfers);
+		System.out.println("dates: "+from + to);
 		return calculateBalance(transfers, user);
 	}
 

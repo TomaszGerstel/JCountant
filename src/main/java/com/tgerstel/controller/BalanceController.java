@@ -35,8 +35,8 @@ public class BalanceController {
 	
 	@GetMapping(path = "/to_date_range", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BalanceResults> balanceToDateRange(@RequestParam LocalDate from, @RequestParam LocalDate to,
-			@AuthenticationPrincipal User user) {		
-		
+			@AuthenticationPrincipal User user) {
+				
 		return ResponseEntity.ok(calculationService.balanceToDateRange(from, to, user));
 	}
 	

@@ -23,6 +23,8 @@ public interface TransferRepository extends CrudRepository<Transfer, Long>{
 
 	List<Transfer> findAllByUser(User user);
 
-	List<Transfer> findAllByDateAfterAndDateBefore(LocalDate minusDays, LocalDate plusDays);	
+	List<Transfer> findAllByDateAfterAndDateBefore(LocalDate minusDays, LocalDate plusDays);
+
+	List<Transfer> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);	
 
 }
