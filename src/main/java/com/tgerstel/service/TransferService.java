@@ -115,6 +115,7 @@ public class TransferService {
 	protected void eraseUserData(Transfer transfer) {
 		transfer.setUser(null);
 		transfer.getReceipt().setUser(null);
+		
 	}
 
 }
