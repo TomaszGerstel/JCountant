@@ -4,11 +4,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
-    <include file="0001_create_table_user.xml" relativeToChangelogFile="true" context="preprod"/>
-    <include file="0002_create_table_user_role.xml" relativeToChangelogFile="true" context="preprod"/>
-    <include file="0003_create_table_user_roles.xml" relativeToChangelogFile="true" context="preprod"/>
-    <include file="0004_create_table_receipt.xml" relativeToChangelogFile="true" context="preprod"/>
-    <include file="0005_create_table_transfer.xml" relativeToChangelogFile="true" context="preprod"/>
-    <include file="1001_data.xml" relativeToChangelogFile="true" context="preprod"/>
-    <include file="1002_data.xml" relativeToChangelogFile="true" context="preprod"/>
+    <include file="0001_create_table_user.xml" relativeToChangelogFile="true" context="all"/>
+    <include file="0002_create_table_user_role.xml" relativeToChangelogFile="true" context="all"/>
+    <include file="0003_create_table_user_roles.xml" relativeToChangelogFile="true" context="all"/>
+    <include file="0004_create_table_receipt.xml" relativeToChangelogFile="true" context="all"/>
+    <include file="0005_create_table_transfer.xml" relativeToChangelogFile="true" context="h2"/>
+    <include file="0006_create_enum_transfer_type_postgres.xml" relativeToChangelogFile="true" context="postgres"/>
+    <include file="0007_create_table_transfer_postgres.xml" relativeToChangelogFile="true" context="postgres"/>
+    <include file="1001_data.xml" relativeToChangelogFile="true" context="all"/>
+    <include file="1002_data.xml" relativeToChangelogFile="true" context="all"/>
 </databaseChangeLog>

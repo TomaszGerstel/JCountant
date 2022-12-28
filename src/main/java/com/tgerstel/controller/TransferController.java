@@ -88,6 +88,8 @@ public class TransferController {
 	public ResponseEntity<List<Transfer>> searchTransfers(@RequestParam(defaultValue = "") String key,
 			@AuthenticationPrincipal User user) {
 		
+		System.out.println("kontr key: "+key);
+		
 		List<Transfer> allTransfers = transferService.searchTransfersByFromName(user, key);
 		return ResponseEntity.ok(allTransfers);
 	}

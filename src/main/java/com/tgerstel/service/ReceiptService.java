@@ -64,8 +64,9 @@ public class ReceiptService {
 	//test, not used?
 	public List<Receipt> receiptsInDateRange(User user, LocalDate from, LocalDate to) {
 		List<Receipt> receiptsBase = receiptRepo
-				.findAllByDateAfterAndDateBefore(from.minusDays(1), to.plusDays(1));
-		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
+				.findAllByDateAfterAndDateBeforeAndUser(from.minusDays(1), to.plusDays(1), user);
+		return receiptsBase;
+//				.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}
 	
 	public List<Receipt> receiptsNotUsedInTransfer(User user) {
@@ -78,7 +79,7 @@ public class ReceiptService {
 	
 	private List<Long> getAllReceiptsIdInTransfers(User user) {
 		List<Transfer> allTransfers = transferRepo.findAllByUser(user);
-		return allTransfers.stream().map(t -> t.getReceipt().getId()).toList();		
+		return allTransfers.stream().filter(t -> t.getReceipt()!=null).map(t -> t.getReceipt().getId()).toList();		
 		
 	}
 	

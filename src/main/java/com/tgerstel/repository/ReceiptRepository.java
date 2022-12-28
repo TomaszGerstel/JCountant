@@ -30,5 +30,7 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Long>{
 
 	List<Receipt> findAllByUser(User user);
 
+	List<Receipt> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);
+
 
 }

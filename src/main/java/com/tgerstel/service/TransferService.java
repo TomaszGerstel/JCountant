@@ -41,8 +41,9 @@ public class TransferService {
 	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {
 		PageRequest page = PageRequest.of(0, resultSize, Sort.by("baseDate").descending());
 		List<Transfer> transfers = transferRepo.findAllByUser(user, page);
-		eraseUsers(transfers);
+//		eraseUsers(transfers);
 		return completeListTransfersDataFromReceipts(transfers);
+//		return transfers;
 	}
 
 	public Optional<Transfer> getById(User user, Long id) {
@@ -100,6 +101,7 @@ public class TransferService {
 	public List<Transfer> searchTransfersByFromName(User user, String key) {
 		List<Transfer> transferBase = transferRepo.findAllByFromContainingIgnoreCase(key);
 		// method
+		System.out.println("service trans "+transferBase);
 		return transferBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}
 
@@ -108,14 +110,14 @@ public class TransferService {
 		return (t == TransferType.SALARY || t == TransferType.TAX_OUT_TRANSFER || t == TransferType.VAT_OUT_TRANSFER);
 	}
 	
-	protected void eraseUsers(List<Transfer> transfers) {
-		for(Transfer t : transfers) eraseUserData(t);
-	}	
-	
-	protected void eraseUserData(Transfer transfer) {
-		transfer.setUser(null);
-		transfer.getReceipt().setUser(null);
-		
-	}
+//	protected void eraseUsers(List<Transfer> transfers) { //delete
+//		for(Transfer t : transfers) eraseUserData(t);
+//	}	
+//	
+//	protected void eraseUserData(Transfer transfer) {
+//		transfer.setUser(null);
+//		transfer.getReceipt().setUser(null);
+//		
+//	}
 
 }

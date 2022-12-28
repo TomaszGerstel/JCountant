@@ -114,7 +114,7 @@ class TransferServiceTest {
 				() -> assertNotNull(capturedUser.getUsername()),
 				() -> assertEquals("Bob", capturedUser.getUsername()),		
 				() -> assertEquals(resultSize, capturedPageRequest.getPageSize()),
-				() -> assertEquals("date: DESC", capturedPageRequest.getSort().toString())
+				() -> assertEquals("baseDate: DESC", capturedPageRequest.getSort().toString())
 		);	
 	}
 	@Test
