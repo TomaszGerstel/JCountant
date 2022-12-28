@@ -1,0 +1,35 @@
+#konsola h2: localhost:8080/h2-console
+spring:
+  datasource:    
+    url: jdbc:h2:mem:jcountant;DATABASE_TO_UPPER=false
+    username: tomek
+    password: pass1
+    driver-class-name: org.h2.Driver
+  jpa:
+#    properties: 
+#      hibernate: enable_lazy_load_no_trans=true
+        
+    show-sql: true
+    defer-datasource-initialization: false
+    hibernate:          
+      ddl-auto: none
+  sql:
+    init:
+      mode: never
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/master.xml
+    contexts: preprod
+    driver-class-name: h2
+  h2:
+    console:      
+      enabled: true
+  security:
+    user:
+      name: admin
+      password: pass1
+      
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+   

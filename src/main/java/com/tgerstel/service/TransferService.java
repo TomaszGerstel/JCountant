@@ -41,6 +41,7 @@ public class TransferService {
 	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {
 		PageRequest page = PageRequest.of(0, resultSize, Sort.by("baseDate").descending());
 		List<Transfer> transfers = transferRepo.findAllByUser(user, page);
+		eraseUsers(transfers);
 		return completeListTransfersDataFromReceipts(transfers);
 	}
 
@@ -105,6 +106,16 @@ public class TransferService {
 	private boolean transferTypeWithoutReceipt(Transfer transfer) {
 		TransferType t = transfer.getTransferType();
 		return (t == TransferType.SALARY || t == TransferType.TAX_OUT_TRANSFER || t == TransferType.VAT_OUT_TRANSFER);
+	}
+	
+	protected void eraseUsers(List<Transfer> transfers) {
+		for(Transfer t : transfers) eraseUserData(t);
+	}	
+	
+	protected void eraseUserData(Transfer transfer) {
+		transfer.setUser(null);
+		transfer.getReceipt().setUser(null);
+		
 	}
 
 }

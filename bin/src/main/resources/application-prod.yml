@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: admin
+    password: pass1prod
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: validate
+  sql:
+    init:
+      mode: embedded
+  liquibase:
+    change-log: classpath:db/changelog/master.xml
+    contexts: preprod
+  
