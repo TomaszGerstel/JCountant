@@ -67,7 +67,7 @@ public class Receipt {
     public Float getNetAmount() {
     	if(netAmount == null) {
     		if(vatValue != null) return amount - vatValue;
-    		if(vatPercentage != null) return amount / (vatPercentage / 100);
+    		if(vatPercentage != null) return amount - (vatPercentage * amount / 100);
     	}
   		return netAmount;      	
       }

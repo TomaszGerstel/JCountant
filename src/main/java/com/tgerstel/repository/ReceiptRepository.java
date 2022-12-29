@@ -30,7 +30,7 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Long>{
 	
 //	List<Receipt> findAllByClientContainingIgnoreCase(String key);
 
-	List<Receipt> findAllByUserAndClientContainingIgnoreCase(String key);
+	List<Receipt> findAllByUserAndClientContainingIgnoreCase(User user,String key);
 
 
 }

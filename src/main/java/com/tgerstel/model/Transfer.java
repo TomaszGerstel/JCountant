@@ -23,11 +23,13 @@ public class Transfer {
     @NotNull
     @Enumerated(EnumType.STRING)
     private TransferType transferType;
+    @NotNull
     private Float amount;
     @Column(name="from_")
     private String from;
     @Column(name="to_")
     private String to;
+    @NotNull
     private LocalDate date;
     private LocalDateTime baseDate;
     private String description;
