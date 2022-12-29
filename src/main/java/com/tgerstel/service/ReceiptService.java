@@ -27,7 +27,6 @@ public class ReceiptService {
 		this.transferRepo = transferRepo;
 	}
 
-
 	public Receipt createReceipt(Receipt receipt, User currentUser) {		
 		receipt.setUser(currentUser);		 	
 		return receiptRepo.save(receipt);	
@@ -58,8 +57,9 @@ public class ReceiptService {
 	}
 	//test
 	public List<Receipt> searchReceiptsByClientName(User user, String key) {		
-		List<Receipt> receiptsBase = receiptRepo.findAllByClientContainingIgnoreCase(key);	
-		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
+		List<Receipt> receiptsBase = receiptRepo.findAllByUserAndClientContainingIgnoreCase(key);
+		return receiptsBase;
+//		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}
 	//test, not used?
 	public List<Receipt> receiptsInDateRange(User user, LocalDate from, LocalDate to) {

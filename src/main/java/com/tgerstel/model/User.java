@@ -43,10 +43,6 @@ public class User implements UserDetails, Serializable {
     private String password;
     private String email;
     private Integer lumpSumTaxRate;
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-//    private List<Receipt> receipts = new ArrayList<>();
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-//    private List<Transfer> transfers = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
     	joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -1,6 +1,5 @@
 package com.tgerstel.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,9 +40,7 @@ public class TransferService {
 	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {
 		PageRequest page = PageRequest.of(0, resultSize, Sort.by("baseDate").descending());
 		List<Transfer> transfers = transferRepo.findAllByUser(user, page);
-//		eraseUsers(transfers);
 		return completeListTransfersDataFromReceipts(transfers);
-//		return transfers;
 	}
 
 	public Optional<Transfer> getById(User user, Long id) {
@@ -109,15 +106,5 @@ public class TransferService {
 		TransferType t = transfer.getTransferType();
 		return (t == TransferType.SALARY || t == TransferType.TAX_OUT_TRANSFER || t == TransferType.VAT_OUT_TRANSFER);
 	}
-	
-//	protected void eraseUsers(List<Transfer> transfers) { //delete
-//		for(Transfer t : transfers) eraseUserData(t);
-//	}	
-//	
-//	protected void eraseUserData(Transfer transfer) {
-//		transfer.setUser(null);
-//		transfer.getReceipt().setUser(null);
-//		
-//	}
 
 }

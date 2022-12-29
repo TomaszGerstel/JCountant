@@ -1,14 +1,12 @@
 package com.tgerstel.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import lombok.Data;
 
 @Data
 public class RegistrationUser {
