@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+        
+   <changeSet id="0006-1" author="tgerstel">
+  			<sql>CREATE TYPE transfer_types AS ENUM('IN_TRANSFER', 'OUT_TRANSFER',
+          'VAT_OUT_TRANSFER', 'TAX_OUT_TRANSFER', 'SALARY')</sql> 
+	</changeSet>
+ 
+</databaseChangeLog>

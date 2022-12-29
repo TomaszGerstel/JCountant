@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -32,6 +34,7 @@ public class Transfer {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="receipt", referencedColumnName="id")
     private Receipt receipt;
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_base_id", referencedColumnName="id")
     private User user;

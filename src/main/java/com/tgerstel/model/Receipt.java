@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.*;
@@ -39,6 +41,7 @@ public class Receipt {
     private String worker;
     @NotBlank(message = "add description")
     private String description;
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_base_id", referencedColumnName = "id")
     private User user;

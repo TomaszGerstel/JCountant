@@ -79,7 +79,7 @@ public class ReceiptService {
 	
 	private List<Long> getAllReceiptsIdInTransfers(User user) {
 		List<Transfer> allTransfers = transferRepo.findAllByUser(user);
-		return allTransfers.stream().map(t -> t.getReceipt().getId()).toList();		
+		return allTransfers.stream().filter(t -> t.getReceipt()!=null).map(t -> t.getReceipt().getId()).toList();		
 		
 	}
 	
