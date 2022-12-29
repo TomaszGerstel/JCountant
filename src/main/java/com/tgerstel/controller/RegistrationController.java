@@ -3,8 +3,6 @@ package com.tgerstel.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgerstel.model.RegistrationUser;
-import com.tgerstel.model.User;
-import com.tgerstel.repository.UserRepository;
 import com.tgerstel.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins="*")

@@ -12,52 +12,38 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-   @Autowired
-   public UserDetailsService userService;
+	@Autowired
+	public UserDetailsService userService;
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public DaoAuthenticationProvider provider() throws Exception {    	
-    	DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(encoder());
-        provider.setUserDetailsService(userService);
-        return provider;  
-    }    
-        
-    @Bean
-    protected SecurityFilterChain web(HttpSecurity http) throws Exception {
-    		http
-    			.authorizeHttpRequests(authorize ->	authorize
-								.requestMatchers("/home", "/login", "/api/register", "/h2-console", "/h2-console/**").permitAll()			
-								.anyRequest().authenticated()					
-				)
-    			.httpBasic()
-    			.and()
+	@Bean
+	public DaoAuthenticationProvider provider() throws Exception {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(encoder());
+		provider.setUserDetailsService(userService);
+		return provider;
+	}
+
+	@Bean
+	protected SecurityFilterChain web(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/home", "/login", "/api/register", "/h2-console", "/h2-console/**").permitAll()
+				.anyRequest().authenticated()).httpBasic().and()
 //    			.formLogin()
 //				.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.csrf().disable()
-				.headers().frameOptions().disable()
-				.and()
-				.cors();
-//                .and()
-//				.formLogin()
-//				.loginPage("/login")
-//				.failureUrl("/login?error=true")
-//				.defaultSuccessUrl("/", true)
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable()
+				.headers().frameOptions().disable().and().cors();
 //				.and()
 //				.logout()
 //				.logoutSuccessUrl("/");
-               return http.build();
-    }
+		return http.build();
+	}
 }

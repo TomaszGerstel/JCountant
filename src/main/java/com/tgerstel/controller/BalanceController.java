@@ -15,42 +15,36 @@ import com.tgerstel.model.BalanceResults;
 import com.tgerstel.model.User;
 import com.tgerstel.service.CalculationService;
 
-
 @RestController
-@RequestMapping(path="/api/balance", produces="application/json")
-@CrossOrigin(origins="*")
+@RequestMapping(path = "/api/balance", produces = "application/json")
+@CrossOrigin(origins = "*")
 public class BalanceController {
-	
-	private final CalculationService calculationService;	
+
+	private final CalculationService calculationService;
 
 	public BalanceController(CalculationService calculationService) {
 		this.calculationService = calculationService;
 	}
 
 	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {		
-		
+	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok(calculationService.currentBalance(user));
 	}
-	
+
 	@GetMapping(path = "/to_date_range", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BalanceResults> balanceToDateRange(@RequestParam LocalDate from, @RequestParam LocalDate to,
 			@AuthenticationPrincipal User user) {
-				
 		return ResponseEntity.ok(calculationService.balanceToDateRange(from, to, user));
 	}
-	
+
 	@GetMapping(path = "/to_current_month", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BalanceResults> balanceToCurrentMonth(@AuthenticationPrincipal User user) {		
-		
+	public ResponseEntity<BalanceResults> balanceToCurrentMonth(@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok(calculationService.balanceToCurrentMonth(user));
 	}
 
 	@GetMapping(path = "/to_last_month", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BalanceResults> balanceToLastMonth(@AuthenticationPrincipal User user) {		
-		
-		return ResponseEntity.ok(calculationService.balanceToLastMonth( user));
+	public ResponseEntity<BalanceResults> balanceToLastMonth(@AuthenticationPrincipal User user) {
+		return ResponseEntity.ok(calculationService.balanceToLastMonth(user));
 	}
-	
-	
+
 }
