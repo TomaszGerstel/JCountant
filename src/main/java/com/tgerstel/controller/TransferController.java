@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tgerstel.model.Transfer;
+import com.tgerstel.model.TransferType;
 import com.tgerstel.model.User;
 import com.tgerstel.service.TransferService;
 
@@ -40,16 +41,19 @@ public class TransferController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addTransfer(@RequestBody @Valid Transfer transfer, Long receiptId, Errors errors,
+	public ResponseEntity<?> addTransfer(@RequestBody @Valid Transfer transfer, Errors errors, Long receiptId, 
 			@AuthenticationPrincipal User user) {
+		
+		// method or different types (classes) of Transfer
+		if(receiptId == null && (transfer.getTransferType()==TransferType.IN_TRANSFER 
+				|| transfer.getTransferType()==TransferType.OUT_TRANSFER)) errors.rejectValue("receipt", "422", "standard transfer must include a receipt");
 
-		if (errors.hasErrors()) {
+		if (errors.hasErrors()) {			
 			List<String> errorMessage = errors.getFieldErrors().stream()
 					.map(error -> error.getField() + ": " + error.getDefaultMessage()).collect(Collectors.toList());
-			return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+	 			return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
+		}		
 		
-
 		Transfer saved = transferService.createTransfer(transfer, receiptId, user).get();
 		URI savedTransferLocation = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(saved.getId()).toUri();
