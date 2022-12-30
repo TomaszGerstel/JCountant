@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tgerstel.model.BalanceResults;
+import com.tgerstel.calculations.BalanceResults;
+import com.tgerstel.calculations.CalculationService;
 import com.tgerstel.model.User;
-import com.tgerstel.service.CalculationService;
 
 @RestController
 @RequestMapping(path = "/api/balance", produces = "application/json")

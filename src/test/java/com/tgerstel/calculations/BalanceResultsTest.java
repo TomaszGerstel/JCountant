@@ -1,9 +1,11 @@
-package com.tgerstel.model;
+package com.tgerstel.calculations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.tgerstel.calculations.BalanceResults;
 
 class BalanceResultsTest {
 	

@@ -58,7 +58,8 @@ class TransferServiceTest {
 	
 
 	@Test
-	void testCreateTransferShouldPassProperTransferAndUserToSaveMethod() {	
+	@DisplayName("CreateTransferShouldPassProperTransferAndUserToSaveMethod")
+	void testCreateTransfer() {	
 		
 		Mockito.when(transferRepo.save(ArgumentMatchers.any())).thenReturn(new Transfer());
 		Mockito.when(receiptRepo.findById(ArgumentMatchers.any())).thenReturn(Optional.of(receipt));
@@ -84,7 +85,8 @@ class TransferServiceTest {
 	}
 	
 	@Test
-	void testCreateTransferShouldReturnEmptyOptionalForNotFoundReceipt() {	
+	@DisplayName("CreateTransferShouldReturnEmptyOptionalForNotFoundReceipt")
+	void testCreateTransfer2() {	
 
 		Mockito.when(receiptRepo.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());		
 		Optional<Transfer> transferReturned = transferService.createTransfer(transferWithReceipt2, 34L, userActual);	

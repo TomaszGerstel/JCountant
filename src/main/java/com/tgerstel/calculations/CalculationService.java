@@ -1,4 +1,4 @@
-package com.tgerstel.service;
+package com.tgerstel.calculations;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -7,9 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tgerstel.model.BalanceResults;
 import com.tgerstel.model.Receipt;
-import com.tgerstel.model.TransactionModel;
 import com.tgerstel.model.Transfer;
 import com.tgerstel.model.TransferType;
 import com.tgerstel.model.User;

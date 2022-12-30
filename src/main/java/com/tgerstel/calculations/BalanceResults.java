@@ -1,4 +1,4 @@
-package com.tgerstel.model;
+package com.tgerstel.calculations;
 
 public class BalanceResults {	
 	
@@ -103,9 +103,91 @@ public class BalanceResults {
 	public Float getOtherCosts() {
 		return vatPaid + taxPaid + profitPaid;
 	}	
-	
+		
 	public Float getBalance() {
 		return grossIncome + vatDue - costs - getOtherCosts();
+	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((costs == null) ? 0 : costs.hashCode());
+		result = prime * result + ((defaultLumpTaxRate == null) ? 0 : defaultLumpTaxRate.hashCode());
+		result = prime * result + ((flatTaxRate == null) ? 0 : flatTaxRate.hashCode());
+		result = prime * result + ((grossIncome == null) ? 0 : grossIncome.hashCode());
+		result = prime * result + ((lumpTaxRate == null) ? 0 : lumpTaxRate.hashCode());
+		result = prime * result + ((netBalance == null) ? 0 : netBalance.hashCode());
+		result = prime * result + ((profitPaid == null) ? 0 : profitPaid.hashCode());
+		result = prime * result + ((taxPaid == null) ? 0 : taxPaid.hashCode());
+		result = prime * result + ((vatDue == null) ? 0 : vatDue.hashCode());
+		result = prime * result + ((vatPaid == null) ? 0 : vatPaid.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BalanceResults other = (BalanceResults) obj;
+		if (costs == null) {
+			if (other.costs != null)
+				return false;
+		} else if (!costs.equals(other.costs))
+			return false;
+		if (defaultLumpTaxRate == null) {
+			if (other.defaultLumpTaxRate != null)
+				return false;
+		} else if (!defaultLumpTaxRate.equals(other.defaultLumpTaxRate))
+			return false;
+		if (flatTaxRate == null) {
+			if (other.flatTaxRate != null)
+				return false;
+		} else 
+			if (!flatTaxRate.equals(other.flatTaxRate))
+			return false;
+		if (grossIncome == null) {
+			if (other.grossIncome != null)
+				return false;
+		} else if (!grossIncome.equals(other.grossIncome))
+			return false;
+		if (lumpTaxRate == null) {
+			if (other.lumpTaxRate != null)
+				return false;
+		} else if (!lumpTaxRate.equals(other.lumpTaxRate))
+			return false;
+		if (netBalance == null) {
+			if (other.netBalance != null)
+				return false;
+		} else if (!netBalance.equals(other.netBalance))
+			return false;
+		if (profitPaid == null) {
+			if (other.profitPaid != null)
+				return false;
+		} else if (!profitPaid.equals(other.profitPaid))
+			return false;
+		if (taxPaid == null) {
+			if (other.taxPaid != null)
+				return false;
+		} else if (!taxPaid.equals(other.taxPaid))
+			return false;
+		if (vatDue == null) {
+			if (other.vatDue != null)
+				return false;
+		} else if (!vatDue.equals(other.vatDue))
+			return false;
+		if (vatPaid == null) {
+			if (other.vatPaid != null)
+				return false;
+		} else if (!vatPaid.equals(other.vatPaid))
+			return false;
+		return true;
 	}
 
 	@Override

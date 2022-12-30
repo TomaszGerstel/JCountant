@@ -1,4 +1,6 @@
-package com.tgerstel.model;
+package com.tgerstel.calculations;
+
+import com.tgerstel.model.TransferType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
