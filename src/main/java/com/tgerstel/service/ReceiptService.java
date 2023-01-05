@@ -45,10 +45,11 @@ public class ReceiptService {
 
 	public void deleteReceiptAndRelatedTransfer(User user, Long id) {		
 		Optional<Receipt> deletingReceipt = receiptRepo.findById(id);		
-		Optional<Transfer> deletingTransfer = transferRepo.findByReceipt(deletingReceipt);		
+		Optional<Transfer> deletingTransfer = transferRepo.findByReceipt(deletingReceipt);
+		if(deletingTransfer.isPresent()) transferRepo.deleteById(deletingTransfer.get().getId());
 		if(deletingReceipt.isPresent() 
 				&& currentUserOwnsReceipt(user, deletingReceipt)) receiptRepo.deleteById(id);		
-		if(deletingTransfer.isPresent()) transferRepo.deleteById(deletingTransfer.get().getId());
+		
 	}
 	
 	boolean currentUserOwnsReceipt(User user, Optional<Receipt> receipt) {

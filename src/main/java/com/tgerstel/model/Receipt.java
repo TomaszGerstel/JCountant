@@ -29,7 +29,7 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    @NotNull
+    @NotNull(message = "enter amount value")
     @Positive(message = "the amount must be a positive value")
     private Float amount;
     @Positive
