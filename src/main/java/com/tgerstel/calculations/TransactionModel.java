@@ -1,5 +1,7 @@
 package com.tgerstel.calculations;
 
+import java.math.BigDecimal;
+
 import com.tgerstel.model.TransferType;
 
 import lombok.AllArgsConstructor;
@@ -10,9 +12,9 @@ import lombok.Data;
 public class TransactionModel {	
 
 	private TransferType transferType;
-	private Float amount;
-	private Float vatValue;
-	private Float netAmount;	
+	private BigDecimal amount;
+	private BigDecimal vatValue;
+	private BigDecimal netAmount;	
 	
 	public TransactionModel() {}
 	

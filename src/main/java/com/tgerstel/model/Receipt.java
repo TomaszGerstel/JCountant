@@ -74,10 +74,11 @@ public class Receipt {
   		return netAmount;      	
       }
     
-    public Float getVatValue() {
+    public BigDecimal getVatValue() {
     	if(vatValue == null) {
-    		if(netAmount != null) return amount - netAmount;
-    		if(vatPercentage != null) return vatPercentage * (amount / 100);
+    		if(netAmount != null) return amount.subtract(netAmount);
+    		if(vatPercentage != null) return amount.divide(new BigDecimal("100")).multiply(new BigDecimal(vatPercentage));    		
+    		
     	}
   		return vatValue;
     	
