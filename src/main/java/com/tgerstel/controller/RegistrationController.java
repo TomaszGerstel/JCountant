@@ -41,7 +41,7 @@ public class RegistrationController {
 			return ResponseEntity.unprocessableEntity().body(errorMessage);
 		}
 		if (userService.userExists(user)) {
-			String mess = "this username already exists";
+			List<String> mess = List.of("this username already exists");
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(mess);
 		}
 		userService.saveUser(user, passEncoder);		

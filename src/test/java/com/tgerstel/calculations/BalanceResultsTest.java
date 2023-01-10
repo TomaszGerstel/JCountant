@@ -26,8 +26,8 @@ class BalanceResultsTest {
 	}
 	
 	@Test
-	void testGetGrossIncome() {		
-		assertEquals(BigDecimal.valueOf(5000) , balanceResult.getGrossIncome());
+	void testGetNetIncome() {		
+		assertEquals(BigDecimal.valueOf(5000) , balanceResult.getNetIncome());
 	}
 
 }

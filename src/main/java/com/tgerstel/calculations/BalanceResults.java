@@ -8,7 +8,7 @@ public class BalanceResults {
 	private Integer defaultLumpTaxRate = 12;
 
 	private BigDecimal costs;
-	private BigDecimal grossIncome;
+	private BigDecimal netIncome;
 	private BigDecimal netBalance;
 	private BigDecimal vatDue;
 	private Integer lumpTaxRate;	
@@ -16,11 +16,11 @@ public class BalanceResults {
 	private BigDecimal vatPaid;
 	private BigDecimal taxPaid;
 	
-	public BalanceResults(BigDecimal costs, BigDecimal grossIncome, BigDecimal netBalance, BigDecimal vatDue,
+	public BalanceResults(BigDecimal costs, BigDecimal netIncome, BigDecimal netBalance, BigDecimal vatDue,
 			BigDecimal profitPaid, BigDecimal vatPaid, BigDecimal taxPaid, Integer lumpTaxRate) {
 		super();
 		this.costs = costs;	
-		this.grossIncome = grossIncome;
+		this.netIncome = netIncome;
 		this.netBalance = netBalance;
 		this.vatDue = vatDue;
 		this.profitPaid = profitPaid;
@@ -33,8 +33,8 @@ public class BalanceResults {
 		return costs;
 	}
 	
-	public BigDecimal getGrossIncome() {
-		return grossIncome;
+	public BigDecimal getNetIncome() {
+		return netIncome;
 	}
 	
 	public BigDecimal getNetBalance() {
@@ -63,7 +63,7 @@ public class BalanceResults {
 	}
 	
 	public BigDecimal getLumpSumTaxDue() {
-		return grossIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100));
+		return netIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100));
 	}
 	
 	public BigDecimal getFlatTaxDue() {
@@ -107,7 +107,7 @@ public class BalanceResults {
 	}	
 		
 	public BigDecimal getBalance() {
-		return grossIncome.add(vatDue).subtract(costs).subtract(getOtherCosts());
+		return netIncome.add(vatDue).subtract(costs).subtract(getOtherCosts());
 	}
 	
 	
@@ -119,7 +119,7 @@ public class BalanceResults {
 		result = prime * result + ((costs == null) ? 0 : costs.hashCode());
 		result = prime * result + ((defaultLumpTaxRate == null) ? 0 : defaultLumpTaxRate.hashCode());
 		result = prime * result + ((flatTaxRate == null) ? 0 : flatTaxRate.hashCode());
-		result = prime * result + ((grossIncome == null) ? 0 : grossIncome.hashCode());
+		result = prime * result + ((netIncome == null) ? 0 : netIncome.hashCode());
 		result = prime * result + ((lumpTaxRate == null) ? 0 : lumpTaxRate.hashCode());
 		result = prime * result + ((netBalance == null) ? 0 : netBalance.hashCode());
 		result = prime * result + ((profitPaid == null) ? 0 : profitPaid.hashCode());
@@ -154,10 +154,10 @@ public class BalanceResults {
 		} else 
 			if (!flatTaxRate.equals(other.flatTaxRate))
 			return false;
-		if (grossIncome == null) {
-			if (other.grossIncome != null)
+		if (netIncome == null) {
+			if (other.netIncome != null)
 				return false;
-		} else if (!grossIncome.equals(other.grossIncome))
+		} else if (!netIncome.equals(other.netIncome))
 			return false;
 		if (lumpTaxRate == null) {
 			if (other.lumpTaxRate != null)
@@ -195,7 +195,7 @@ public class BalanceResults {
 	@Override
 	public String toString() {
 		return "BalanceResults [flatTaxRate=" + flatTaxRate + ", defaultLumpTaxRate=" + defaultLumpTaxRate + ", costs="
-				+ costs + ", grossIncome=" + grossIncome + ", netBalance=" + netBalance + ", vatDue=" + vatDue
+				+ costs + ", grossIncome=" + netIncome + ", netBalance=" + netBalance + ", vatDue=" + vatDue
 				+ ", profitPaid=" + profitPaid + ", vatPaid=" + vatPaid + ", taxPaid=" + taxPaid + ", getLumpTaxRate()="
 				+ getLumpTaxRate() + ", getLumpSumTaxDue()=" + getLumpSumTaxDue() + ", getFlatTaxDue()="
 				+ getFlatTaxDue() + ", getVatBalance()=" + getVatBalance() + ", getFlatTaxBalance()="
