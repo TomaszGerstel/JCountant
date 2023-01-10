@@ -48,8 +48,8 @@ public class CalculationService {
 	protected BalanceResults calculateBalance(List<Transfer> transfers, User user) {
 		List<TransactionModel> transactions = createTransactionObjects(transfers);
 
-		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
-				calculateGrossIncome(transactions), calculateNetBalance(transactions), calculateVatDue(transactions),
+		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions), calculateGrossCosts(transactions),
+				calculateNetIncome(transactions), calculateGrossIncome(transactions), calculateNetBalance(transactions), calculateVatDue(transactions),
 				calculateProfitPaid(transactions), calculateVatPaid(transactions), calculateTaxPaid(transactions),
 				user.getLumpSumTaxRate());
 		return balanceResults;
@@ -97,7 +97,23 @@ public class CalculationService {
 		}
 		return sum;
 	}
+	
+	protected BigDecimal calculateGrossCosts(List<TransactionModel> transactions) {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (TransactionModel t : transactions) {
+			if (t.getTransferType() == TransferType.OUT_TRANSFER)	sum = sum.add(t.getAmount());
+		}
+		return sum;
+	}
 
+	protected BigDecimal calculateNetIncome(List<TransactionModel> transactions) {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (TransactionModel t : transactions) {
+			if (t.getTransferType() == TransferType.IN_TRANSFER) sum = sum.add(t.getAmount());			
+		}
+		return sum;
+	}
+	
 	protected BigDecimal calculateGrossIncome(List<TransactionModel> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (TransactionModel t : transactions) {

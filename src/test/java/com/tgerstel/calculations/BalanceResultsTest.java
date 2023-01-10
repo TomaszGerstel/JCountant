@@ -16,7 +16,7 @@ class BalanceResultsTest {
 	@BeforeAll
 	static void prepareVariable() {
 		balanceResult = new BalanceResults(
-				BigDecimal.valueOf(1000),BigDecimal.valueOf(5000), BigDecimal.valueOf(4000), BigDecimal.valueOf(1200),
+				BigDecimal.valueOf(1000), BigDecimal.valueOf(5000), BigDecimal.valueOf(5000), BigDecimal.valueOf(5000), BigDecimal.valueOf(4000), BigDecimal.valueOf(1200),
 				BigDecimal.valueOf(100), BigDecimal.valueOf(200), BigDecimal.valueOf(150), null);
 	}
 

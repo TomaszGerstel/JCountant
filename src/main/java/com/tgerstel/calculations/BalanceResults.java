@@ -8,6 +8,8 @@ public class BalanceResults {
 	private Integer defaultLumpTaxRate = 12;
 
 	private BigDecimal costs;
+	private BigDecimal grossCosts;
+	private BigDecimal grossIncome;
 	private BigDecimal netIncome;
 	private BigDecimal netBalance;
 	private BigDecimal vatDue;
@@ -16,10 +18,12 @@ public class BalanceResults {
 	private BigDecimal vatPaid;
 	private BigDecimal taxPaid;
 	
-	public BalanceResults(BigDecimal costs, BigDecimal netIncome, BigDecimal netBalance, BigDecimal vatDue,
+	public BalanceResults(BigDecimal costs, BigDecimal grossCosts, BigDecimal grossIncome, BigDecimal netIncome, BigDecimal netBalance, BigDecimal vatDue,
 			BigDecimal profitPaid, BigDecimal vatPaid, BigDecimal taxPaid, Integer lumpTaxRate) {
 		super();
 		this.costs = costs;	
+		this.grossCosts = grossCosts;
+		this.grossIncome = grossIncome;
 		this.netIncome = netIncome;
 		this.netBalance = netBalance;
 		this.vatDue = vatDue;
@@ -31,6 +35,14 @@ public class BalanceResults {
 	
 	public BigDecimal getCosts() {
 		return costs;
+	}
+	
+	public BigDecimal getGrossCosts() {
+		return grossCosts;
+	}
+	
+	public BigDecimal getGrossIncome() {
+		return grossIncome;
 	}
 	
 	public BigDecimal getNetIncome() {
@@ -107,7 +119,7 @@ public class BalanceResults {
 	}	
 		
 	public BigDecimal getBalance() {
-		return netIncome.add(vatDue).subtract(costs).subtract(getOtherCosts());
+		return grossIncome.subtract(grossCosts).subtract(getOtherCosts());
 	}
 	
 	

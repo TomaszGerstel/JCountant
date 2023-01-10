@@ -81,8 +81,9 @@ class CalculationServiceTest {
 		transfers = List.of(transf1_In, transf2_Out, transf3_Salary, transf4_Tax, transf5_Vat);
 
 		// add variables to show calculations and take values from transfers
-		balanceResultsForKnowingTransfers = new BalanceResults(BigDecimal.valueOf(180), BigDecimal.valueOf(1000),BigDecimal.valueOf(820),
-				BigDecimal.valueOf(180), BigDecimal.valueOf(600),BigDecimal.valueOf(100), BigDecimal.valueOf(100), null);
+		balanceResultsForKnowingTransfers = new BalanceResults(BigDecimal.valueOf(180), BigDecimal.valueOf(200), BigDecimal.valueOf(1200),
+				BigDecimal.valueOf(1000),BigDecimal.valueOf(820), BigDecimal.valueOf(180), BigDecimal.valueOf(600),BigDecimal.valueOf(100), 
+				BigDecimal.valueOf(100), null);
 
 		user = new User();
 		user.setLumpSumTaxRate(12);
@@ -99,7 +100,8 @@ class CalculationServiceTest {
 		BalanceResults result = calcService.currentBalance(new User());
 
 		assertAll(() -> assertEquals(BigDecimal.valueOf(200), result.getBalance()), () -> assertEquals(BigDecimal.valueOf(180), result.getCosts()),
-				() -> assertEquals(BigDecimal.valueOf(55.8), result.getFlatTaxBalance()),
+				() -> assertEquals(BigDecimal.valueOf(55.8), result.getFlatTaxBalance()), () -> assertEquals(BigDecimal.valueOf(200), result.getGrossCosts()),
+				() -> assertEquals(BigDecimal.valueOf(1200), result.getGrossIncome()),
 				() -> assertEquals(BigDecimal.valueOf(155.8), result.getFlatTaxDue()), () -> assertEquals(19, result.getFlatTaxRate()),
 				() -> assertEquals(BigDecimal.valueOf(1000), result.getNetIncome()),
 				() -> assertEquals(BigDecimal.valueOf(20), result.getLumpSumTaxBalance()),
@@ -123,7 +125,8 @@ class CalculationServiceTest {
 		BalanceResults result = calcService.balanceToCurrentMonth(new User());
 		// change to equal prepared balance result?
 		assertAll(() -> assertEquals(BigDecimal.valueOf(200), result.getBalance()), () -> assertEquals(BigDecimal.valueOf(180), result.getCosts()),
-				() -> assertEquals(BigDecimal.valueOf(55.8), result.getFlatTaxBalance()),
+				() -> assertEquals(BigDecimal.valueOf(55.8), result.getFlatTaxBalance()), () -> assertEquals(BigDecimal.valueOf(200), result.getGrossCosts()),
+				() -> assertEquals(BigDecimal.valueOf(1200), result.getGrossIncome()),
 				() -> assertEquals(BigDecimal.valueOf(155.8), result.getFlatTaxDue()), () -> assertEquals(19, result.getFlatTaxRate()),
 				() -> assertEquals(BigDecimal.valueOf(1000), result.getNetIncome()),
 				() -> assertEquals(BigDecimal.valueOf(20), result.getLumpSumTaxBalance()),
