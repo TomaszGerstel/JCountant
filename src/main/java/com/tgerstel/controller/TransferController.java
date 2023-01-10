@@ -54,9 +54,12 @@ public class TransferController {
 	 			return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
 		}		
 		
-		Transfer saved = transferService.createTransfer(transfer, receiptId, user).get();
+		Optional<Transfer> saved = transferService.createTransfer(transfer, receiptId, user);
+		
+		if(saved.isEmpty()) return new ResponseEntity<>(List.of("selected receipt is unavailable"), HttpStatus.UNPROCESSABLE_ENTITY);
+		
 		URI savedTransferLocation = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(saved.getId()).toUri();
+				.buildAndExpand(saved.get().getId()).toUri();
 
 		return ResponseEntity.created(savedTransferLocation).body(saved);
 	}

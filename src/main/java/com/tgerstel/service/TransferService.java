@@ -30,11 +30,16 @@ public class TransferService {
 		transfer.setUser(user);
 		if (!transferTypeWithoutReceipt(transfer)) {
 			Optional<Receipt> result = receiptRepo.findById(receiptId);
-			if (result.isEmpty() || !currentUserOwnsReceipt(user, result))
+			if (result.isEmpty() || !currentUserOwnsReceipt(user, result) || receiptUsedInTransfer(result))
 				return Optional.empty();
 			transfer.setReceipt(result.get());
 		}
 		return Optional.of(transferRepo.save(transfer));
+	}
+	
+	protected boolean receiptUsedInTransfer(Optional<Receipt> receipt) {
+		Optional<Transfer> result = transferRepo.findByReceipt(receipt);
+		return !result.isEmpty();
 	}
 
 	public List<Transfer> getRecentTransfers(User user, Integer resultSize) {

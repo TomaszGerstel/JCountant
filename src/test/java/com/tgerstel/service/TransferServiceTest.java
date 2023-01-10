@@ -94,6 +94,8 @@ class TransferServiceTest {
 		
 		Assertions.assertThat(transferReturned).isEmpty();	
 	}
+	
+//	receiptUsedInTransfer test
 
 	@Test
 	@DisplayName("getRecentTransfers() shoud giving proper page request and user to repository method")
