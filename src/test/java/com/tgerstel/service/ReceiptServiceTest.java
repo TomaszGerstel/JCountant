@@ -3,6 +3,7 @@ package com.tgerstel.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,13 +55,13 @@ class ReceiptServiceTest {
 		dateTime = LocalDate.now();
 		userActual = new User("Sober", "sobot@a.com", "hardpass", 13);
 		userActual.setId(11L);
-		receipt = new Receipt(dateTime, 810.0f, 200.0f, null, null, "Albatros", "Stan", "for example", userActual);	
-		transfer = new Transfer(TransferType.IN_TRANSFER, 800.0f, "Customer", "Me", dateTime,	null, receipt, userActual);		
+		receipt = new Receipt(dateTime, BigDecimal.valueOf(810), BigDecimal.valueOf(200), null, null, "Albatros", "Stan", "for example", userActual);	
+		transfer = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(800), "Customer", "Me", dateTime,	null, receipt, userActual);		
 		user2 = new User("Sober", "sobot@a.com", "hardpass", 13);
 		user2.setId(21L);		
-		receipt2 = new Receipt(dateTime, 1000.0f, 250.0f, null, null, "MediaGain", "Ed", "for example", user2);
-		transfer2 = new Transfer(TransferType.IN_TRANSFER, 1000.0f, "MediaGain", "Me", dateTime, null, receipt2, userActual);		
-		receipt3 = new Receipt(dateTime, 500.0f, null, null, null, "Stratovarius", "Ed", "for app", userActual);
+		receipt2 = new Receipt(dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(250), null, null, "MediaGain", "Ed", "for example", user2);
+		transfer2 = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1000), "MediaGain", "Me", dateTime, null, receipt2, userActual);		
+		receipt3 = new Receipt(dateTime,BigDecimal.valueOf(500), null, null, null, "Stratovarius", "Ed", "for app", userActual);
 		receipt.setId(1L);
 		receipt2.setId(77L);
 		receipt3.setId(3L);
@@ -80,12 +81,12 @@ class ReceiptServiceTest {
 		
 		assertAll(
 				() -> assertEquals(dateTime, receiptReturned.getDate()),
-				() -> assertEquals(810f, receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
 				() -> assertEquals("Sober", receiptReturned.getUser().getUsername()),
 				() -> assertEquals("sobot@a.com", receiptReturned.getUser().getEmail()),
 				() -> assertEquals(13, receiptReturned.getUser().getLumpSumTaxRate()),
-				() -> assertEquals(200.0f, receiptReturned.getNetAmount()),
-				() -> assertEquals(810, receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(200), receiptReturned.getNetAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
 				() -> assertEquals("Albatros", receiptReturned.getClient()),
 				() -> assertEquals("Stan", receiptReturned.getWorker()),
 				() -> assertEquals("for example", receiptReturned.getDescription()),
@@ -123,7 +124,7 @@ class ReceiptServiceTest {
 	@DisplayName("If getById() returning proper receipt for current user")
 	void testIfGetByIdRetursReceipt() {		
 		
-		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
+		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, BigDecimal.valueOf(810), BigDecimal.valueOf(200), null, null, 
 				"Albatros", "Stan", "for example", userActual ));		
 		
 		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);
@@ -132,12 +133,12 @@ class ReceiptServiceTest {
 		
 		assertAll(			
 				() -> assertEquals(dateTime, receiptReturned.getDate()),
-				() -> assertEquals(810f, receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
 				() -> assertEquals("Sober", receiptReturned.getUser().getUsername()),
 				() -> assertEquals("sobot@a.com", receiptReturned.getUser().getEmail()),
 				() -> assertEquals(13, receiptReturned.getUser().getLumpSumTaxRate()),
-				() -> assertEquals(200.0f, receiptReturned.getNetAmount()),
-				() -> assertEquals(810, receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(200), receiptReturned.getNetAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
 				() -> assertEquals("Albatros", receiptReturned.getClient()),
 				() -> assertEquals("Stan", receiptReturned.getWorker()),
 				() -> assertEquals("for example", receiptReturned.getDescription()),
@@ -153,7 +154,7 @@ class ReceiptServiceTest {
 		userActual.setId(11L);
 		User userOnReceipt = new User("Sober", "sobot@a.com", "hardpass", 13);
 		userOnReceipt.setId(21L);
-		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, 810.0f, 200.0f, null, null, 
+		Optional<Receipt> receipt = Optional.of(new Receipt(dateTime, BigDecimal.valueOf(810), BigDecimal.valueOf(200), null, null, 
 				"Albatros", "Stan", "for example", userOnReceipt ));		
 		
 		Mockito.when(receiptRepo.findById(1L)).thenReturn(receipt);		

@@ -1,6 +1,7 @@
 package com.tgerstel.model;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.lang.Nullable;
@@ -31,11 +32,11 @@ public class Receipt {
     private LocalDate date;
     @NotNull(message = "enter amount value")
     @Positive(message = "the amount must be a positive value")
-    private Float amount;
+    private BigDecimal amount;
     @Positive
-    private Float netAmount;
+    private BigDecimal netAmount;
     @Positive
-    private Float vatValue;
+    private BigDecimal vatValue;
     @Positive
     private Float vatPercentage;
     @NotBlank(message = "enter client name")
@@ -49,8 +50,8 @@ public class Receipt {
     @JoinColumn(name="user_base_id", referencedColumnName = "id")
     private User user;
 
-    public Receipt(@NotNull LocalDate date, @NotNull Float amount, @Nullable Float netAmount,
-                   @Nullable Float vatValue, @Nullable Float vatPercentage, @NotNull String client,
+    public Receipt(@NotNull LocalDate date, @NotNull BigDecimal amount, @Nullable BigDecimal netAmount,
+                   @Nullable BigDecimal vatValue, @Nullable Float vatPercentage, @NotNull String client,
                    @NotNull String worker, @NotNull String description, @Nullable User user) {
 
         this.date = date;
@@ -64,18 +65,20 @@ public class Receipt {
         this.user = user;
     }
 
-    public Float getNetAmount() {
+    public BigDecimal getNetAmount() {
     	if(netAmount == null) {
-    		if(vatValue != null) return amount - vatValue;
-    		if(vatPercentage != null) return amount - (vatPercentage * amount / 100);
+    		if(vatValue != null) return amount.subtract(vatValue);
+    		if(vatPercentage != null) return amount.subtract(amount.divide(new BigDecimal("100"))
+    				.multiply(new BigDecimal(vatPercentage.toString())));
     	}
   		return netAmount;      	
       }
     
-    public Float getVatValue() {
+    public BigDecimal getVatValue() {
     	if(vatValue == null) {
-    		if(netAmount != null) return amount - netAmount;
-    		if(vatPercentage != null) return vatPercentage * (amount / 100);
+    		if(netAmount != null) return amount.subtract(netAmount);
+    		if(vatPercentage != null) return amount.divide(new BigDecimal("100")).multiply(new BigDecimal(vatPercentage));    		
+    		
     	}
   		return vatValue;
     	

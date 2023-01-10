@@ -1,5 +1,6 @@
 package com.tgerstel.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -53,13 +54,13 @@ class ReceiptControllerMvcMockTest {
 		dateTime = LocalDate.now();
 		userActual = new User("Bob", "sobob@a.com", "hardpass", 13);
 		userActual.setId(1L);
-		receipt = new Receipt(dateTime, 1200.0f, 200.0f, null, null, "Customer", "Me", "for example", userActual);
+		receipt = new Receipt(dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(200), null, null, "Customer", "Me", "for example", userActual);
 		receipt.setId(22L);
 		user2 = new User("Rob", "roby@am.com", "hardpass", 12);
-		receiptWithUser2 = new Receipt(dateTime, 1000.0f, 200.0f, null, null, "Sansumg", "Me", "for example", user2);
-		transfer = new Transfer(TransferType.IN_TRANSFER, 1200.0f, "Customer", "Me", dateTime, null, receipt,
+		receiptWithUser2 = new Receipt(dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, null, "Sansumg", "Me", "for example", user2);
+		transfer = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, receipt,
 				userActual);
-		transferWithReceipt2 = new Transfer(TransferType.IN_TRANSFER, 1200.0f, "Customer", "Me", dateTime, null,
+		transferWithReceipt2 = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
 				receiptWithUser2, userActual);
 	}
 

@@ -1,21 +1,23 @@
 package com.tgerstel.calculations;
 
+import java.math.BigDecimal;
+
 public class BalanceResults {	
 	
 	private final Float flatTaxRate = 19.0f;
 	private Integer defaultLumpTaxRate = 12;
 
-	private Float costs;
-	private Float grossIncome;
-	private Float netBalance;
-	private Float vatDue;
+	private BigDecimal costs;
+	private BigDecimal grossIncome;
+	private BigDecimal netBalance;
+	private BigDecimal vatDue;
 	private Integer lumpTaxRate;	
-	private Float profitPaid;
-	private Float vatPaid;
-	private Float taxPaid;
+	private BigDecimal profitPaid;
+	private BigDecimal vatPaid;
+	private BigDecimal taxPaid;
 	
-	public BalanceResults(Float costs, Float grossIncome, Float netBalance, Float vatDue,
-			Float profitPaid, Float vatPaid, Float taxPaid, Integer lumpTaxRate) {
+	public BalanceResults(BigDecimal costs, BigDecimal grossIncome, BigDecimal netBalance, BigDecimal vatDue,
+			BigDecimal profitPaid, BigDecimal vatPaid, BigDecimal taxPaid, Integer lumpTaxRate) {
 		super();
 		this.costs = costs;	
 		this.grossIncome = grossIncome;
@@ -27,31 +29,31 @@ public class BalanceResults {
 		this.lumpTaxRate = lumpTaxRate;
 	}
 	
-	public Float getCosts() {
+	public BigDecimal getCosts() {
 		return costs;
 	}
 	
-	public Float getGrossIncome() {
+	public BigDecimal getGrossIncome() {
 		return grossIncome;
 	}
 	
-	public Float getNetBalance() {
+	public BigDecimal getNetBalance() {
 		return netBalance;
 	}
 	
-	public Float getVatDue() {
+	public BigDecimal getVatDue() {
 		return vatDue;
 	}
 	
-	public Float getProfitPaid() {
+	public BigDecimal getProfitPaid() {
 		return profitPaid;
 	}
 	
-	public Float getVatPaid() {
+	public BigDecimal getVatPaid() {
 		return vatPaid;
 	}	
 
-	public Float getTaxPaid() {
+	public BigDecimal getTaxPaid() {
 		return taxPaid;
 	}
 	
@@ -60,52 +62,52 @@ public class BalanceResults {
 		return lumpTaxRate;
 	}
 	
-	public Float getLumpSumTaxDue() {
-		return grossIncome * getLumpTaxRate() / 100;
+	public BigDecimal getLumpSumTaxDue() {
+		return grossIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100));
 	}
 	
-	public Float getFlatTaxDue() {
-		return netBalance * flatTaxRate / 100;
+	public BigDecimal getFlatTaxDue() {
+		return netBalance.multiply(BigDecimal.valueOf(flatTaxRate)).divide(BigDecimal.valueOf(100));
 	}
 	
-	public Float getVatBalance() {
-		return vatDue - vatPaid;
+	public BigDecimal getVatBalance() {
+		return vatDue.subtract(vatPaid);
 	}
 	
-	public Float getFlatTaxBalance() {
-		return getFlatTaxDue() - taxPaid;
+	public BigDecimal getFlatTaxBalance() {
+		return getFlatTaxDue().subtract(taxPaid);
 	}
 	
-	public Float getLumpSumTaxBalance() {
-		return getLumpSumTaxDue() - taxPaid;
+	public BigDecimal getLumpSumTaxBalance() {
+		return getLumpSumTaxDue().subtract(taxPaid);
 	}
 
-	public Float getProfitDueFlat() {
-		return netBalance - getFlatTaxDue();
+	public BigDecimal getProfitDueFlat() {
+		return netBalance.subtract(getFlatTaxDue());
 	}
 	
-	public Float getProfitRemainingFlat() {
-		return getProfitDueFlat() - profitPaid; 
+	public BigDecimal getProfitRemainingFlat() {
+		return getProfitDueFlat().subtract(profitPaid); 
 	}
 
-	public Float getProfitDueLump() {
-		return netBalance - getLumpSumTaxDue();
+	public BigDecimal getProfitDueLump() {
+		return netBalance.subtract(getLumpSumTaxDue());
 	}	
 
-	public Float getProfitRemainingLump() {
-		return getProfitDueLump() - profitPaid; 
+	public BigDecimal getProfitRemainingLump() {
+		return getProfitDueLump().subtract(profitPaid); 
 	}
 
 	public Float getFlatTaxRate() {
 		return flatTaxRate;
 	}
 	
-	public Float getOtherCosts() {
-		return vatPaid + taxPaid + profitPaid;
+	public BigDecimal getOtherCosts() {
+		return vatPaid.add(taxPaid).add(profitPaid);
 	}	
 		
-	public Float getBalance() {
-		return grossIncome + vatDue - costs - getOtherCosts();
+	public BigDecimal getBalance() {
+		return grossIncome.add(vatDue).subtract(costs).subtract(getOtherCosts());
 	}
 	
 	

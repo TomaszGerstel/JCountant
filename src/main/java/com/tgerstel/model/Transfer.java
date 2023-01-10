@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -24,7 +25,7 @@ public class Transfer {
     @Enumerated(EnumType.STRING)
     private TransferType transferType;
     @NotNull(message = "enter amount value")
-    private Float amount;
+    private BigDecimal amount;
     @Column(name="from_")
     private String from;
     @Column(name="to_")
@@ -46,7 +47,7 @@ public class Transfer {
         this.baseDate = LocalDateTime.now();
     }
 
-    public Transfer(@NotNull TransferType transferType, @NotNull Float amount, @Nullable String from,
+    public Transfer(@NotNull TransferType transferType, @NotNull BigDecimal amount, @Nullable String from,
                     @Nullable String to, @NotNull LocalDate date, @Nullable String description,
                     @Nullable Receipt receipt, @NotNull User user) {
 

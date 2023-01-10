@@ -2,6 +2,8 @@ package com.tgerstel.calculations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -14,17 +16,18 @@ class BalanceResultsTest {
 	@BeforeAll
 	static void prepareVariable() {
 		balanceResult = new BalanceResults(
-				1000f, 5000f, 4000f, 1200f, 100f, 200f, 150f, null);
+				BigDecimal.valueOf(1000),BigDecimal.valueOf(5000), BigDecimal.valueOf(4000), BigDecimal.valueOf(1200),
+				BigDecimal.valueOf(100), BigDecimal.valueOf(200), BigDecimal.valueOf(150), null);
 	}
 
 	@Test
 	void testGetCosts() {		
-		assertEquals(1000 , balanceResult.getCosts());
+		assertEquals(BigDecimal.valueOf(1000) , balanceResult.getCosts());
 	}
 	
 	@Test
 	void testGetGrossIncome() {		
-		assertEquals(5000 , balanceResult.getGrossIncome());
+		assertEquals(BigDecimal.valueOf(5000) , balanceResult.getGrossIncome());
 	}
 
 }
