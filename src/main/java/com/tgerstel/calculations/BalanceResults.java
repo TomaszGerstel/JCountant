@@ -11,22 +11,22 @@ public class BalanceResults {
 	private BigDecimal grossCosts;
 	private BigDecimal grossIncome;
 	private BigDecimal netIncome;
-	private BigDecimal netBalance;
-	private BigDecimal vatDue;
+//	private BigDecimal netBalance;
+//	private BigDecimal vatDue;
 	private Integer lumpTaxRate;	
 	private BigDecimal profitPaid;
 	private BigDecimal vatPaid;
 	private BigDecimal taxPaid;
 	
-	public BalanceResults(BigDecimal costs, BigDecimal grossCosts, BigDecimal grossIncome, BigDecimal netIncome, BigDecimal netBalance, BigDecimal vatDue,
+	public BalanceResults(BigDecimal costs, BigDecimal grossCosts, BigDecimal grossIncome, BigDecimal netIncome,
 			BigDecimal profitPaid, BigDecimal vatPaid, BigDecimal taxPaid, Integer lumpTaxRate) {
 		super();
 		this.costs = costs;	
 		this.grossCosts = grossCosts;
 		this.grossIncome = grossIncome;
 		this.netIncome = netIncome;
-		this.netBalance = netBalance;
-		this.vatDue = vatDue;
+//		this.netBalance = netBalance;
+//		this.vatDue = vatDue;
 		this.profitPaid = profitPaid;
 		this.vatPaid = vatPaid;
 		this.taxPaid = taxPaid;
@@ -49,14 +49,6 @@ public class BalanceResults {
 		return netIncome;
 	}
 	
-	public BigDecimal getNetBalance() {
-		return netBalance;
-	}
-	
-	public BigDecimal getVatDue() {
-		return vatDue;
-	}
-	
 	public BigDecimal getProfitPaid() {
 		return profitPaid;
 	}
@@ -69,6 +61,10 @@ public class BalanceResults {
 		return taxPaid;
 	}
 	
+	public BigDecimal getNetBalance() {
+		return getNetIncome().subtract(getCosts());
+	}
+	
 	public Integer getLumpTaxRate() {
 		if(lumpTaxRate == null) return defaultLumpTaxRate;
 		return lumpTaxRate;
@@ -79,11 +75,11 @@ public class BalanceResults {
 	}
 	
 	public BigDecimal getFlatTaxDue() {
-		return netBalance.multiply(BigDecimal.valueOf(flatTaxRate)).divide(BigDecimal.valueOf(100));
+		return getNetBalance().multiply(BigDecimal.valueOf(flatTaxRate.intValue())).divide(BigDecimal.valueOf(100));
 	}
 	
 	public BigDecimal getVatBalance() {
-		return vatDue.subtract(vatPaid);
+		return getVatDue().subtract(vatPaid);
 	}
 	
 	public BigDecimal getFlatTaxBalance() {
@@ -95,7 +91,7 @@ public class BalanceResults {
 	}
 
 	public BigDecimal getProfitDueFlat() {
-		return netBalance.subtract(getFlatTaxDue());
+		return getNetBalance().subtract(getFlatTaxDue());
 	}
 	
 	public BigDecimal getProfitRemainingFlat() {
@@ -103,7 +99,7 @@ public class BalanceResults {
 	}
 
 	public BigDecimal getProfitDueLump() {
-		return netBalance.subtract(getLumpSumTaxDue());
+		return getNetBalance().subtract(getLumpSumTaxDue());
 	}	
 
 	public BigDecimal getProfitRemainingLump() {
@@ -122,6 +118,10 @@ public class BalanceResults {
 		return grossIncome.subtract(grossCosts).subtract(getOtherCosts());
 	}
 	
+	public BigDecimal getVatDue() {
+		return getGrossIncome().subtract(getGrossCosts()).subtract(getNetBalance());
+	}
+	
 	
 
 	@Override
@@ -132,11 +132,10 @@ public class BalanceResults {
 		result = prime * result + ((defaultLumpTaxRate == null) ? 0 : defaultLumpTaxRate.hashCode());
 		result = prime * result + ((flatTaxRate == null) ? 0 : flatTaxRate.hashCode());
 		result = prime * result + ((netIncome == null) ? 0 : netIncome.hashCode());
-		result = prime * result + ((lumpTaxRate == null) ? 0 : lumpTaxRate.hashCode());
-		result = prime * result + ((netBalance == null) ? 0 : netBalance.hashCode());
+		result = prime * result + ((lumpTaxRate == null) ? 0 : lumpTaxRate.hashCode());	
 		result = prime * result + ((profitPaid == null) ? 0 : profitPaid.hashCode());
 		result = prime * result + ((taxPaid == null) ? 0 : taxPaid.hashCode());
-		result = prime * result + ((vatDue == null) ? 0 : vatDue.hashCode());
+//		result = prime * result + ((vatDue == null) ? 0 : vatDue.hashCode());
 		result = prime * result + ((vatPaid == null) ? 0 : vatPaid.hashCode());
 		return result;
 	}
@@ -175,12 +174,7 @@ public class BalanceResults {
 			if (other.lumpTaxRate != null)
 				return false;
 		} else if (!lumpTaxRate.equals(other.lumpTaxRate))
-			return false;
-		if (netBalance == null) {
-			if (other.netBalance != null)
-				return false;
-		} else if (!netBalance.equals(other.netBalance))
-			return false;
+			return false;		
 		if (profitPaid == null) {
 			if (other.profitPaid != null)
 				return false;
@@ -190,11 +184,6 @@ public class BalanceResults {
 			if (other.taxPaid != null)
 				return false;
 		} else if (!taxPaid.equals(other.taxPaid))
-			return false;
-		if (vatDue == null) {
-			if (other.vatDue != null)
-				return false;
-		} else if (!vatDue.equals(other.vatDue))
 			return false;
 		if (vatPaid == null) {
 			if (other.vatPaid != null)
@@ -206,16 +195,19 @@ public class BalanceResults {
 
 	@Override
 	public String toString() {
-		return "BalanceResults [flatTaxRate=" + flatTaxRate + ", defaultLumpTaxRate=" + defaultLumpTaxRate + ", costs="
-				+ costs + ", grossIncome=" + netIncome + ", netBalance=" + netBalance + ", vatDue=" + vatDue
-				+ ", profitPaid=" + profitPaid + ", vatPaid=" + vatPaid + ", taxPaid=" + taxPaid + ", getLumpTaxRate()="
+		return "BalanceResults [getCosts()=" + getCosts() + ", getGrossCosts()=" + getGrossCosts()
+				+ ", getGrossIncome()=" + getGrossIncome() + ", getNetIncome()=" + getNetIncome() + ", getVatDue()="
+				+ getVatDue() + ", getProfitPaid()=" + getProfitPaid() + ", getVatPaid()=" + getVatPaid()
+				+ ", getTaxPaid()=" + getTaxPaid() + ", getNetBalance()=" + getNetBalance() + ", getLumpTaxRate()="
 				+ getLumpTaxRate() + ", getLumpSumTaxDue()=" + getLumpSumTaxDue() + ", getFlatTaxDue()="
 				+ getFlatTaxDue() + ", getVatBalance()=" + getVatBalance() + ", getFlatTaxBalance()="
 				+ getFlatTaxBalance() + ", getLumpSumTaxBalance()=" + getLumpSumTaxBalance() + ", getProfitDueFlat()="
 				+ getProfitDueFlat() + ", getProfitRemainingFlat()=" + getProfitRemainingFlat()
 				+ ", getProfitDueLump()=" + getProfitDueLump() + ", getProfitRemainingLump()="
 				+ getProfitRemainingLump() + ", getFlatTaxRate()=" + getFlatTaxRate() + ", getOtherCosts()="
-				+ getOtherCosts() + ", getBalance()=" + getBalance() + "]";
-	}		
+				+ getOtherCosts() + ", getBalance()=" + getBalance() + ", hashCode()=" + hashCode() + "]";
+	}
+
+		
 	
 }

@@ -36,22 +36,23 @@ public class CalculationService {
 	public BalanceResults balanceToLastMonth(User user) {
 		YearMonth month = YearMonth.from(LocalDate.now().minusMonths(1));
 		LocalDate from = month.atDay(1);
-        LocalDate to   = month.atEndOfMonth();
+		LocalDate to = month.atEndOfMonth();
 		return balanceToDateRange(from, to, user);
-	}	
-	
+	}
+
 	public BalanceResults balanceToDateRange(LocalDate from, LocalDate to, User user) {
-		List<Transfer> transfers = transferRepo.findAllByDateAfterAndDateBeforeAndUser(from.minusDays(1), to.plusDays(1), user);
+		List<Transfer> transfers = transferRepo.findAllByDateAfterAndDateBeforeAndUser(from.minusDays(1),
+				to.plusDays(1), user);
 		return calculateBalance(transfers, user);
 	}
 
 	protected BalanceResults calculateBalance(List<Transfer> transfers, User user) {
 		List<TransactionModel> transactions = createTransactionObjects(transfers);
 
-		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions), calculateGrossCosts(transactions),
-				calculateNetIncome(transactions), calculateGrossIncome(transactions), calculateNetBalance(transactions), calculateVatDue(transactions),
-				calculateProfitPaid(transactions), calculateVatPaid(transactions), calculateTaxPaid(transactions),
-				user.getLumpSumTaxRate());
+		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
+				calculateGrossCosts(transactions), calculateGrossIncome(transactions), calculateNetIncome(transactions),
+				calculateProfitPaid(transactions), calculateVatPaid(transactions),
+				calculateTaxPaid(transactions), user.getLumpSumTaxRate());
 		return balanceResults;
 	}
 
@@ -60,23 +61,23 @@ public class CalculationService {
 		TransactionModel transaction;
 
 		for (Transfer t : transfers) {
-			transaction = new TransactionModel();			
-			if (t.getReceipt() != null) {				
+			transaction = new TransactionModel();
+			if (t.getReceipt() != null) {
 				transaction = makeTransactionFromReceipt(t.getReceipt());
 			} else if (transferTypeWithoutReceipt(t)) {
-				transaction.setAmount(t.getAmount());				
+				transaction.setAmount(t.getAmount());
 			}
 			transaction.setTransferType(t.getTransferType());
 			transactions.add(transaction);
 		}
 		return transactions;
 	}
-	
+
 	protected TransactionModel makeTransactionFromReceipt(Receipt receipt) {
 		TransactionModel transaction = new TransactionModel();
 		transaction.setAmount(receipt.getAmount());
 		transaction.setNetAmount(receipt.getNetAmount());
-		transaction.setVatValue(receipt.getVatValue());		
+		transaction.setVatValue(receipt.getVatValue());
 		return transaction;
 	}
 
@@ -89,19 +90,29 @@ public class CalculationService {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.OUT_TRANSFER) {
-				if (t.getVatValue() != null)
-					sum = sum.add(t.getAmount().subtract(t.getVatValue()));
+				if (t.getNetAmount() != null)
+					sum = sum.add(t.getNetAmount());
 				else
 					sum = sum.add(t.getAmount());
 			}
 		}
 		return sum;
 	}
-	
+
 	protected BigDecimal calculateGrossCosts(List<TransactionModel> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (TransactionModel t : transactions) {
-			if (t.getTransferType() == TransferType.OUT_TRANSFER)	sum = sum.add(t.getAmount());
+			if (t.getTransferType() == TransferType.OUT_TRANSFER)
+				sum = sum.add(t.getAmount());
+		}
+		return sum;
+	}
+
+	protected BigDecimal calculateGrossIncome(List<TransactionModel> transactions) {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (TransactionModel t : transactions) {
+			if (t.getTransferType() == TransferType.IN_TRANSFER)
+				sum = sum.add(t.getAmount());
 		}
 		return sum;
 	}
@@ -109,17 +120,9 @@ public class CalculationService {
 	protected BigDecimal calculateNetIncome(List<TransactionModel> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (TransactionModel t : transactions) {
-			if (t.getTransferType() == TransferType.IN_TRANSFER) sum = sum.add(t.getAmount());			
-		}
-		return sum;
-	}
-	
-	protected BigDecimal calculateGrossIncome(List<TransactionModel> transactions) {
-		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER) {
-				if (t.getVatValue() != null)
-					sum = sum.add(t.getAmount()).subtract(t.getVatValue());
+				if (t.getNetAmount() != null)
+					sum = sum.add(t.getNetAmount());
 				else
 					sum = sum.add(t.getAmount());
 			}
@@ -136,27 +139,35 @@ public class CalculationService {
 		return sum;
 	}
 
-	protected BigDecimal calculateNetBalance(List<TransactionModel> transactions) {
-		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
-			if (t.getTransferType() == TransferType.IN_TRANSFER)
-				sum = sum.add(t.getNetAmount());
-			if (t.getTransferType() == TransferType.OUT_TRANSFER)
-				sum = sum.subtract(t.getNetAmount());
-		}
-		return sum;
-	}
+//	protected BigDecimal calculateNetBalance(List<TransactionModel> transactions) {
+//		BigDecimal sum = BigDecimal.ZERO;
+//		for (TransactionModel t : transactions) {
+//			if (t.getTransferType() == TransferType.IN_TRANSFER) {
+//				if (t.getNetAmount() != null)
+//					sum = sum.add(t.getNetAmount());
+//				else
+//					sum = sum.add(t.getAmount());
+//			}
+//			if (t.getTransferType() == TransferType.OUT_TRANSFER) {
+//				if (t.getNetAmount() != null)
+//					sum = sum.subtract(t.getNetAmount());
+//				else
+//					sum = sum.subtract(t.getAmount());
+//			}
+//		}
+//		return sum;
+//	}
 
-	protected BigDecimal calculateVatDue(List<TransactionModel> transactions) {
-		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
-			if (t.getTransferType() == TransferType.IN_TRANSFER)
-				sum = sum.add(t.getVatValue());
-			if (t.getTransferType() == TransferType.OUT_TRANSFER)
-				sum = sum.subtract(t.getVatValue());
-		}
-		return sum;
-	}
+//	protected BigDecimal calculateVatDue(List<TransactionModel> transactions) {
+//		BigDecimal sum = BigDecimal.ZERO;
+//		for (TransactionModel t : transactions) {
+//			if (t.getTransferType() == TransferType.IN_TRANSFER && t.getVatValue() != null)
+//				sum = sum.add(t.getVatValue());
+//			if (t.getTransferType() == TransferType.OUT_TRANSFER && t.getVatValue() != null)
+//				sum = sum.subtract(t.getVatValue());
+//		}
+//		return sum;
+//	}
 
 	protected BigDecimal calculateVatPaid(List<TransactionModel> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;

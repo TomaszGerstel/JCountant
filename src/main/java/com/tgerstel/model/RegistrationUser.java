@@ -19,8 +19,7 @@ public class RegistrationUser {
     @NotBlank(message = "Enter password")
     private String password;
     @Positive
-    private Integer lumpSumTaxRate;  
- 
+    private Integer lumpSumTaxRate; 
 
     public User toUser(PasswordEncoder passEncoder) {    	
         return new User(username, email, passEncoder.encode(password), lumpSumTaxRate);
@@ -33,7 +32,5 @@ public class RegistrationUser {
 		this.email = email;
 		this.password = password;
 		this.lumpSumTaxRate = lumpSumTaxRate;
-	}
-    
-    
+	}    
 }

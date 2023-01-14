@@ -41,6 +41,4 @@ public class UserService {
 		if(userRepo.findByUsername(user.getUsername()) != null) return true;
 		return false;		
 	}
-
-
 }

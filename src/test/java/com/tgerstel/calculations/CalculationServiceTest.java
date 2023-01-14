@@ -82,7 +82,7 @@ class CalculationServiceTest {
 
 		// add variables to show calculations and take values from transfers
 		balanceResultsForKnowingTransfers = new BalanceResults(BigDecimal.valueOf(180), BigDecimal.valueOf(200), BigDecimal.valueOf(1200),
-				BigDecimal.valueOf(1000),BigDecimal.valueOf(820), BigDecimal.valueOf(180), BigDecimal.valueOf(600),BigDecimal.valueOf(100), 
+				BigDecimal.valueOf(1000), BigDecimal.valueOf(600),BigDecimal.valueOf(100), 
 				BigDecimal.valueOf(100), null);
 
 		user = new User();
@@ -214,7 +214,7 @@ class CalculationServiceTest {
 	
 	@Test
 	void testCalculateGrossIncome() {
-		assertEquals(BigDecimal.valueOf(1000), calcService.calculateGrossIncome(transactions));
+		assertEquals(BigDecimal.valueOf(1200), calcService.calculateGrossIncome(transactions));
 	}
 
 	@Test
@@ -222,15 +222,15 @@ class CalculationServiceTest {
 		assertEquals(BigDecimal.valueOf(600), calcService.calculateProfitPaid(transactions));
 	}
 
-	@Test
-	void testCalculateNetBalance() {
-		assertEquals(BigDecimal.valueOf(820), calcService.calculateNetBalance(transactions));
-	}
+//	@Test
+//	void testCalculateNetBalance() {
+//		assertEquals(BigDecimal.valueOf(820), calcService.calculateNetBalance(transactions));
+//	}
 
-	@Test
-	void testCalculateVatDue() {
-		assertEquals(BigDecimal.valueOf(180), calcService.calculateVatDue(transactions));
-	}
+//	@Test
+//	void testCalculateVatDue() {
+//		assertEquals(BigDecimal.valueOf(180), calcService.calculateVatDue(transactions));
+//	}
 
 	@Test
 	void testCalculateVatPaid() {
