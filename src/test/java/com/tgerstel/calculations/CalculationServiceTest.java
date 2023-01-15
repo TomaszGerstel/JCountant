@@ -203,8 +203,7 @@ class CalculationServiceTest {
 	void testTransferTypeWithoutReceipt2() {
 
 		assertAll(() -> assertFalse(calcService.transferTypeWithoutReceipt(transf1_In)),
-				() -> assertFalse(calcService.transferTypeWithoutReceipt(transf2_Out)));
-		
+				() -> assertFalse(calcService.transferTypeWithoutReceipt(transf2_Out)));		
 	}
 
 	@Test
@@ -221,16 +220,6 @@ class CalculationServiceTest {
 	void testCalculateProfitPaid() {
 		assertEquals(BigDecimal.valueOf(600), calcService.calculateProfitPaid(transactions));
 	}
-
-//	@Test
-//	void testCalculateNetBalance() {
-//		assertEquals(BigDecimal.valueOf(820), calcService.calculateNetBalance(transactions));
-//	}
-
-//	@Test
-//	void testCalculateVatDue() {
-//		assertEquals(BigDecimal.valueOf(180), calcService.calculateVatDue(transactions));
-//	}
 
 	@Test
 	void testCalculateVatPaid() {

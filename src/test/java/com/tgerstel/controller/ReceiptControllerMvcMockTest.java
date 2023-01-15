@@ -2,6 +2,8 @@ package com.tgerstel.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,8 +29,7 @@ import com.tgerstel.model.TransferType;
 import com.tgerstel.model.User;
 import com.tgerstel.service.ReceiptService;
 
-
-@WebMvcTest(value = ReceiptController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
+@WebMvcTest(value = ReceiptController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
 @ExtendWith(MockitoExtension.class)
 class ReceiptControllerMvcMockTest {
 
@@ -46,39 +46,66 @@ class ReceiptControllerMvcMockTest {
 	static Receipt receiptWithUser2;
 	static Transfer transfer;
 	static Transfer transferWithReceipt2;
+	static List<Receipt> receipts;
 
 	@BeforeAll
 	static void prepareVariables() {
-		
-		
+
 		dateTime = LocalDate.now();
 		userActual = new User("Bob", "sobob@a.com", "hardpass", 13);
 		userActual.setId(1L);
-		receipt = new Receipt(dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(200), null, null, "Customer", "Me", "for example", userActual);
+		receipt = new Receipt(dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(200), null, null, "Customer", "Me",
+				"for example", userActual);
 		receipt.setId(22L);
 		user2 = new User("Rob", "roby@am.com", "hardpass", 12);
-		receiptWithUser2 = new Receipt(dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, null, "Sansumg", "Me", "for example", user2);
-		transfer = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, receipt,
-				userActual);
-		transferWithReceipt2 = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
-				receiptWithUser2, userActual);
+		receiptWithUser2 = new Receipt(dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, null,
+				"Sansumg", "Me", "for example", user2);
+		transfer = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
+				receipt, userActual);
+		transferWithReceipt2 = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me",
+				dateTime, null, receiptWithUser2, userActual);
+		receipts = List.of(receipt, receiptWithUser2);
+
 	}
 
 	@Test
 	void testAddReceipt() throws Exception {
-		
+
 		Mockito.when(receiptService.createReceipt(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(receipt);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt")
-				.content(asJsonString(receipt))
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt").content(asJsonString(receipt))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200}"))
+				.andExpect(MockMvcResultMatchers.content().json("{'id': 22}"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
 	}
 
+	@Test
+	void testAllReceipts() throws Exception {
+
+		Mockito.when(receiptService.getRecentReceipts(ArgumentMatchers.any(), ArgumentMatchers.any()))
+				.thenReturn(receipts);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/recent")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200}, {'amount': 1000}]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	void testNoTransferReceipts() throws Exception {
+
+		Mockito.when(receiptService.receiptsNotUsedInTransfer(ArgumentMatchers.any())).thenReturn(receipts);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/no_transfer_receipts")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200}, {'amount': 1000}]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
 	public static String asJsonString(final Object obj) {
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -89,20 +116,66 @@ class ReceiptControllerMvcMockTest {
 		}
 	}
 
-//	@Test
-//	void testGetReceiptById() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testDelete() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSearchReceipts() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	void testGetReceiptById() throws Exception {
 
+		Mockito.when(receiptService.getById(ArgumentMatchers.any(), ArgumentMatchers.anyLong()))
+				.thenReturn(Optional.of(receipt));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/1")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200}"))
+				.andExpect(MockMvcResultMatchers.content().json("{'id': 22}"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	void testGetReceiptById2() throws Exception {
+
+		Mockito.when(receiptService.getById(ArgumentMatchers.any(), ArgumentMatchers.eq(1L)))
+				.thenReturn(Optional.empty());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/1").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
+
+	@Test
+	void testDelete() throws Exception {		
+
+//		Mockito.doNothing().when(receiptService).deleteReceiptAndRelatedTransfer(ArgumentMatchers.any(),
+//				ArgumentMatchers.eq(1L));
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/receipt/1")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
+	
+	@Test
+	void testSearchReceipts() throws Exception {
+
+		Mockito.when(receiptService.searchReceiptsByClientName(ArgumentMatchers.any(), ArgumentMatchers.eq("client_name")))
+				.thenReturn(receipts);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/search")
+				.param("key", "client_name")				
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200}, {'amount': 1000}]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	void testSearchReceipts2() throws Exception {
+
+		Mockito.when(receiptService.searchReceiptsByClientName(ArgumentMatchers.any(), ArgumentMatchers.eq("some_client")))
+				.thenReturn(receipts);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/search")
+				.param("key", "client_name")				
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
 }
-

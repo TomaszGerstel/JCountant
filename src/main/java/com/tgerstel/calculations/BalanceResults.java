@@ -11,8 +11,6 @@ public class BalanceResults {
 	private BigDecimal grossCosts;
 	private BigDecimal grossIncome;
 	private BigDecimal netIncome;
-//	private BigDecimal netBalance;
-//	private BigDecimal vatDue;
 	private Integer lumpTaxRate;	
 	private BigDecimal profitPaid;
 	private BigDecimal vatPaid;
@@ -25,8 +23,6 @@ public class BalanceResults {
 		this.grossCosts = grossCosts;
 		this.grossIncome = grossIncome;
 		this.netIncome = netIncome;
-//		this.netBalance = netBalance;
-//		this.vatDue = vatDue;
 		this.profitPaid = profitPaid;
 		this.vatPaid = vatPaid;
 		this.taxPaid = taxPaid;
