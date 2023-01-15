@@ -38,8 +38,7 @@ class BalanceResultsTest {
 	@Test
 	void testGetNetIncome() {		
 		assertEquals(BigDecimal.valueOf(1600) , balanceResult.getNetIncome());
-	}
-	
+	}	
 	
 	@Test
 	void testGetProfitPaid() {		
@@ -55,7 +54,6 @@ class BalanceResultsTest {
 	void testGetTaxPaid() {		
 		assertEquals(BigDecimal.valueOf(100) , balanceResult.getTaxPaid());
 	}
-
 	
 	@Test
 	void testGetNetBalance() {		
@@ -81,7 +79,54 @@ class BalanceResultsTest {
 	void testGetVatBalance() {		
 		assertEquals(BigDecimal.valueOf(0) , balanceResult.getVatBalance());
 	}
+		
+	@Test
+	void testGetFlatTaxBalance() {		
+		assertEquals(BigDecimal.valueOf(52) , balanceResult.getFlatTaxBalance());
+	}
+
+	@Test
+	void testGetLumpSumTaxBalance() {		
+		assertEquals(BigDecimal.valueOf(92) , balanceResult.getLumpSumTaxBalance());
+	}
 	
-	// getflatTaxBalance
+	@Test
+	void testGetProfitDueFlat() {		
+		assertEquals(BigDecimal.valueOf(648) , balanceResult.getProfitDueFlat());
+	}
 	
+	@Test
+	void testGetProfitRemainingFlat() {		
+		assertEquals(BigDecimal.valueOf(248) , balanceResult.getProfitRemainingFlat());
+	}
+	
+	@Test
+	void testGetProfitDueLump() {		
+		assertEquals(BigDecimal.valueOf(608) , balanceResult.getProfitDueLump());
+	}
+	
+	@Test
+	void testGetProfitRemainingLump() {		
+		assertEquals(BigDecimal.valueOf(208) , balanceResult.getProfitRemainingLump());
+	}
+	
+	@Test
+	void testGetFlatTaxRate() {		
+		assertEquals(19f , balanceResult.getFlatTaxRate());
+	}
+	
+	@Test
+	void testGetOtherCosts() {		
+		assertEquals(BigDecimal.valueOf(700) , balanceResult.getOtherCosts());
+	}
+	
+	@Test
+	void testGetBalance() {		
+		assertEquals(BigDecimal.valueOf(300) , balanceResult.getBalance());
+	}
+	
+	@Test
+	void testGetVatDue() {		
+		assertEquals(BigDecimal.valueOf(200) , balanceResult.getVatDue());
+	}
 }
