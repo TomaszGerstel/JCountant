@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -59,5 +60,9 @@ public class Transfer {
         this.description = description;
         this.receipt = receipt;
         this.user = user;
+    }
+    
+    public BigDecimal getAmount() {
+    	return amount.setScale(2, RoundingMode.HALF_EVEN);
     }
 }
