@@ -52,7 +52,7 @@ public class CalculationService {
 		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
 				calculateGrossCosts(transactions), calculateGrossIncome(transactions), calculateNetIncome(transactions),
 				calculateProfitPaid(transactions), calculateVatPaid(transactions),
-				calculateTaxPaid(transactions), user.getLumpSumTaxRate());
+				calculateTaxPaid(transactions), user.getLumpSumTaxRate());	
 		return balanceResults;
 	}
 

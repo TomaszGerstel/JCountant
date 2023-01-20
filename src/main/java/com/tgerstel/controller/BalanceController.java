@@ -27,7 +27,7 @@ public class BalanceController {
 	}
 
 	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {
+	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {		
 		return ResponseEntity.ok(calculationService.currentBalance(user));
 	}
 

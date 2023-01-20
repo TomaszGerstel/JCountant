@@ -131,7 +131,6 @@ public class BalanceResults {
 		result = prime * result + ((lumpTaxRate == null) ? 0 : lumpTaxRate.hashCode());	
 		result = prime * result + ((profitPaid == null) ? 0 : profitPaid.hashCode());
 		result = prime * result + ((taxPaid == null) ? 0 : taxPaid.hashCode());
-//		result = prime * result + ((vatDue == null) ? 0 : vatDue.hashCode());
 		result = prime * result + ((vatPaid == null) ? 0 : vatPaid.hashCode());
 		return result;
 	}
@@ -192,17 +191,18 @@ public class BalanceResults {
 	@Override
 	public String toString() {
 		return "BalanceResults [getCosts()=" + getCosts() + ", getGrossCosts()=" + getGrossCosts()
-				+ ", getGrossIncome()=" + getGrossIncome() + ", getNetIncome()=" + getNetIncome() + ", getVatDue()="
-				+ getVatDue() + ", getProfitPaid()=" + getProfitPaid() + ", getVatPaid()=" + getVatPaid()
-				+ ", getTaxPaid()=" + getTaxPaid() + ", getNetBalance()=" + getNetBalance() + ", getLumpTaxRate()="
-				+ getLumpTaxRate() + ", getLumpSumTaxDue()=" + getLumpSumTaxDue() + ", getFlatTaxDue()="
-				+ getFlatTaxDue() + ", getVatBalance()=" + getVatBalance() + ", getFlatTaxBalance()="
-				+ getFlatTaxBalance() + ", getLumpSumTaxBalance()=" + getLumpSumTaxBalance() + ", getProfitDueFlat()="
-				+ getProfitDueFlat() + ", getProfitRemainingFlat()=" + getProfitRemainingFlat()
-				+ ", getProfitDueLump()=" + getProfitDueLump() + ", getProfitRemainingLump()="
-				+ getProfitRemainingLump() + ", getFlatTaxRate()=" + getFlatTaxRate() + ", getOtherCosts()="
-				+ getOtherCosts() + ", getBalance()=" + getBalance() + ", hashCode()=" + hashCode() + "]";
+				+ ", getGrossIncome()=" + getGrossIncome() + ", getNetIncome()=" + getNetIncome() + ", getProfitPaid()="
+				+ getProfitPaid() + ", getVatPaid()=" + getVatPaid() + ", getTaxPaid()=" + getTaxPaid()
+				+ ", getNetBalance()=" + getNetBalance() + ", getLumpTaxRate()=" + getLumpTaxRate()
+				+ ", getLumpSumTaxDue()=" + getLumpSumTaxDue() + ", getFlatTaxDue()=" + getFlatTaxDue()
+				+ ", getVatBalance()=" + getVatBalance() + ", getFlatTaxBalance()=" + getFlatTaxBalance()
+				+ ", getLumpSumTaxBalance()=" + getLumpSumTaxBalance() + ", getProfitDueFlat()=" + getProfitDueFlat()
+				+ ", getProfitRemainingFlat()=" + getProfitRemainingFlat() + ", getProfitDueLump()="
+				+ getProfitDueLump() + ", getProfitRemainingLump()=" + getProfitRemainingLump() + ", getFlatTaxRate()="
+				+ getFlatTaxRate() + ", getOtherCosts()=" + getOtherCosts() + ", getBalance()=" + getBalance()
+				+ ", getVatDue()=" + getVatDue() + ", hashCode()=" + hashCode() + "]";
 	}
+
 
 		
 	

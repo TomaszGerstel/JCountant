@@ -2,108 +2,95 @@ package com.tgerstel.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ReceiptTest {
 
-//	@Test
-//	void testGetNetAmount() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetVatValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetId() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetDate() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetAmount() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetVatPercentage() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetClient() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetWorker() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetDescription() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testGetUser() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetId() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetDate() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetAmount() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetNetAmount() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetVatValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetVatPercentage() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetClient() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetWorker() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetDescription() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testSetUser() {
-//		fail("Not yet implemented");
-//	}
+	static Receipt receiptWithAllValues;
+	static Receipt receiptWithOnlyVatValue;
+	static Receipt receiptWithOnlyNetAmount;
+	static Receipt receiptWithOnlyVatPercentage;
+	static Receipt receiptWthoutOptValues;
+	static LocalDate date;
+
+	@BeforeAll
+	static void prepareVaiables() {
+		date = LocalDate.now();
+		receiptWithAllValues = new Receipt(date, BigDecimal.valueOf(3600), BigDecimal.valueOf(3000),
+				BigDecimal.valueOf(600), 20f, "client1", "worker1", "desc", null);
+		receiptWithOnlyVatValue = new Receipt(date, BigDecimal.valueOf(3000), null, BigDecimal.valueOf(500), null,
+				"client2", "worker1", "desc", null);
+		receiptWithOnlyNetAmount = new Receipt(date, BigDecimal.valueOf(3000), BigDecimal.valueOf(2500), null, null,
+				"client3", "worker2", "desc", null);
+		receiptWithOnlyVatPercentage = new Receipt(date, BigDecimal.valueOf(3750), null, null, 25f, "client1",
+				"worker2", "desc", null);
+		receiptWthoutOptValues = new Receipt(date, BigDecimal.valueOf(3000), null, null, null, "client4", "worker1",
+				"desc", null);
+	}
+
+	@Test
+	@DisplayName("getNetAmoutn for object with declared all fields should return known value")
+	void testGetNetAmount() {
+		assertEquals(BigDecimal.valueOf(3000).setScale(2), receiptWithAllValues.getNetAmount());
+	}
+	
+	@Test
+	@DisplayName("getNetAmount should return known (calculated from vatValue) value (amount - vatValue)")
+	void testGetNetAmount2() {
+		assertEquals(BigDecimal.valueOf(2500).setScale(2), receiptWithOnlyVatValue.getNetAmount());
+	}
+	
+	@Test
+	@DisplayName("getNetAmoutn for object with declared netAmount should return known value")
+	void testGetNetAmount3() {
+		assertEquals(BigDecimal.valueOf(2500).setScale(2), receiptWithOnlyNetAmount.getNetAmount());
+	}
+	
+	@Test
+	@DisplayName("getNetAmount should return known (calculated from vatPercentage) value")
+	void testGetNetAmount4() {
+		assertEquals(BigDecimal.valueOf(3000).setScale(2), receiptWithOnlyVatPercentage.getNetAmount());
+	}
+	
+	@Test
+	@DisplayName("getNetValue for object without vatValue, netValue and vatPercentage shoud return null")
+	void testGetNetAmount5() {
+		assertNull(receiptWthoutOptValues.getNetAmount());
+	}	
+	
+	@Test
+	@DisplayName("getVatValue for object with declared all fields should return known value")
+	void testGetVataValue() {
+		assertEquals(BigDecimal.valueOf(600).setScale(2), receiptWithAllValues.getVatValue());
+	}
+	
+	@Test
+	@DisplayName("getVatValue for object with declared catCalue should return known value")
+	void testGetVatValue2() {
+		assertEquals(BigDecimal.valueOf(500).setScale(2), receiptWithOnlyVatValue.getVatValue());
+	}
+	
+	@Test
+	@DisplayName("getVatValue should return known (calculated from netAmount) value")
+	void testGetVatValue3() {
+		assertEquals(BigDecimal.valueOf(500).setScale(2), receiptWithOnlyNetAmount.getVatValue());
+	}
+	
+	@Test
+	@DisplayName("getVatValue should return known (calculated from vatPercentage) value")
+	void testGetVatValue4() {
+		assertEquals(BigDecimal.valueOf(750).setScale(2), receiptWithOnlyVatPercentage.getVatValue());
+	}
+	
+	@Test
+	@DisplayName("getVatValue for object without vatValue, netValue and vatPercentage shoud return null")
+	void testGetVatValue5() {
+		assertNull(receiptWthoutOptValues.getVatValue());
+	}
 
 }
