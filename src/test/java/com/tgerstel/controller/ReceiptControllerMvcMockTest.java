@@ -76,7 +76,7 @@ class ReceiptControllerMvcMockTest {
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt").content(asJsonString(receipt))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
-				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200}"))
+				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
 				.andExpect(MockMvcResultMatchers.content().json("{'id': 22}"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
 	}
@@ -89,7 +89,7 @@ class ReceiptControllerMvcMockTest {
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/recent")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200}, {'amount': 1000}]"))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1000.00}]"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -100,7 +100,7 @@ class ReceiptControllerMvcMockTest {
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/no_transfer_receipts")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200}, {'amount': 1000}]"))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1000.00}]"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -124,7 +124,7 @@ class ReceiptControllerMvcMockTest {
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/1")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200}"))
+				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
 				.andExpect(MockMvcResultMatchers.content().json("{'id': 22}"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
@@ -161,7 +161,7 @@ class ReceiptControllerMvcMockTest {
 				.param("key", "client_name")				
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200}, {'amount': 1000}]"))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1000.00}]"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	

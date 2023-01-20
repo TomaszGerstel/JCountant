@@ -58,7 +58,7 @@ public class BalanceResults {
 	}
 	
 	public BigDecimal getNetBalance() {
-		return getNetIncome().subtract(getCosts());
+		return getNetIncome().subtract(getCosts()).setScale(2);
 	}
 	
 	public Integer getLumpTaxRate() {
@@ -67,39 +67,40 @@ public class BalanceResults {
 	}
 	
 	public BigDecimal getLumpSumTaxDue() {
-		return netIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100));
+		return netIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100)).setScale(2);
 	}
 	
 	public BigDecimal getFlatTaxDue() {
-		return getNetBalance().multiply(BigDecimal.valueOf(flatTaxRate.intValue())).divide(BigDecimal.valueOf(100));
+		return getNetBalance().multiply(BigDecimal.valueOf(flatTaxRate.intValue()))
+				.divide(BigDecimal.valueOf(100)).setScale(2);
 	}
 	
 	public BigDecimal getVatBalance() {
-		return getVatDue().subtract(vatPaid);
+		return getVatDue().subtract(vatPaid).setScale(2);
 	}
 	
 	public BigDecimal getFlatTaxBalance() {
-		return getFlatTaxDue().subtract(taxPaid);
+		return getFlatTaxDue().subtract(taxPaid).setScale(2);
 	}
 	
 	public BigDecimal getLumpSumTaxBalance() {
-		return getLumpSumTaxDue().subtract(taxPaid);
+		return getLumpSumTaxDue().subtract(taxPaid).setScale(2);
 	}
 
 	public BigDecimal getProfitDueFlat() {
-		return getNetBalance().subtract(getFlatTaxDue());
+		return getNetBalance().subtract(getFlatTaxDue()).setScale(2);
 	}
 	
 	public BigDecimal getProfitRemainingFlat() {
-		return getProfitDueFlat().subtract(profitPaid); 
+		return getProfitDueFlat().subtract(profitPaid).setScale(2); 
 	}
 
 	public BigDecimal getProfitDueLump() {
-		return getNetBalance().subtract(getLumpSumTaxDue());
+		return getNetBalance().subtract(getLumpSumTaxDue()).setScale(2);
 	}	
 
 	public BigDecimal getProfitRemainingLump() {
-		return getProfitDueLump().subtract(profitPaid); 
+		return getProfitDueLump().subtract(profitPaid).setScale(2); 
 	}
 
 	public Float getFlatTaxRate() {
@@ -107,15 +108,15 @@ public class BalanceResults {
 	}
 	
 	public BigDecimal getOtherCosts() {
-		return vatPaid.add(taxPaid).add(profitPaid);
+		return vatPaid.add(taxPaid).add(profitPaid).setScale(2);
 	}	
 		
 	public BigDecimal getBalance() {
-		return grossIncome.subtract(grossCosts).subtract(getOtherCosts());
+		return grossIncome.subtract(grossCosts).subtract(getOtherCosts()).setScale(2);
 	}
 	
 	public BigDecimal getVatDue() {
-		return getGrossIncome().subtract(getGrossCosts()).subtract(getNetBalance());
+		return getGrossIncome().subtract(getGrossCosts()).subtract(getNetBalance()).setScale(2);
 	}
 	
 	

@@ -60,11 +60,13 @@ class CalculationServiceTest {
 		date1_now = LocalDate.now();
 		date2_month_ago = date1_now.minusMonths(1);
 		transfers = new ArrayList<Transfer>();
-		transaction1_In = new TransactionModel(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), BigDecimal.valueOf(200), BigDecimal.valueOf(1000));
-		transaction2_Out = new TransactionModel(TransferType.OUT_TRANSFER, BigDecimal.valueOf(200), BigDecimal.valueOf(20), BigDecimal.valueOf(180));
-		transaction3_Salary = new TransactionModel(TransferType.SALARY, BigDecimal.valueOf(600), null, null);
-		transaction4_Tax = new TransactionModel(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(100), null, null);
-		transaction5_Vat = new TransactionModel(TransferType.VAT_OUT_TRANSFER, BigDecimal.valueOf(100), null, null);
+		transaction1_In = new TransactionModel(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200).setScale(2),
+				BigDecimal.valueOf(200).setScale(2), BigDecimal.valueOf(1000).setScale(2));
+		transaction2_Out = new TransactionModel(TransferType.OUT_TRANSFER, BigDecimal.valueOf(200).setScale(2),
+				BigDecimal.valueOf(20).setScale(2), BigDecimal.valueOf(180).setScale(2));
+		transaction3_Salary = new TransactionModel(TransferType.SALARY, BigDecimal.valueOf(600).setScale(2), null, null);
+		transaction4_Tax = new TransactionModel(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(100).setScale(2), null, null);
+		transaction5_Vat = new TransactionModel(TransferType.VAT_OUT_TRANSFER, BigDecimal.valueOf(100).setScale(2), null, null);
 
 		transactions = List.of(transaction1_In, transaction2_Out, transaction3_Salary, transaction4_Tax,
 				transaction5_Vat);
@@ -81,9 +83,9 @@ class CalculationServiceTest {
 		transfers = List.of(transf1_In, transf2_Out, transf3_Salary, transf4_Tax, transf5_Vat);
 
 		// add variables to show calculations and take values from transfers
-		balanceResultsForKnowingTransfers = new BalanceResults(BigDecimal.valueOf(180), BigDecimal.valueOf(200), BigDecimal.valueOf(1200),
-				BigDecimal.valueOf(1000), BigDecimal.valueOf(600),BigDecimal.valueOf(100), 
-				BigDecimal.valueOf(100), null);
+		balanceResultsForKnowingTransfers = new BalanceResults(BigDecimal.valueOf(180).setScale(2), BigDecimal.valueOf(200).setScale(2), BigDecimal.valueOf(1200).setScale(2),
+				BigDecimal.valueOf(1000).setScale(2), BigDecimal.valueOf(600).setScale(2),BigDecimal.valueOf(100).setScale(2), 
+				BigDecimal.valueOf(100).setScale(2), null);
 
 		user = new User();
 		user.setLumpSumTaxRate(12);
@@ -99,20 +101,28 @@ class CalculationServiceTest {
 
 		BalanceResults result = calcService.currentBalance(new User());
 
-		assertAll(() -> assertEquals(BigDecimal.valueOf(200), result.getBalance()), () -> assertEquals(BigDecimal.valueOf(180), result.getCosts()),
-				() -> assertEquals(BigDecimal.valueOf(55.8), result.getFlatTaxBalance()), () -> assertEquals(BigDecimal.valueOf(200), result.getGrossCosts()),
-				() -> assertEquals(BigDecimal.valueOf(1200), result.getGrossIncome()),
-				() -> assertEquals(BigDecimal.valueOf(155.8), result.getFlatTaxDue()), () -> assertEquals(19, result.getFlatTaxRate()),
-				() -> assertEquals(BigDecimal.valueOf(1000), result.getNetIncome()),
-				() -> assertEquals(BigDecimal.valueOf(20), result.getLumpSumTaxBalance()),
-				() -> assertEquals(BigDecimal.valueOf(120), result.getLumpSumTaxDue()), () -> assertEquals(12, result.getLumpTaxRate()),
-				() -> assertEquals(BigDecimal.valueOf(820), result.getNetBalance()), () -> assertEquals(BigDecimal.valueOf(800), result.getOtherCosts()),
-				() -> assertEquals(BigDecimal.valueOf(664.2), result.getProfitDueFlat()),
-				() -> assertEquals(BigDecimal.valueOf(700), result.getProfitDueLump()), () -> assertEquals(BigDecimal.valueOf(600), result.getProfitPaid()),
-				() -> assertEquals(BigDecimal.valueOf(64.2), result.getProfitRemainingFlat()),
-				() -> assertEquals(BigDecimal.valueOf(100), result.getProfitRemainingLump()), () -> assertEquals(BigDecimal.valueOf(100), result.getTaxPaid()),
-				() -> assertEquals(BigDecimal.valueOf(80), result.getVatBalance()), () -> assertEquals(BigDecimal.valueOf(180), result.getVatDue()),
-				() -> assertEquals(BigDecimal.valueOf(100), result.getVatPaid()));
+		assertAll(() -> assertEquals(BigDecimal.valueOf(200).setScale(2), result.getBalance()),
+				() -> assertEquals(BigDecimal.valueOf(180).setScale(2), result.getCosts()),
+				() -> assertEquals(BigDecimal.valueOf(55.8).setScale(2), result.getFlatTaxBalance().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(200).setScale(2), result.getGrossCosts()),
+				() -> assertEquals(BigDecimal.valueOf(1200).setScale(2), result.getGrossIncome()),
+				() -> assertEquals(BigDecimal.valueOf(155.8).setScale(2), result.getFlatTaxDue().setScale(2)),
+				() -> assertEquals(19, result.getFlatTaxRate()),
+				() -> assertEquals(BigDecimal.valueOf(1000).setScale(2), result.getNetIncome()),
+				() -> assertEquals(BigDecimal.valueOf(20).setScale(2), result.getLumpSumTaxBalance().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(120).setScale(2), result.getLumpSumTaxDue().setScale(2)),
+				() -> assertEquals(12, result.getLumpTaxRate()),
+				() -> assertEquals(BigDecimal.valueOf(820).setScale(2), result.getNetBalance()),
+				() -> assertEquals(BigDecimal.valueOf(800).setScale(2), result.getOtherCosts()),
+				() -> assertEquals(BigDecimal.valueOf(664.2).setScale(2), result.getProfitDueFlat()),
+				() -> assertEquals(BigDecimal.valueOf(700).setScale(2), result.getProfitDueLump().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(600).setScale(2), result.getProfitPaid()),
+				() -> assertEquals(BigDecimal.valueOf(64.2).setScale(2), result.getProfitRemainingFlat().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(100).setScale(2), result.getProfitRemainingLump().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(100).setScale(2), result.getTaxPaid()),
+				() -> assertEquals(BigDecimal.valueOf(80).setScale(2), result.getVatBalance().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(180).setScale(2), result.getVatDue().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(100).setScale(2), result.getVatPaid()));
 	}
 
 	@Test
@@ -124,20 +134,28 @@ class CalculationServiceTest {
 
 		BalanceResults result = calcService.balanceToCurrentMonth(new User());
 		// change to equal prepared balance result?
-		assertAll(() -> assertEquals(BigDecimal.valueOf(200), result.getBalance()), () -> assertEquals(BigDecimal.valueOf(180), result.getCosts()),
-				() -> assertEquals(BigDecimal.valueOf(55.8), result.getFlatTaxBalance()), () -> assertEquals(BigDecimal.valueOf(200), result.getGrossCosts()),
-				() -> assertEquals(BigDecimal.valueOf(1200), result.getGrossIncome()),
-				() -> assertEquals(BigDecimal.valueOf(155.8), result.getFlatTaxDue()), () -> assertEquals(19, result.getFlatTaxRate()),
-				() -> assertEquals(BigDecimal.valueOf(1000), result.getNetIncome()),
-				() -> assertEquals(BigDecimal.valueOf(20), result.getLumpSumTaxBalance()),
-				() -> assertEquals(BigDecimal.valueOf(120), result.getLumpSumTaxDue()), () -> assertEquals(12, result.getLumpTaxRate()),
-				() -> assertEquals(BigDecimal.valueOf(820), result.getNetBalance()), () -> assertEquals(BigDecimal.valueOf(800), result.getOtherCosts()),
-				() -> assertEquals(BigDecimal.valueOf(664.2), result.getProfitDueFlat()),
-				() -> assertEquals(BigDecimal.valueOf(700), result.getProfitDueLump()), () -> assertEquals(BigDecimal.valueOf(600), result.getProfitPaid()),
-				() -> assertEquals(BigDecimal.valueOf(64.2), result.getProfitRemainingFlat()),
-				() -> assertEquals(BigDecimal.valueOf(100), result.getProfitRemainingLump()), () -> assertEquals(BigDecimal.valueOf(100), result.getTaxPaid()),
-				() -> assertEquals(BigDecimal.valueOf(80), result.getVatBalance()), () -> assertEquals(BigDecimal.valueOf(180), result.getVatDue()),
-				() -> assertEquals(BigDecimal.valueOf(100), result.getVatPaid()));
+		assertAll(() -> assertEquals(BigDecimal.valueOf(200).setScale(2), result.getBalance()),
+				() -> assertEquals(BigDecimal.valueOf(180).setScale(2), result.getCosts()),
+				() -> assertEquals(BigDecimal.valueOf(55.8).setScale(2), result.getFlatTaxBalance().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(200).setScale(2), result.getGrossCosts()),
+				() -> assertEquals(BigDecimal.valueOf(1200).setScale(2), result.getGrossIncome()),
+				() -> assertEquals(BigDecimal.valueOf(155.8).setScale(2), result.getFlatTaxDue().setScale(2)),
+				() -> assertEquals(19, result.getFlatTaxRate()),
+				() -> assertEquals(BigDecimal.valueOf(1000).setScale(2), result.getNetIncome()),
+				() -> assertEquals(BigDecimal.valueOf(20).setScale(2), result.getLumpSumTaxBalance().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(120).setScale(2), result.getLumpSumTaxDue().setScale(2)),
+				() -> assertEquals(12, result.getLumpTaxRate()),
+				() -> assertEquals(BigDecimal.valueOf(820).setScale(2), result.getNetBalance()),
+				() -> assertEquals(BigDecimal.valueOf(800).setScale(2), result.getOtherCosts()),
+				() -> assertEquals(BigDecimal.valueOf(664.2).setScale(2), result.getProfitDueFlat()),
+				() -> assertEquals(BigDecimal.valueOf(700).setScale(2), result.getProfitDueLump().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(600).setScale(2), result.getProfitPaid()),
+				() -> assertEquals(BigDecimal.valueOf(64.2).setScale(2), result.getProfitRemainingFlat().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(100).setScale(2), result.getProfitRemainingLump().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(100).setScale(2), result.getTaxPaid()),
+				() -> assertEquals(BigDecimal.valueOf(80).setScale(2), result.getVatBalance().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(180).setScale(2), result.getVatDue().setScale(2)),
+				() -> assertEquals(BigDecimal.valueOf(100).setScale(2), result.getVatPaid()));
 	}
 
 	@Test
@@ -184,9 +202,9 @@ class CalculationServiceTest {
 
 		TransactionModel result = calcService.makeTransactionFromReceipt(receipt1);
 
-		assertAll(() -> assertEquals(BigDecimal.valueOf(650), result.getAmount()),
-				() -> assertEquals(BigDecimal.valueOf(600), result.getNetAmount()),
-				() -> assertEquals(BigDecimal.valueOf(50), result.getVatValue()));
+		assertAll(() -> assertEquals(BigDecimal.valueOf(650).setScale(2), result.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(600).setScale(2), result.getNetAmount()),
+				() -> assertEquals(BigDecimal.valueOf(50).setScale(2), result.getVatValue()));
 	}
 
 	@Test
@@ -208,27 +226,27 @@ class CalculationServiceTest {
 
 	@Test
 	void testCalculateCosts() {			
-		assertEquals(BigDecimal.valueOf(180), calcService.calculateCosts(transactions));
+		assertEquals(BigDecimal.valueOf(180).setScale(2), calcService.calculateCosts(transactions));
 	}	
 	
 	@Test
 	void testCalculateGrossIncome() {
-		assertEquals(BigDecimal.valueOf(1200), calcService.calculateGrossIncome(transactions));
+		assertEquals(BigDecimal.valueOf(1200).setScale(2), calcService.calculateGrossIncome(transactions));
 	}
 
 	@Test
 	void testCalculateProfitPaid() {
-		assertEquals(BigDecimal.valueOf(600), calcService.calculateProfitPaid(transactions));
+		assertEquals(BigDecimal.valueOf(600).setScale(2), calcService.calculateProfitPaid(transactions));
 	}
 
 	@Test
 	void testCalculateVatPaid() {
-		assertEquals(BigDecimal.valueOf(100), calcService.calculateVatPaid(transactions));
+		assertEquals(BigDecimal.valueOf(100).setScale(2), calcService.calculateVatPaid(transactions));
 	}
 
 	@Test
 	void testCalculateTaxPaid() {
-		assertEquals(BigDecimal.valueOf(100), calcService.calculateTaxPaid(transactions));
+		assertEquals(BigDecimal.valueOf(100).setScale(2), calcService.calculateTaxPaid(transactions));
 	}
 
 }

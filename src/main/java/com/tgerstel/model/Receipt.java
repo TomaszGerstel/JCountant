@@ -64,6 +64,10 @@ public class Receipt {
 		this.description = description;
 		this.user = user;
 	}
+	
+	public BigDecimal getAmount() {
+		return amount.setScale(2, RoundingMode.HALF_EVEN);
+	}
 
 	public BigDecimal getNetAmount() {
 		if (netAmount == null) {

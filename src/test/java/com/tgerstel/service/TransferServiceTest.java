@@ -73,13 +73,13 @@ class TransferServiceTest {
 		
 		assertAll(
 				() -> assertEquals(dateTime, transferReturned.getDate()),
-				() -> assertEquals(BigDecimal.valueOf(1200), transferReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(1200).setScale(2), transferReturned.getAmount()),
 				() -> assertEquals("Bob", transferReturned.getUser().getUsername()),
 				() -> assertNotNull(transferReturned.getUser()),
 				() -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType()),				
 				() -> assertEquals("Customer", transferReturned.getFrom()),
 				() -> assertEquals("Me", transferReturned.getTo()),
-				() -> assertEquals(BigDecimal.valueOf(1200), transferReturned.getReceipt().getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(1200).setScale(2), transferReturned.getReceipt().getAmount()),
 				() -> assertNotNull(transferReturned.getReceipt()),
 				() -> assertEquals("Customer", transferReturned.getReceipt().getClient())	
 		);
@@ -132,7 +132,7 @@ class TransferServiceTest {
 		
 		assertAll(			
 				() -> assertEquals(dateTime, transferReturned.getDate()),
-				() -> assertEquals(BigDecimal.valueOf(1200), transferReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(1200).setScale(2), transferReturned.getAmount()),
 				() -> assertEquals("Bob", transferReturned.getUser().getUsername()),
 				() -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType())
 	

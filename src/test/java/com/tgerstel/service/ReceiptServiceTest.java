@@ -81,12 +81,12 @@ class ReceiptServiceTest {
 		
 		assertAll(
 				() -> assertEquals(dateTime, receiptReturned.getDate()),
-				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810).setScale(2), receiptReturned.getAmount()),
 				() -> assertEquals("Sober", receiptReturned.getUser().getUsername()),
 				() -> assertEquals("sobot@a.com", receiptReturned.getUser().getEmail()),
 				() -> assertEquals(13, receiptReturned.getUser().getLumpSumTaxRate()),
-				() -> assertEquals(BigDecimal.valueOf(200), receiptReturned.getNetAmount()),
-				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(200).setScale(2), receiptReturned.getNetAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810).setScale(2), receiptReturned.getAmount()),
 				() -> assertEquals("Albatros", receiptReturned.getClient()),
 				() -> assertEquals("Stan", receiptReturned.getWorker()),
 				() -> assertEquals("for example", receiptReturned.getDescription()),
@@ -133,12 +133,12 @@ class ReceiptServiceTest {
 		
 		assertAll(			
 				() -> assertEquals(dateTime, receiptReturned.getDate()),
-				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810).setScale(2), receiptReturned.getAmount()),
 				() -> assertEquals("Sober", receiptReturned.getUser().getUsername()),
 				() -> assertEquals("sobot@a.com", receiptReturned.getUser().getEmail()),
 				() -> assertEquals(13, receiptReturned.getUser().getLumpSumTaxRate()),
-				() -> assertEquals(BigDecimal.valueOf(200), receiptReturned.getNetAmount()),
-				() -> assertEquals(BigDecimal.valueOf(810), receiptReturned.getAmount()),
+				() -> assertEquals(BigDecimal.valueOf(200).setScale(2), receiptReturned.getNetAmount()),
+				() -> assertEquals(BigDecimal.valueOf(810).setScale(2), receiptReturned.getAmount()),
 				() -> assertEquals("Albatros", receiptReturned.getClient()),
 				() -> assertEquals("Stan", receiptReturned.getWorker()),
 				() -> assertEquals("for example", receiptReturned.getDescription()),
