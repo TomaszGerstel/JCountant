@@ -24,6 +24,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=jcountant
+    volumes:
+      - /db/data:/var/lib/postgresql/data    
     ports:
       - "3307:5432"
     restart: unless-stopped
