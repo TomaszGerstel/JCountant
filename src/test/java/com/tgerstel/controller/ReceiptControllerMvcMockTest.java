@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
+import static org.mockito.ArgumentMatchers.*;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testAddReceipt() throws Exception {
 
-		Mockito.when(receiptService.createReceipt(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(receipt);
+		Mockito.when(receiptService.createReceipt(any(), any())).thenReturn(receipt);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt").content(asJsonString(receipt))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
@@ -84,7 +84,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testAllReceipts() throws Exception {
 
-		Mockito.when(receiptService.getRecentReceipts(ArgumentMatchers.any(), ArgumentMatchers.any()))
+		Mockito.when(receiptService.getRecentReceipts(any(),any()))
 				.thenReturn(receipts);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/recent")
@@ -96,7 +96,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testNoTransferReceipts() throws Exception {
 
-		Mockito.when(receiptService.receiptsNotUsedInTransfer(ArgumentMatchers.any())).thenReturn(receipts);
+		Mockito.when(receiptService.receiptsNotUsedInTransfer(any())).thenReturn(receipts);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/no_transfer_receipts")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
@@ -119,7 +119,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testGetReceiptById() throws Exception {
 
-		Mockito.when(receiptService.getById(ArgumentMatchers.any(), ArgumentMatchers.anyLong()))
+		Mockito.when(receiptService.getById(any(),anyLong()))
 				.thenReturn(Optional.of(receipt));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/1")
@@ -132,7 +132,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testGetReceiptById2() throws Exception {
 
-		Mockito.when(receiptService.getById(ArgumentMatchers.any(), ArgumentMatchers.eq(1L)))
+		Mockito.when(receiptService.getById(any(), eq(1L)))
 				.thenReturn(Optional.empty());
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/1").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -154,7 +154,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testSearchReceipts() throws Exception {
 
-		Mockito.when(receiptService.searchReceiptsByClientName(ArgumentMatchers.any(), ArgumentMatchers.eq("client_name")))
+		Mockito.when(receiptService.searchReceiptsByClientName(any(), eq("client_name")))
 				.thenReturn(receipts);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/search")
@@ -168,7 +168,7 @@ class ReceiptControllerMvcMockTest {
 	@Test
 	void testSearchReceipts2() throws Exception {
 
-		Mockito.when(receiptService.searchReceiptsByClientName(ArgumentMatchers.any(), ArgumentMatchers.eq("some_client")))
+		Mockito.when(receiptService.searchReceiptsByClientName(any(), eq("some_client")))
 				.thenReturn(receipts);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/receipt/search")
