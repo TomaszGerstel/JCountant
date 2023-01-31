@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class TransferControllerMvcMockTest {
 
 	@MockBean
 	TransferService transferService;
-	
+
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -49,6 +50,7 @@ public class TransferControllerMvcMockTest {
 	static Transfer transfer;
 	static Transfer specialTransfer;
 	static Transfer notValidTransfer;
+	static List<Transfer> transfers;
 
 	@BeforeAll
 	static void prepareVariables() {
@@ -61,44 +63,90 @@ public class TransferControllerMvcMockTest {
 		transfer.setId(12L);
 		specialTransfer = new Transfer(TransferType.SALARY, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
 				null, null);
-		notValidTransfer = new Transfer(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(200), "Customer", "Me", null, null,
-				null, null);
+		specialTransfer.setId(33L);
+		notValidTransfer = new Transfer(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(200), "Customer", "Me", null,
+				null, null, null);
+		transfers = List.of(transfer, specialTransfer);
 	}
 
 	@Test
 	void addTransferTest() throws Exception {
 
 		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(transfer));
-		
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(transfer)).param("receiptId", "2")
-				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(transfer)).param("receiptId", "2")
+						.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
 				.andExpect(MockMvcResultMatchers.content().json("{'id': 12}"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
 	}
-	
+
 	@Test
 	@DisplayName("AddTransfer with regular transfer type without receipt_id should return 422 status")
 	void addTransferTest2() throws Exception {
 
 		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(transfer));
-		
+
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(transfer))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
+	}
+
+	@Test
+	@DisplayName("AddTransfer with special transfer type without receipt_id should save transfer")
+	void addTransferTest3() throws Exception {
+
+		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(specialTransfer));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(specialTransfer))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
+				.andExpect(MockMvcResultMatchers.content().json("{'id': 33}"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+	}
+
+	@Test
+	@DisplayName("AddTransfer with no valid transfer")
+	void addTransferTest4() throws Exception {
+
+		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(notValidTransfer));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(notValidTransfer))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
 	}
 	
 	@Test
-	@DisplayName("AddTransfer with no valid transfer")
-	void addTransferTest3() throws Exception {
+	void testAllTransfers() throws Exception {
 
-		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(notValidTransfer));
-		
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(notValidTransfer))
-				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))			
-				.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
-	}	
+		Mockito.when(transferService.getRecentTransfers(any(),any()))
+				.thenReturn(transfers);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/recent")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1200.00}]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	
+	// TODO : check, ok? and delete methods
+	@Test
+	void testGetTransferById() throws Exception {
+
+		Mockito.when(transferService.getById(any(),anyLong()))
+				.thenReturn(Optional.of(transfer));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/1")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
+				.andExpect(MockMvcResultMatchers.content().json("{'id': 12}"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	
 
 	public static String asJsonString(final Object obj) {
 		ObjectMapper mapper = new ObjectMapper();

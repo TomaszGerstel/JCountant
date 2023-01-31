@@ -8,6 +8,7 @@ public class JCountantApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(JCountantApplication.class, args);
+	
 	}
 
 }
