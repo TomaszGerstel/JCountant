@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,22 +131,68 @@ public class TransferControllerMvcMockTest {
 				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1200.00}]"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
-	
-	// TODO : check, ok? and delete methods
+
 	@Test
 	void testGetTransferById() throws Exception {
 
-		Mockito.when(transferService.getById(any(),anyLong()))
+		Mockito.when(transferService.getById(any(), eq(12L)))
 				.thenReturn(Optional.of(transfer));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/1")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/12")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
 				.andExpect(MockMvcResultMatchers.content().json("{'id': 12}"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	@Test
+	@DisplayName("GetTransferById should return not found status if there is no result")
+	void testGetTransferById2() throws Exception {
+
+		Mockito.when(transferService.getById(any(), eq(15L)))
+				.thenReturn(Optional.empty());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/15")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))			
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
+	
+	@Test
+	void testDelete() throws Exception {	
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/transfer/1")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
+	
+	@Test
+	void testSearchReceipts() throws Exception {
+
+		Mockito.when(transferService.searchTransfersByFromName(any(), eq("client_name")))
+				.thenReturn(transfers);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/search")
+				.param("key", "client_name")				
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1200.00}]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	@DisplayName("SearchTransfer should return ok status i empty result if there no transfer found")
+	void testSearchReceipts2() throws Exception {
+
+		Mockito.when(transferService.searchTransfersByFromName(any(), eq("client_name")))
+				.thenReturn(new ArrayList<>());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/transfer/search")
+				.param("key", "client_name")				
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.content().json("[]"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
 	
 
 	public static String asJsonString(final Object obj) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.*;
@@ -130,6 +131,7 @@ class ReceiptControllerMvcMockTest {
 	}
 
 	@Test
+	@DisplayName("GetReceiptById should return not found status if there is no result")
 	void testGetReceiptById2() throws Exception {
 
 		Mockito.when(receiptService.getById(any(), eq(1L)))
@@ -166,6 +168,7 @@ class ReceiptControllerMvcMockTest {
 	}
 	
 	@Test
+	@DisplayName("SearchReceipt should return ok status i empty result if there no receipts found")
 	void testSearchReceipts2() throws Exception {
 
 		Mockito.when(receiptService.searchReceiptsByClientName(any(), eq("some_client")))
