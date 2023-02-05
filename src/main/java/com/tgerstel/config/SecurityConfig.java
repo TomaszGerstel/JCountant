@@ -36,6 +36,7 @@ public class SecurityConfig {
 	protected SecurityFilterChain web(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/home", "/login", "/api/register", "/h2-console", "/h2-console/**").permitAll()
+//				.requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()).httpBasic().and()
 //    			.formLogin()
 //				.and()
