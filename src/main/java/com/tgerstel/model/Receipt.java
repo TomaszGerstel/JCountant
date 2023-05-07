@@ -74,7 +74,7 @@ public class Receipt {
 			if (vatValue != null)
 				return amount.subtract(vatValue).setScale(2, RoundingMode.HALF_EVEN);
 			if (vatPercentage != null)
-				return amount.divide(BigDecimal.valueOf(100 + vatPercentage)).multiply(BigDecimal.valueOf(100))
+				return amount.divide(BigDecimal.valueOf(100 + vatPercentage), 6, RoundingMode.HALF_EVEN).multiply(BigDecimal.valueOf(100))
 						.setScale(2, RoundingMode.HALF_EVEN);
 			else
 				return null;
@@ -87,7 +87,7 @@ public class Receipt {
 			if (netAmount != null)
 				return amount.subtract(netAmount).setScale(2, RoundingMode.HALF_EVEN);
 			if (vatPercentage != null)
-				return amount.divide(BigDecimal.valueOf(100 + vatPercentage))
+				return amount.divide(BigDecimal.valueOf(100 + vatPercentage), 6, RoundingMode.HALF_EVEN)
 						.multiply(BigDecimal.valueOf(vatPercentage)).setScale(2, RoundingMode.HALF_EVEN);
 			else
 				return null;

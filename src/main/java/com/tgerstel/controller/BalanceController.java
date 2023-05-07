@@ -15,7 +15,13 @@ import com.tgerstel.calculations.BalanceResults;
 import com.tgerstel.calculations.CalculationService;
 import com.tgerstel.model.User;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@OpenAPIDefinition(info = @Info(title = "Receipt API", version = "v1"))
+@SecurityRequirement(name = "basicAuth")
 @RequestMapping(path = "/api/balance", produces = "application/json")
 @CrossOrigin(origins = "*")
 public class BalanceController {

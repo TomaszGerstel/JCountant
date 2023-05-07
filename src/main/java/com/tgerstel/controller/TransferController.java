@@ -26,9 +26,14 @@ import com.tgerstel.model.TransferType;
 import com.tgerstel.model.User;
 import com.tgerstel.service.TransferService;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
+@OpenAPIDefinition(info = @Info(title = "Receipt API", version = "v1"))
+@SecurityRequirement(name = "basicAuth")
 @RequestMapping(path = "/api/transfer", produces = "application/json")
 @CrossOrigin(origins = "*")
 public class TransferController {

@@ -25,9 +25,14 @@ import com.tgerstel.model.Receipt;
 import com.tgerstel.model.User;
 import com.tgerstel.service.ReceiptService;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.info.*;
 import jakarta.validation.Valid;
 
 @RestController
+@OpenAPIDefinition(info = @Info(title = "Receipt API", version = "v1"))
+@SecurityRequirement(name = "basicAuth")
 @RequestMapping(path = "/api/receipt", produces = "application/json")
 @CrossOrigin(origins = "*")
 public class ReceiptController {
@@ -59,11 +64,10 @@ public class ReceiptController {
 
 		List<Receipt> allReceipts = receiptService.getRecentReceipts(user, resultSize);
 		return ResponseEntity.ok(allReceipts);
-	}
-
+	}	
+	
 	@GetMapping(path = "/no_transfer_receipts", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Receipt>> allReceiptsWithoutTransfer(@AuthenticationPrincipal User user) {
-
 		List<Receipt> allReceipts = receiptService.receiptsNotUsedInTransfer(user);
 		return ResponseEntity.ok(allReceipts);
 	}
