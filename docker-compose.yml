@@ -11,10 +11,11 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jcountant?stringtype=unspecified
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+#      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_PASSWORD=hardpass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8080:8080"
     restart: unless-stopped    
           
   db:
@@ -22,7 +23,8 @@ services:
     container_name: db
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=hardpass
       - POSTGRES_DB=jcountant
     volumes:
       - /db/data:/var/lib/postgresql/data    
