@@ -1,4 +1,4 @@
-package com.tgerstel.config;
+package com.tgerstel.infrastructure.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

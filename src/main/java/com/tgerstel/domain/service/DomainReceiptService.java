@@ -8,13 +8,11 @@ import com.tgerstel.domain.repository.ReceiptRepository;
 import com.tgerstel.domain.repository.TransferRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 import com.tgerstel.infrastructure.repository.Receipt;
 import com.tgerstel.infrastructure.repository.Transfer;
 import com.tgerstel.infrastructure.repository.User;
 
-@Service
 public class DomainReceiptService implements ReceiptService {
 	
 	private final ReceiptRepository receiptRepo;

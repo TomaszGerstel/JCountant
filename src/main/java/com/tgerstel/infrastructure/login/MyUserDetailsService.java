@@ -1,8 +1,7 @@
-package com.tgerstel.domain.service;
+package com.tgerstel.infrastructure.login;
 
 import com.tgerstel.domain.repository.UserRepository;
 import com.tgerstel.infrastructure.repository.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +12,6 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepo;
 
-    @Autowired
     public MyUserDetailsService (UserRepository userRepo) {
         this.userRepo = userRepo;
     }

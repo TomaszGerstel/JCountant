@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tgerstel.domain.BalanceResults;
-import com.tgerstel.domain.TransactionModel;
+import com.tgerstel.domain.Transaction;
 import com.tgerstel.domain.repository.TransferRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -33,13 +33,13 @@ class CalculationServiceTest {
 	@InjectMocks
 	private BalanceCalculationService calcService;
 
-	static List<TransactionModel> transactions;
+	static List<Transaction> transactions;
 	static List<Transfer> transfers;
-	static TransactionModel transaction1_In;
-	static TransactionModel transaction2_Out;
-	static TransactionModel transaction3_Salary;
-	static TransactionModel transaction4_Tax;
-	static TransactionModel transaction5_Vat;
+	static Transaction transaction1_In;
+	static Transaction transaction2_Out;
+	static Transaction transaction3_Salary;
+	static Transaction transaction4_Tax;
+	static Transaction transaction5_Vat;
 	static Transfer transf1_In;
 	static Transfer transf2_Out;
 	static Transfer transf3_Salary;
@@ -57,13 +57,13 @@ class CalculationServiceTest {
 		date1_now = LocalDate.now();
 		date2_month_ago = date1_now.minusMonths(1);
 		transfers = new ArrayList<Transfer>();
-		transaction1_In = new TransactionModel(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200).setScale(2),
+		transaction1_In = new Transaction(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200).setScale(2),
 				BigDecimal.valueOf(200).setScale(2), BigDecimal.valueOf(1000).setScale(2));
-		transaction2_Out = new TransactionModel(TransferType.OUT_TRANSFER, BigDecimal.valueOf(200).setScale(2),
+		transaction2_Out = new Transaction(TransferType.OUT_TRANSFER, BigDecimal.valueOf(200).setScale(2),
 				BigDecimal.valueOf(20).setScale(2), BigDecimal.valueOf(180).setScale(2));
-		transaction3_Salary = new TransactionModel(TransferType.SALARY, BigDecimal.valueOf(600).setScale(2), null, null);
-		transaction4_Tax = new TransactionModel(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(100).setScale(2), null, null);
-		transaction5_Vat = new TransactionModel(TransferType.VAT_OUT_TRANSFER, BigDecimal.valueOf(100).setScale(2), null, null);
+		transaction3_Salary = new Transaction(TransferType.SALARY, BigDecimal.valueOf(600).setScale(2), null, null);
+		transaction4_Tax = new Transaction(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(100).setScale(2), null, null);
+		transaction5_Vat = new Transaction(TransferType.VAT_OUT_TRANSFER, BigDecimal.valueOf(100).setScale(2), null, null);
 
 		transactions = List.of(transaction1_In, transaction2_Out, transaction3_Salary, transaction4_Tax,
 				transaction5_Vat);
@@ -189,7 +189,7 @@ class CalculationServiceTest {
 	@DisplayName("CalculateTransactionObject method should return right transaction lisf from known transfer list")
 	void testCreateTransactionObject() {
 
-		List<TransactionModel> result = calcService.createTransactionObjects(transfers);
+		List<Transaction> result = calcService.createTransactionObjects(transfers);
 		assertEquals(transactions, result);
 	}
 
@@ -197,7 +197,7 @@ class CalculationServiceTest {
 	@DisplayName("MakeTransactionFromReceipt method should return right transaction object from known receipt")
 	void testMakeTransactionFromReceipt() {
 
-		TransactionModel result = calcService.makeTransactionFromReceipt(receipt1);
+		Transaction result = calcService.makeTransactionFromReceipt(receipt1);
 
 		assertAll(() -> assertEquals(BigDecimal.valueOf(650).setScale(2), result.getAmount()),
 				() -> assertEquals(BigDecimal.valueOf(600).setScale(2), result.getNetAmount()),

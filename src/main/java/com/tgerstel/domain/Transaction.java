@@ -7,13 +7,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TransactionModel {	
+public class Transaction {
 
 	private TransferType transferType;
 	private BigDecimal amount;
 	private BigDecimal vatValue;
 	private BigDecimal netAmount;	
 	
-	public TransactionModel() {}
+	public Transaction() {}
 	
 }

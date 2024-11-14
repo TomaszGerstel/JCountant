@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.tgerstel.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -22,16 +23,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.tgerstel.domain.RegistrationUser;
 import com.tgerstel.infrastructure.repository.User;
 import com.tgerstel.infrastructure.repository.UserRole;
-import com.tgerstel.infrastructure.repository.UserSpringRepository;
-import com.tgerstel.infrastructure.repository.UserRoleSpringRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
 	@Mock
-	private UserRoleSpringRepository userRoleRepo;
-	@Mock
-	private UserSpringRepository userRepo;
+	private UserRepository userRepo;
 	@InjectMocks
 	private DomainUserService userService;
 
@@ -49,11 +46,11 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("saveUser shoud return (and pass to repository) proper User object")
+	@DisplayName("saveUser should return (and pass to repository) proper User object")
 	void testSaveUser() {
 
 		ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
-		Mockito.when(userRoleRepo.findByName("USER")).thenReturn(Optional.of(userRole));
+		Mockito.when(userRepo.findRoleByName("USER")).thenReturn(Optional.of(userRole));
 
 		userService.saveUser(registrationUser, passEncoder);
 
@@ -71,10 +68,10 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("saveUser shoud return NoSuchElementException if there is no UserRole")
+	@DisplayName("saveUser should return NoSuchElementException if there is no UserRole")
 	void testSaveUser2() {
 
-		Mockito.when(userRoleRepo.findByName("USER")).thenReturn(Optional.empty());
+		Mockito.when(userRepo.findRoleByName("USER")).thenReturn(Optional.empty());
 
 		Assertions.assertThatThrownBy(() -> userService.saveUser(registrationUser, passEncoder))
 				.isInstanceOf(NoSuchElementException.class);

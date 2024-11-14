@@ -7,16 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tgerstel.domain.BalanceResults;
-import com.tgerstel.domain.TransactionModel;
+import com.tgerstel.domain.Transaction;
 import com.tgerstel.domain.repository.TransferRepository;
-import org.springframework.stereotype.Service;
 
 import com.tgerstel.infrastructure.repository.Receipt;
 import com.tgerstel.infrastructure.repository.Transfer;
 import com.tgerstel.domain.TransferType;
 import com.tgerstel.infrastructure.repository.User;
 
-@Service
 public class BalanceCalculationService implements BalanceCalculator {
 
 	private TransferRepository transferRepo;
@@ -49,7 +47,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 	}
 
 	BalanceResults calculateBalance(List<Transfer> transfers, User user) {
-		List<TransactionModel> transactions = createTransactionObjects(transfers);
+		List<Transaction> transactions = createTransactionObjects(transfers);
 
 		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
 				calculateGrossCosts(transactions), calculateGrossIncome(transactions), calculateNetIncome(transactions),
@@ -58,12 +56,12 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return balanceResults;
 	}
 
-	protected List<TransactionModel> createTransactionObjects(List<Transfer> transfers) {
-		List<TransactionModel> transactions = new ArrayList<>();
-		TransactionModel transaction;
+	protected List<Transaction> createTransactionObjects(List<Transfer> transfers) {
+		List<Transaction> transactions = new ArrayList<>();
+		Transaction transaction;
 
 		for (Transfer t : transfers) {
-			transaction = new TransactionModel();
+			transaction = new Transaction();
 			if (t.getReceipt() != null) {
 				transaction = makeTransactionFromReceipt(t.getReceipt());
 			} else if (transferTypeWithoutReceipt(t)) {
@@ -75,8 +73,8 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return transactions;
 	}
 
-	protected TransactionModel makeTransactionFromReceipt(Receipt receipt) {
-		TransactionModel transaction = new TransactionModel();
+	protected Transaction makeTransactionFromReceipt(Receipt receipt) {
+		Transaction transaction = new Transaction();
 		transaction.setAmount(receipt.getAmount());
 		transaction.setNetAmount(receipt.getNetAmount());
 		transaction.setVatValue(receipt.getVatValue());
@@ -88,9 +86,9 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return (t == TransferType.SALARY || t == TransferType.TAX_OUT_TRANSFER || t == TransferType.VAT_OUT_TRANSFER);
 	}
 
-	protected BigDecimal calculateCosts(List<TransactionModel> transactions) {
+	protected BigDecimal calculateCosts(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.OUT_TRANSFER) {
 				if (t.getNetAmount() != null)
 					sum = sum.add(t.getNetAmount());
@@ -101,27 +99,27 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateGrossCosts(List<TransactionModel> transactions) {
+	protected BigDecimal calculateGrossCosts(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.OUT_TRANSFER)
 				sum = sum.add(t.getAmount());
 		}
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateGrossIncome(List<TransactionModel> transactions) {
+	protected BigDecimal calculateGrossIncome(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER)
 				sum = sum.add(t.getAmount());
 		}
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateNetIncome(List<TransactionModel> transactions) {
+	protected BigDecimal calculateNetIncome(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER) {
 				if (t.getNetAmount() != null)
 					sum = sum.add(t.getNetAmount());
@@ -132,27 +130,27 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateProfitPaid(List<TransactionModel> transactions) {
+	protected BigDecimal calculateProfitPaid(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.SALARY)
 				sum = sum.add(t.getAmount());
 		}
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateVatPaid(List<TransactionModel> transactions) {
+	protected BigDecimal calculateVatPaid(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.VAT_OUT_TRANSFER)
 				sum = sum.add(t.getAmount());
 		}
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateTaxPaid(List<TransactionModel> transactions) {
+	protected BigDecimal calculateTaxPaid(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (TransactionModel t : transactions) {
+		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.TAX_OUT_TRANSFER)
 				sum = sum.add(t.getAmount());
 		}

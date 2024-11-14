@@ -1,4 +1,4 @@
-package com.tgerstel.domain.service;
+package com.tgerstel.infrastructure.login;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.tgerstel.infrastructure.repository.User;
-import com.tgerstel.infrastructure.repository.UserSpringRepository;
 
 @ExtendWith(MockitoExtension.class)
 class MyUserDetailsServiceTest {
