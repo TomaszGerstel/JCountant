@@ -6,13 +6,9 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tgerstel.domain.BalanceResults;
-import com.tgerstel.domain.Transaction;
+import com.tgerstel.domain.*;
 import com.tgerstel.domain.repository.TransferRepository;
 
-import com.tgerstel.infrastructure.repository.Receipt;
-import com.tgerstel.infrastructure.repository.Transfer;
-import com.tgerstel.domain.TransferType;
 import com.tgerstel.infrastructure.repository.User;
 
 public class BalanceCalculationService implements BalanceCalculator {

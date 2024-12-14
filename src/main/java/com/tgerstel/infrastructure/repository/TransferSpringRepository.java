@@ -7,16 +7,16 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.CrudRepository;
 
-public interface TransferSpringRepository extends CrudRepository<Transfer, Long>{
+public interface TransferSpringRepository extends CrudRepository<TransferEntity, Long>{
 
-	List<Transfer> findAllByUser(User user, PageRequest page);
+	List<TransferEntity> findAllByUser(User user, PageRequest page);
 
-	Optional<Transfer> findByReceipt(Receipt receipt);
+	Optional<TransferEntity> findByReceiptEntityId(Long receiptId);
 
-	List<Transfer> findAllByFromContainingIgnoreCase(String key);
+	List<TransferEntity> findAllByFromContainingIgnoreCase(String key);
 
-	List<Transfer> findAllByUser(User user);
+	List<TransferEntity> findAllByUser(User user);
 
-	List<Transfer> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);	
+	List<TransferEntity> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);
 
 }

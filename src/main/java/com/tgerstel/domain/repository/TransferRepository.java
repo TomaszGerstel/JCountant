@@ -1,7 +1,8 @@
 package com.tgerstel.domain.repository;
 
-import com.tgerstel.infrastructure.repository.Receipt;
-import com.tgerstel.infrastructure.repository.Transfer;
+import com.tgerstel.domain.Receipt;
+import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.service.command.CreateTransferCommand;
 import com.tgerstel.infrastructure.repository.User;
 import org.springframework.data.domain.PageRequest;
 
@@ -13,7 +14,7 @@ public interface TransferRepository {
 
     Optional<Transfer> getById(Long id);
 
-    Transfer add(Transfer transfer);
+    Transfer add(CreateTransferCommand command);
 
     List<Transfer> getPageForUser(User user, PageRequest page);
 

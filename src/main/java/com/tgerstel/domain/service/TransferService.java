@@ -1,6 +1,7 @@
 package com.tgerstel.domain.service;
 
-import com.tgerstel.infrastructure.repository.Transfer;
+import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.service.command.CreateTransferCommand;
 import com.tgerstel.infrastructure.repository.User;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public interface TransferService {
 
-    Optional<Transfer> createTransfer(Transfer transfer, Long receiptId, User user);
+    Optional<Transfer> createTransfer(CreateTransferCommand transfer);
 
     List<Transfer> getRecentTransfers(User user, Integer resultSize);
 

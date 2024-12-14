@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity
+@Entity()
 @Table(name="user_base")
 @NoArgsConstructor
 public class User implements UserDetails, Serializable {

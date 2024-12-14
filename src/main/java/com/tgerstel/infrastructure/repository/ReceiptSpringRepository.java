@@ -6,15 +6,15 @@ import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ReceiptSpringRepository extends CrudRepository<Receipt, Long>{
+public interface ReceiptSpringRepository extends CrudRepository<ReceiptEntity, Long>{
 
-	List<Receipt> findAllByUser(User user, PageRequest page);
+	List<ReceiptEntity> findAllByUser(User user, PageRequest page);
 
-	List<Receipt> findAllByUser(User user);
+	List<ReceiptEntity> findAllByUser(User user);
 
-	List<Receipt> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);
+	List<ReceiptEntity> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);
 
-	List<Receipt> findAllByUserAndClientContainingIgnoreCase(User user,String key);
+	List<ReceiptEntity> findAllByUserAndClientContainingIgnoreCase(User user, String key);
 
 
 }
