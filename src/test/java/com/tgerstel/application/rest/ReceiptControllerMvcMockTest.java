@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.tgerstel.domain.Receipt;
+import com.tgerstel.domain.Transfer;
 import com.tgerstel.domain.service.ReceiptService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +27,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tgerstel.infrastructure.repository.Receipt;
-import com.tgerstel.infrastructure.repository.Transfer;
 import com.tgerstel.domain.TransferType;
 import com.tgerstel.infrastructure.repository.User;
 
@@ -55,24 +55,22 @@ class ReceiptControllerMvcMockTest {
 		dateTime = LocalDate.now();
 		userActual = new User("Bob", "sobob@a.com", "hardpass", 13);
 		userActual.setId(1L);
-		receipt = new Receipt(dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(200), null, null, "Customer", "Me",
+		receipt = new Receipt(22L, dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(200), null, null, "Customer", "Me",
 				"for example", userActual);
-		receipt.setId(22L);
 		user2 = new User("Rob", "roby@am.com", "hardpass", 12);
-		receiptWithUser2 = new Receipt(dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, null,
+		receiptWithUser2 = new Receipt(23L, dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, null,
 				"Sansumg", "Me", "for example", user2);
-		transfer = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
+		transfer = new Transfer(12L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, null,
 				receipt, userActual);
-		transferWithReceipt2 = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me",
-				dateTime, null, receiptWithUser2, userActual);
+		transferWithReceipt2 = new Transfer(13L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me",
+				dateTime, null, null, receiptWithUser2, userActual);
 		receipts = List.of(receipt, receiptWithUser2);
-
 	}
 
 	@Test
 	void testAddReceipt() throws Exception {
 
-		Mockito.when(receiptService.createReceipt(any(), any())).thenReturn(receipt);
+		Mockito.when(receiptService.createReceipt(any())).thenReturn(receipt);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt").content(asJsonString(receipt))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))

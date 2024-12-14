@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tgerstel.domain.BalanceResults;
-import com.tgerstel.domain.Transaction;
+import com.tgerstel.domain.*;
 import com.tgerstel.domain.repository.TransferRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,9 +19,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tgerstel.infrastructure.repository.Receipt;
-import com.tgerstel.infrastructure.repository.Transfer;
-import com.tgerstel.domain.TransferType;
+import com.tgerstel.infrastructure.repository.ReceiptEntity;
+import com.tgerstel.infrastructure.repository.TransferEntity;
 import com.tgerstel.infrastructure.repository.User;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,13 +66,13 @@ class CalculationServiceTest {
 		transactions = List.of(transaction1_In, transaction2_Out, transaction3_Salary, transaction4_Tax,
 				transaction5_Vat);
 
-		transf1_In = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), null, null, date1_now, null,
-				new Receipt(date1_now, BigDecimal.valueOf(1200), BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, "client", "worker", "desc", null), new User());
-		transf2_Out = new Transfer(TransferType.OUT_TRANSFER, BigDecimal.valueOf(200), null, null, date2_month_ago, null,
-				new Receipt(date2_month_ago, BigDecimal.valueOf(200), BigDecimal.valueOf(180), BigDecimal.valueOf(20), null, "client", "worker", "desc", null), new User());
-		transf3_Salary = new Transfer(TransferType.SALARY, BigDecimal.valueOf(600), null, null, date2_month_ago, null, null, new User());
-		transf4_Tax = new Transfer(TransferType.TAX_OUT_TRANSFER,BigDecimal.valueOf(100), null, null, date1_now, null, null, new User());
-		transf5_Vat = new Transfer(TransferType.VAT_OUT_TRANSFER, BigDecimal.valueOf(100), null, null, date2_month_ago, null, null,
+		transf1_In = new Transfer(11L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), null, null, date1_now, null, null,
+				new Receipt(1L, date1_now, BigDecimal.valueOf(1200), BigDecimal.valueOf(1000), BigDecimal.valueOf(200), null, "client", "worker", "desc", null), new User());
+		transf2_Out = new Transfer(12L, TransferType.OUT_TRANSFER, BigDecimal.valueOf(200), null, null, date2_month_ago, null, null,
+				new Receipt(2L, date2_month_ago, BigDecimal.valueOf(200), BigDecimal.valueOf(180), BigDecimal.valueOf(20), null, "client", "worker", "desc", null), new User());
+		transf3_Salary = new Transfer(13L, TransferType.SALARY, BigDecimal.valueOf(600), null, null, date2_month_ago, null, null, null, new User());
+		transf4_Tax = new Transfer(14L, TransferType.TAX_OUT_TRANSFER,BigDecimal.valueOf(100), null, null, date1_now, null, null, null, new User());
+		transf5_Vat = new Transfer(15L, TransferType.VAT_OUT_TRANSFER, BigDecimal.valueOf(100), null, null, date2_month_ago, null, null, null,
 				new User());
 
 		transfers = List.of(transf1_In, transf2_Out, transf3_Salary, transf4_Tax, transf5_Vat);
@@ -86,7 +84,7 @@ class CalculationServiceTest {
 
 		user = new User();
 		user.setLumpSumTaxRate(12);
-		receipt1 = new Receipt(date1_now, BigDecimal.valueOf(650), BigDecimal.valueOf(600), BigDecimal.valueOf(50), null, "WallMark", "Stan", "for service", null);
+		receipt1 = new Receipt(6L, date1_now, BigDecimal.valueOf(650), BigDecimal.valueOf(600), BigDecimal.valueOf(50), null, "WallMark", "Stan", "for service", null);
 
 	}
 

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.tgerstel.domain.Receipt;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,17 +20,17 @@ class ReceiptTest {
 	static LocalDate date;
 
 	@BeforeAll
-	static void prepareVaiables() {
+	static void prepareVariables() {
 		date = LocalDate.now();
-		receiptWithAllValues = new Receipt(date, BigDecimal.valueOf(3600), BigDecimal.valueOf(3000),
+		receiptWithAllValues = new Receipt(1L, date, BigDecimal.valueOf(3600), BigDecimal.valueOf(3000),
 				BigDecimal.valueOf(600), 20f, "client1", "worker1", "desc", null);
-		receiptWithOnlyVatValue = new Receipt(date, BigDecimal.valueOf(3000), null, BigDecimal.valueOf(500), null,
+		receiptWithOnlyVatValue = new Receipt(2L, date, BigDecimal.valueOf(3000), null, BigDecimal.valueOf(500), null,
 				"client2", "worker1", "desc", null);
-		receiptWithOnlyNetAmount = new Receipt(date, BigDecimal.valueOf(3000), BigDecimal.valueOf(2500), null, null,
+		receiptWithOnlyNetAmount = new Receipt(3L, date, BigDecimal.valueOf(3000), BigDecimal.valueOf(2500), null, null,
 				"client3", "worker2", "desc", null);
-		receiptWithOnlyVatPercentage = new Receipt(date, BigDecimal.valueOf(3750), null, null, 25f, "client1",
+		receiptWithOnlyVatPercentage = new Receipt(4L, date, BigDecimal.valueOf(3750), null, null, 25f, "client1",
 				"worker2", "desc", null);
-		receiptWthoutOptValues = new Receipt(date, BigDecimal.valueOf(3000), null, null, null, "client4", "worker1",
+		receiptWthoutOptValues = new Receipt(5L, date, BigDecimal.valueOf(3000), null, null, null, "client4", "worker1",
 				"desc", null);
 	}
 

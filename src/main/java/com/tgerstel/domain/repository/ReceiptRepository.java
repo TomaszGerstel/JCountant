@@ -1,6 +1,7 @@
 package com.tgerstel.domain.repository;
 
-import com.tgerstel.infrastructure.repository.Receipt;
+import com.tgerstel.domain.Receipt;
+import com.tgerstel.domain.service.command.CreateReceiptCommand;
 import com.tgerstel.infrastructure.repository.User;
 import org.springframework.data.domain.PageRequest;
 
@@ -12,7 +13,7 @@ public interface ReceiptRepository {
 
     Optional<Receipt> getById(Long id);
 
-    Receipt add(Receipt receipt);
+    Receipt add(CreateReceiptCommand receipt);
 
     List<Receipt> getPageForUser(User user, PageRequest page);
 

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.tgerstel.domain.Receipt;
+import com.tgerstel.domain.Transfer;
 import com.tgerstel.domain.service.TransferService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +29,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tgerstel.infrastructure.repository.Receipt;
-import com.tgerstel.infrastructure.repository.Transfer;
+import com.tgerstel.infrastructure.repository.ReceiptEntity;
+import com.tgerstel.infrastructure.repository.TransferEntity;
 import com.tgerstel.domain.TransferType;
 
 @WebMvcTest(value = TransferController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
@@ -52,15 +54,13 @@ public class TransferControllerMvcMockTest {
 	static void prepareVariables() {
 
 		dateTime = LocalDate.now();
-		receipt = new Receipt(dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(1000.0), null, null, "Customer",
+		receipt = new Receipt(11L, dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(1000.0), null, null, "Customer",
 				"Me", "for example", null);
-		transfer = new Transfer(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
+		transfer = new Transfer(12L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, null,
 				receipt, null);
-		transfer.setId(12L);
-		specialTransfer = new Transfer(TransferType.SALARY, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null,
+		specialTransfer = new Transfer(33L, TransferType.SALARY, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, null,
 				null, null);
-		specialTransfer.setId(33L);
-		notValidTransfer = new Transfer(TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(200), "Customer", "Me", null,
+		notValidTransfer = new Transfer(34L, TransferType.TAX_OUT_TRANSFER, BigDecimal.valueOf(200), "Customer", "Me", null, null,
 				null, null, null);
 		transfers = List.of(transfer, specialTransfer);
 	}
@@ -68,7 +68,7 @@ public class TransferControllerMvcMockTest {
 	@Test
 	void addTransferTest() throws Exception {
 
-		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(transfer));
+		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(transfer));
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(transfer)).param("receiptId", "2")
@@ -83,7 +83,7 @@ public class TransferControllerMvcMockTest {
 	@DisplayName("AddTransfer with regular transfer type without receipt_id should return 422 status")
 	void addTransferTest2() throws Exception {
 
-		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(transfer));
+		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(transfer));
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(transfer))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
@@ -94,7 +94,7 @@ public class TransferControllerMvcMockTest {
 	@DisplayName("AddTransfer with special transfer type without receipt_id should save transfer")
 	void addTransferTest3() throws Exception {
 
-		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(specialTransfer));
+		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(specialTransfer));
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(specialTransfer))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
@@ -108,7 +108,7 @@ public class TransferControllerMvcMockTest {
 	@DisplayName("AddTransfer with no valid transfer")
 	void addTransferTest4() throws Exception {
 
-		Mockito.when(transferService.createTransfer(any(), any(), any())).thenReturn(Optional.of(notValidTransfer));
+		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(notValidTransfer));
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/transfer").content(asJsonString(notValidTransfer))
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
