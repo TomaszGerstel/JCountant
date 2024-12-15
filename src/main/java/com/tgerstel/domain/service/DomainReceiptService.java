@@ -7,13 +7,12 @@ import java.util.Optional;
 
 import com.tgerstel.domain.Receipt;
 import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.ReceiptRepository;
 import com.tgerstel.domain.repository.TransferRepository;
 import com.tgerstel.domain.service.command.CreateReceiptCommand;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
-import com.tgerstel.infrastructure.repository.User;
 
 public class DomainReceiptService implements ReceiptService {
 	
@@ -41,7 +40,7 @@ public class DomainReceiptService implements ReceiptService {
 		return Optional.empty();
 	}
 
-	public void deleteReceiptAndRelatedTransfer(User user, Long id) {		
+	public void deleteReceiptAndRelatedTransfer(User user, Long id) {
 		Optional<Receipt> deletingReceipt = receiptRepo.getById(id);
 
 		if (deletingReceipt.isEmpty()) return;

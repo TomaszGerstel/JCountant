@@ -2,8 +2,8 @@ package com.tgerstel.infrastructure.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserSpringRepository extends CrudRepository<User, Long>{
+public interface UserSpringRepository extends CrudRepository<UserEntity, Long>{
 
-	User findByUsername(String username);
+	UserEntity findByUsername(String username);
 
 }

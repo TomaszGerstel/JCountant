@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tgerstel.domain.RegistrationUser;
-import com.tgerstel.infrastructure.repository.User;
 import com.tgerstel.infrastructure.repository.UserRole;
 
 @ExtendWith(MockitoExtension.class)

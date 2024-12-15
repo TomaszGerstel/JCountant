@@ -1,5 +1,6 @@
 package com.tgerstel.infrastructure.repository;
 
+import com.tgerstel.domain.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,10 +26,8 @@ import java.util.Set;
 @Entity()
 @Table(name="user_base")
 @NoArgsConstructor
-public class User implements UserDetails, Serializable {
+public class UserEntity {
 
-	private static final long serialVersionUID = 1L;
-	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,52 +42,25 @@ public class User implements UserDetails, Serializable {
     	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<UserRole> roles = new HashSet<>();
 
-    public User(String username, String email, String password, Integer lumpSumTaxRate) {
+    public UserEntity(String username, String email, String password, Integer lumpSumTaxRate) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.lumpSumTaxRate = lumpSumTaxRate;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public UserEntity(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.lumpSumTaxRate = user.getLumpSumTaxRate();
+        this.roles = user.getRoles();
     }
 
-    @Override
-    public String getPassword() {
-        return password;
+    public User toUser() {
+        return new User(id, username, email, password, lumpSumTaxRate, roles);
     }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }      
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", lumpSumTaxRate=" + lumpSumTaxRate
-				+ ", roles=" + roles + "]";
-	} 
 }
 

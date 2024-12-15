@@ -1,8 +1,8 @@
 package com.tgerstel.domain.service;
 
 import com.tgerstel.domain.Receipt;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.command.CreateReceiptCommand;
-import com.tgerstel.infrastructure.repository.User;
 
 import java.util.List;
 import java.util.Optional;

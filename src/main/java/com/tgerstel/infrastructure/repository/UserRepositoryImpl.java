@@ -1,5 +1,6 @@
 package com.tgerstel.infrastructure.repository;
 
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findUserByName(String username) {
-        return userSpringRepository.findByUsername(username);
+        UserEntity found = userSpringRepository.findByUsername(username);
+        return found == null ? null : found.toUser();
     }
 
     @Override
@@ -28,6 +30,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        return userSpringRepository.save(user);
+        UserEntity userEntity = new UserEntity(user);
+        return userSpringRepository.save(userEntity).toUser();
     }
 }

@@ -1,7 +1,7 @@
 package com.tgerstel.domain.service;
 
 import com.tgerstel.domain.BalanceResults;
-import com.tgerstel.infrastructure.repository.User;
+import com.tgerstel.domain.User;
 
 import java.time.LocalDate;
 

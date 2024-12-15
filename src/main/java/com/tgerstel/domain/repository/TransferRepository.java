@@ -2,8 +2,8 @@ package com.tgerstel.domain.repository;
 
 import com.tgerstel.domain.Receipt;
 import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.command.CreateTransferCommand;
-import com.tgerstel.infrastructure.repository.User;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;

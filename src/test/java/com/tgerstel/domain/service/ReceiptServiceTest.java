@@ -7,9 +7,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.tgerstel.domain.Receipt;
 import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.ReceiptRepository;
 import com.tgerstel.domain.repository.TransferRepository;
 import com.tgerstel.domain.service.command.CreateReceiptCommand;
@@ -27,7 +29,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
 import com.tgerstel.domain.TransferType;
-import com.tgerstel.infrastructure.repository.User;
 
 @ExtendWith(MockitoExtension.class)
 class ReceiptServiceTest {
@@ -55,11 +56,11 @@ class ReceiptServiceTest {
     static void prepareVariables() {
 
         dateTime = LocalDate.now();
-        userActual = new User("Sober", "sobot@a.com", "hardpass", 13);
+        userActual = new User(1L, "Sober", "sobot@a.com", "hardpass", 13, Set.of());
         userActual.setId(11L);
         receipt = new Receipt(1L, dateTime, BigDecimal.valueOf(810), BigDecimal.valueOf(200), null, null, "Albatros", "Stan", "for example", userActual);
         transfer = new Transfer(11L, TransferType.IN_TRANSFER, BigDecimal.valueOf(800), "Customer", "Me", dateTime, null, null, receipt, userActual);
-        user2 = new User("Sober", "sobot@a.com", "hardpass", 13);
+        user2 = new User(2L, "Sober", "sobot@a.com", "hardpass", 13, Set.of());
         user2.setId(21L);
         receipt2 = new Receipt(77L, dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(250), null, null, "MediaGain", "Ed", "for example", user2);
         transfer2 = new Transfer(177L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1000), "MediaGain", "Me", dateTime, null, null, receipt2, userActual);
@@ -152,9 +153,9 @@ class ReceiptServiceTest {
     @DisplayName("If getById() returning empty optional when current user dosn't own found receipt")
     void testIfGetByIdReturnsEmptyOptional() {
 
-        User userActual = new User("Sobek", "sobek@a.com", "hardpass", 12);
+        User userActual = new User(1L, "Sobek", "sobek@a.com", "hardpass", 12, Set.of());
         userActual.setId(11L);
-        User userOnReceipt = new User("Sober", "sobot@a.com", "hardpass", 13);
+        User userOnReceipt = new User(2L, "Sober", "sobot@a.com", "hardpass", 13, Set.of());
         userOnReceipt.setId(21L);
         Optional<Receipt> receipt = Optional.of(new Receipt(123L, dateTime, BigDecimal.valueOf(810), BigDecimal.valueOf(200), null, null,
                 "Albatros", "Stan", "for example", userOnReceipt));

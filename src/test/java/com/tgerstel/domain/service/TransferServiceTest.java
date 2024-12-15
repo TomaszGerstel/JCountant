@@ -6,9 +6,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 import com.tgerstel.domain.Receipt;
 import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.ReceiptRepository;
 import com.tgerstel.domain.repository.TransferRepository;
 import com.tgerstel.domain.service.command.CreateTransferCommand;
@@ -26,7 +28,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
 import com.tgerstel.domain.TransferType;
-import com.tgerstel.infrastructure.repository.User;
 
 @ExtendWith(MockitoExtension.class)
 class TransferServiceTest {
@@ -53,10 +54,10 @@ class TransferServiceTest {
     static void prepareVariables() {
 
         dateTime = LocalDate.now();
-        userActual = new User("Bob", "sobob@a.com", "hardpass", 13);
+        userActual = new User(1L, "Bob", "sobob@a.com", "hardpass", 13, Set.of());
         userActual.setId(1L);
         receipt = new Receipt(22L, dateTime, BigDecimal.valueOf(1200), BigDecimal.valueOf(200.0), null, null, "Customer", "Me", "for example", userActual);
-        user2 = new User("Rob", "roby@am.com", "hardpass", 12);
+        user2 = new User(2L, "Rob", "roby@am.com", "hardpass", 12, Set.of());
         receiptWithUser2 = new Receipt(33L, dateTime, BigDecimal.valueOf(1000), BigDecimal.valueOf(200.0), null, null, "Sansumg", "Me", "for example", user2);
         transfer = new Transfer(122L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, null, receipt, userActual);
         transferWithReceipt2 = new Transfer(133L, TransferType.IN_TRANSFER, BigDecimal.valueOf(1200), "Customer", "Me", dateTime, null, null, receiptWithUser2, userActual);
