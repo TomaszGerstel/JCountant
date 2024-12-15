@@ -40,7 +40,7 @@ public class TransferEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_base_id", referencedColumnName = "id")
-    private User user;
+    private UserEntity user;
 
     @PrePersist
     public void setBaseDate() {
@@ -49,7 +49,7 @@ public class TransferEntity {
 
     public TransferEntity(@NotNull TransferType transferType, @NotNull BigDecimal amount, @Nullable String from,
                           @Nullable String to, @NotNull LocalDate date, @Nullable String description,
-                          @Nullable ReceiptEntity receipt, @NotNull User user) {
+                          @Nullable ReceiptEntity receipt, @NotNull UserEntity user) {
 
         this.transferType = transferType;
         this.amount = amount;
@@ -63,6 +63,6 @@ public class TransferEntity {
 
     public Transfer toTransfer() {
         return new Transfer(id, transferType, amount, from, to, date, baseDate, description,
-                receiptEntity == null ? null : receiptEntity.toReceipt(), user);
+                receiptEntity == null ? null : receiptEntity.toReceipt(), user.toUser());
     }
 }

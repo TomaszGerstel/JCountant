@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tgerstel.domain.Receipt;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.ReceiptService;
 import com.tgerstel.domain.service.command.CreateReceiptCommand;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.tgerstel.infrastructure.repository.User;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

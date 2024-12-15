@@ -1,6 +1,5 @@
 package com.tgerstel.domain;
 
-import com.tgerstel.infrastructure.repository.User;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -8,6 +7,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class RegistrationUser {
@@ -23,7 +25,7 @@ public class RegistrationUser {
     private Integer lumpSumTaxRate; 
 
     public User toUser(PasswordEncoder passEncoder) {
-        return new User(username, email, passEncoder.encode(password), lumpSumTaxRate);
+        return new User(null, username, email, passEncoder.encode(password), lumpSumTaxRate, new HashSet<>());
     }
 
 	public RegistrationUser(String username, String email, String password, 

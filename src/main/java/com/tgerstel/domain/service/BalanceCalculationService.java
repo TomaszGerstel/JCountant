@@ -9,8 +9,6 @@ import java.util.List;
 import com.tgerstel.domain.*;
 import com.tgerstel.domain.repository.TransferRepository;
 
-import com.tgerstel.infrastructure.repository.User;
-
 public class BalanceCalculationService implements BalanceCalculator {
 
 	private TransferRepository transferRepo;

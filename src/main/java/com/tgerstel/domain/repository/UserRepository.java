@@ -1,6 +1,6 @@
 package com.tgerstel.domain.repository;
 
-import com.tgerstel.infrastructure.repository.User;
+import com.tgerstel.domain.User;
 import com.tgerstel.infrastructure.repository.UserRole;
 
 import java.util.Optional;

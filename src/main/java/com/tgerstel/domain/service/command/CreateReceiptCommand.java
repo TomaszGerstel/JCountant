@@ -1,6 +1,6 @@
 package com.tgerstel.domain.service.command;
 
-import com.tgerstel.infrastructure.repository.User;
+import com.tgerstel.domain.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

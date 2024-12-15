@@ -33,11 +33,11 @@ public class ReceiptEntity {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_base_id", referencedColumnName = "id")
-	private User user;
+	private UserEntity user;
 
 	public ReceiptEntity(@NotNull LocalDate date, @NotNull BigDecimal amount, @Nullable BigDecimal netAmount,
 						 @Nullable BigDecimal vatValue, @Nullable Float vatPercentage, @NotNull String client,
-						 @NotNull String worker, @NotNull String description, @Nullable User user) {
+						 @NotNull String worker, @NotNull String description, @Nullable UserEntity user) {
 
 		this.date = date;
 		this.amount = amount;
@@ -51,7 +51,7 @@ public class ReceiptEntity {
 	}
 
 	public Receipt toReceipt() {
-		return new Receipt(id, date, amount, netAmount, vatValue, vatPercentage, client, worker, description, user);
+		return new Receipt(id, date, amount, netAmount, vatValue, vatPercentage, client, worker, description, user.toUser());
 	}
 
 }

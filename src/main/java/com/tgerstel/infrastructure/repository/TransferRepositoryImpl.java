@@ -3,6 +3,7 @@ package com.tgerstel.infrastructure.repository;
 
 import com.tgerstel.domain.Receipt;
 import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.TransferRepository;
 import com.tgerstel.domain.service.command.CreateTransferCommand;
 import org.springframework.data.domain.PageRequest;
@@ -35,19 +36,21 @@ public class TransferRepositoryImpl implements TransferRepository {
         ReceiptEntity receipt =
                 receiptId == null ? null : receiptSpringRepository.findById(receiptId).orElse(null);
         TransferEntity transferEntity = new TransferEntity(command.transferType(), command.amount(), command.from(),
-                command.to(), command.date(), command.description(), receipt, command.user());
+                command.to(), command.date(), command.description(), receipt, new UserEntity(command.user()));
         return transferSpringRepository.save(transferEntity).toTransfer();
     }
 
     @Override
     public List<Transfer> getPageForUser(final User user, final PageRequest page) {
-        return transferSpringRepository.findAllByUser(user, page)
+        UserEntity userEntity = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword(), user.getLumpSumTaxRate());
+        return transferSpringRepository.findAllByUserId(user.getId(), page)
                 .stream().map(TransferEntity::toTransfer).toList();
     }
 
     @Override
     public List<Transfer> getAllForUser(final User user) {
-        return transferSpringRepository.findAllByUser(user)
+        UserEntity userEntity = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword(), user.getLumpSumTaxRate());
+        return transferSpringRepository.findAllByUserId(user.getId())
                 .stream().map(TransferEntity::toTransfer).toList();
     }
 
@@ -64,7 +67,7 @@ public class TransferRepositoryImpl implements TransferRepository {
 
     @Override
     public List<Transfer> getForUserInRange(final LocalDate from, final LocalDate to, final User user) {
-        return transferSpringRepository.findAllByDateAfterAndDateBeforeAndUser(from, to, user)
+        return transferSpringRepository.findAllByDateAfterAndDateBeforeAndUserId(from, to, user.getId())
                 .stream().map(TransferEntity::toTransfer).toList();
     }
 

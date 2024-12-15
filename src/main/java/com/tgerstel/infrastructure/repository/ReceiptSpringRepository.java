@@ -8,13 +8,13 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ReceiptSpringRepository extends CrudRepository<ReceiptEntity, Long>{
 
-	List<ReceiptEntity> findAllByUser(User user, PageRequest page);
+	List<ReceiptEntity> findAllByUserId(Long user_id, PageRequest page);
 
-	List<ReceiptEntity> findAllByUser(User user);
+	List<ReceiptEntity> findAllByUserId(Long user_id);
 
-	List<ReceiptEntity> findAllByDateAfterAndDateBeforeAndUser(LocalDate minusDays, LocalDate plusDays, User user);
+	List<ReceiptEntity> findAllByDateAfterAndDateBeforeAndUserId(LocalDate minusDays, LocalDate plusDays, Long user_id);
 
-	List<ReceiptEntity> findAllByUserAndClientContainingIgnoreCase(User user, String key);
+	List<ReceiptEntity> findAllByUserIdAndClientContainingIgnoreCase(Long user_id, String key);
 
 
 }

@@ -2,7 +2,6 @@ package com.tgerstel.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tgerstel.infrastructure.repository.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

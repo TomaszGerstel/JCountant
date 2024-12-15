@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.tgerstel.infrastructure.repository.User;
+import java.util.Set;
+
 
 @ExtendWith(MockitoExtension.class)
 class MyUserDetailsServiceTest {
@@ -32,7 +34,7 @@ class MyUserDetailsServiceTest {
 
 	@BeforeAll
 	static void prepareVariables() {
-		user = new User("Stan", "natan@gmail.com", "secret", 12);
+		user = new User(1L,"Stan", "natan@gmail.com", "secret", 12, Set.of());
 	}
 
 	@Test

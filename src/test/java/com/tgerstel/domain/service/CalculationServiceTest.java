@@ -19,10 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tgerstel.infrastructure.repository.ReceiptEntity;
-import com.tgerstel.infrastructure.repository.TransferEntity;
-import com.tgerstel.infrastructure.repository.User;
-
 @ExtendWith(MockitoExtension.class)
 class CalculationServiceTest {
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tgerstel.domain.Transfer;
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.TransferService;
 import com.tgerstel.domain.service.command.CreateTransferCommand;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tgerstel.domain.TransferType;
-import com.tgerstel.infrastructure.repository.User;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

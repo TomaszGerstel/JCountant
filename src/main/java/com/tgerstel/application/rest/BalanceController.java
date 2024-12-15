@@ -2,6 +2,7 @@ package com.tgerstel.application.rest;
 
 import java.time.LocalDate;
 
+import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.BalanceCalculator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgerstel.domain.BalanceResults;
-import com.tgerstel.infrastructure.repository.User;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -33,7 +33,7 @@ public class BalanceController {
 	}
 
 	@GetMapping(path = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {		
+	public ResponseEntity<BalanceResults> currentBalance(@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok(balanceCalculator.currentBalance(user));
 	}
 
