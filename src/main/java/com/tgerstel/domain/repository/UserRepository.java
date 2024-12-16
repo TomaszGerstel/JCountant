@@ -1,15 +1,15 @@
 package com.tgerstel.domain.repository;
 
 import com.tgerstel.domain.User;
-import com.tgerstel.infrastructure.repository.UserRole;
+import com.tgerstel.domain.UserRole;
 
 import java.util.Optional;
 
 public interface UserRepository {
 
-    User findUserByName(String username);
+    User findUserByUsername(String username);
 
     Optional<UserRole> findRoleByName(String name);
 
-    User save(User user);
+    void save(User user);
 }

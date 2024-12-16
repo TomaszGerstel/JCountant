@@ -41,7 +41,7 @@ class MyUserDetailsServiceTest {
 	@DisplayName("loadUserByUsernamer shoud return UserDetails with proper fields")
 	void testLoadUserByUsername() {
 		
-		Mockito.when(userRepo.findUserByName("Stan")).thenReturn(user);
+		Mockito.when(userRepo.findUserByUsername("Stan")).thenReturn(user);
 
 		UserDetails result = userDetailsService.loadUserByUsername("Stan");
 
@@ -56,7 +56,7 @@ class MyUserDetailsServiceTest {
 	@DisplayName("loadUserByUsernamer shoud return UsernameNotFoundException if there is no User found")
 	void testLoadUserByUsername2() {
 
-		Mockito.when(userRepo.findUserByName("Stan")).thenReturn(null);
+		Mockito.when(userRepo.findUserByUsername("Stan")).thenReturn(null);
 
 		Assertions.assertThatThrownBy(() -> userDetailsService.loadUserByUsername("Stan"))
 				.isInstanceOf(UsernameNotFoundException.class);

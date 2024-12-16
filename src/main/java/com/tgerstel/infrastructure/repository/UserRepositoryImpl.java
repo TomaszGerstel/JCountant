@@ -1,6 +1,7 @@
 package com.tgerstel.infrastructure.repository;
 
 import com.tgerstel.domain.User;
+import com.tgerstel.domain.UserRole;
 import com.tgerstel.domain.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,19 +19,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findUserByName(String username) {
-        UserEntity found = userSpringRepository.findByUsername(username);
-        return found == null ? null : found.toUser();
+    public User findUserByUsername(String username) {
+        return userSpringRepository.findByUsername(username)
+                .map(UserEntity::toUser)
+                .orElse(null);
     }
 
     @Override
     public Optional<UserRole> findRoleByName(String name) {
-        return userRoleSpringRepository.findByName(name);
+        return userRoleSpringRepository.findByName(name).map(UserRoleEntity::toUserRole);
     }
 
     @Override
-    public User save(User user) {
-        UserEntity userEntity = new UserEntity(user);
-        return userSpringRepository.save(userEntity).toUser();
+    public void save(User user) {
+        userSpringRepository.save(new UserEntity(user));
     }
 }

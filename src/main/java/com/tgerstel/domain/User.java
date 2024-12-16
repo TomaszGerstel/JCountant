@@ -1,6 +1,5 @@
 package com.tgerstel.domain;
 
-import com.tgerstel.infrastructure.repository.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
