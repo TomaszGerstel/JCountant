@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRoleSpringRepository extends CrudRepository<UserRole, Long>{
+public interface UserRoleSpringRepository extends CrudRepository<UserRoleEntity, Long>{
 
-	Optional<UserRole> findByName(String name);
+	Optional<UserRoleEntity> findByName(String name);
 
 }

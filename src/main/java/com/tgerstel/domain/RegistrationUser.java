@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.util.HashSet;
-import java.util.Set;
 
 @Data
 public class RegistrationUser {

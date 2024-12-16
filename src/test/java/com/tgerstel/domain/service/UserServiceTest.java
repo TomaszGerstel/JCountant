@@ -22,7 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tgerstel.domain.RegistrationUser;
-import com.tgerstel.infrastructure.repository.UserRole;
+import com.tgerstel.domain.UserRole;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -39,8 +39,7 @@ class UserServiceTest {
 	@BeforeAll
 	static void prepareVariables() {
 		passEncoder = new BCryptPasswordEncoder();
-		userRole = new UserRole();
-		userRole.setName("USER");
+		userRole = new UserRole(1L, "USER", "USER");
 		registrationUser = new RegistrationUser("Stan", "natan@gmail.com", "secret", 12);
 
 	}

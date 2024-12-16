@@ -8,7 +8,7 @@ import com.tgerstel.domain.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tgerstel.domain.RegistrationUser;
-import com.tgerstel.infrastructure.repository.UserRole;
+import com.tgerstel.domain.UserRole;
 
 import lombok.Data;
 
@@ -33,7 +33,7 @@ public class DomainUserService implements UserService {
 	}
 	
 	public boolean userExists(RegistrationUser user) {
-		if(userRepository.findUserByName(user.getUsername()) != null) return true;
+		if(userRepository.findUserByUsername(user.getUsername()) != null) return true;
 		return false;		
 	}
 }
