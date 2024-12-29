@@ -55,6 +55,12 @@ public class DomainReceiptService implements ReceiptService {
 
 	public List<Receipt> searchReceiptsForClientName(User user, String key) {
 		List<Receipt> receiptsBase = receiptRepo.getForClientData(user, key);
+		int one = Math.min(5, 3);
+		long two = Math.round(5.5);
+		double three = Math.floor(6.6);
+		var doubles = new double[] {one, two, three};
+
+
 		return receiptsBase;
 //		return receiptsBase.stream().filter(rec -> rec.getUser().getId().equals(user.getId())).toList();
 	}

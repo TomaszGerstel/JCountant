@@ -41,7 +41,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 	}
 
 	BalanceResults calculateBalance(List<Transfer> transfers, User user) {
-		List<Transaction> transactions = createTransactionObjects(transfers);
+		List<Transaction> transactions = createTransactions(transfers);
 
 		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
 				calculateGrossCosts(transactions), calculateGrossIncome(transactions), calculateNetIncome(transactions),
@@ -50,7 +50,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return balanceResults;
 	}
 
-	protected List<Transaction> createTransactionObjects(List<Transfer> transfers) {
+	protected List<Transaction> createTransactions(List<Transfer> transfers) {
 		List<Transaction> transactions = new ArrayList<>();
 		Transaction transaction;
 

@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.tgerstel.domain.RegistrationUser;
+import com.tgerstel.domain.service.command.RegistrationCommand;
 import com.tgerstel.domain.UserRole;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,13 +34,13 @@ class UserServiceTest {
 
 	static PasswordEncoder passEncoder;
 	static UserRole userRole;
-	static RegistrationUser registrationUser;
+	static RegistrationCommand registrationCommand;
 
 	@BeforeAll
 	static void prepareVariables() {
 		passEncoder = new BCryptPasswordEncoder();
 		userRole = new UserRole(1L, "USER", "USER");
-		registrationUser = new RegistrationUser("Stan", "natan@gmail.com", "secret", 12);
+		registrationCommand = new RegistrationCommand("Stan", "natan@gmail.com", "secret", 12);
 
 	}
 
@@ -51,7 +51,7 @@ class UserServiceTest {
 		ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
 		Mockito.when(userRepo.findRoleByName("USER")).thenReturn(Optional.of(userRole));
 
-		userService.saveUser(registrationUser, passEncoder);
+		userService.saveUser(registrationCommand, passEncoder);
 
 		Mockito.verify(userRepo).save(argumentCaptor.capture());
 		User capturedUser = argumentCaptor.getValue();
@@ -59,7 +59,7 @@ class UserServiceTest {
 		assertAll(
 
 				() -> assertTrue(capturedUser.getRoles().contains(userRole)),
-				() -> assertTrue(passEncoder.matches(registrationUser.getPassword(), capturedUser.getPassword())),
+				() -> assertTrue(passEncoder.matches(registrationCommand.getPassword(), capturedUser.getPassword())),
 				() -> assertEquals("Stan", capturedUser.getUsername()),
 				() -> assertEquals(12, capturedUser.getLumpSumTaxRate())
 
@@ -72,7 +72,7 @@ class UserServiceTest {
 
 		Mockito.when(userRepo.findRoleByName("USER")).thenReturn(Optional.empty());
 
-		Assertions.assertThatThrownBy(() -> userService.saveUser(registrationUser, passEncoder))
+		Assertions.assertThatThrownBy(() -> userService.saveUser(registrationCommand, passEncoder))
 				.isInstanceOf(NoSuchElementException.class);
 		Mockito.verify(userRepo, Mockito.times(0)).save(ArgumentMatchers.any());
 	}
