@@ -2,15 +2,16 @@ package com.tgerstel.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.tgerstel.domain.service.command.RegistrationCommand;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-class RegistrationUserTest {
+class RegistrationCommandTest {
 
 	@Test
 	void testToUser() {
-		RegistrationUser userRegistration = new RegistrationUser("Al", "al@gmail.com", "secret", 12);
+		RegistrationCommand userRegistration = new RegistrationCommand("Al", "al@gmail.com", "secret", 12);
 		PasswordEncoder passEncoder = new  BCryptPasswordEncoder();		
 		
 		User userBase = userRegistration.toUser(passEncoder);

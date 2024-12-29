@@ -7,7 +7,7 @@ import com.tgerstel.domain.User;
 import com.tgerstel.domain.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.tgerstel.domain.RegistrationUser;
+import com.tgerstel.domain.service.command.RegistrationCommand;
 import com.tgerstel.domain.UserRole;
 
 import lombok.Data;
@@ -22,7 +22,7 @@ public class DomainUserService implements UserService {
 		this.userRepository = userRepository;
 	}	
 
-	public void saveUser(RegistrationUser user, PasswordEncoder passEncoder) {
+	public void saveUser(RegistrationCommand user, PasswordEncoder passEncoder) {
 		User newUser = user.toUser(passEncoder);
 		Optional<UserRole> userRole = userRepository.findRoleByName("USER");
 		userRole.ifPresentOrElse(role -> newUser.getRoles().add(role),
@@ -32,7 +32,7 @@ public class DomainUserService implements UserService {
 		userRepository.save(newUser);
 	}
 	
-	public boolean userExists(RegistrationUser user) {
+	public boolean userExists(RegistrationCommand user) {
 		if(userRepository.findUserByUsername(user.getUsername()) != null) return true;
 		return false;		
 	}

@@ -183,7 +183,7 @@ class CalculationServiceTest {
 	@DisplayName("CalculateTransactionObject method should return right transaction lisf from known transfer list")
 	void testCreateTransactionObject() {
 
-		List<Transaction> result = calcService.createTransactionObjects(transfers);
+		List<Transaction> result = calcService.createTransactions(transfers);
 		assertEquals(transactions, result);
 	}
 
