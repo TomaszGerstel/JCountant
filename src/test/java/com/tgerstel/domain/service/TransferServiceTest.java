@@ -34,8 +34,10 @@ class TransferServiceTest {
 
     @Mock
     private TransferRepository transferRepo;
+
     @Mock
     private ReceiptRepository receiptRepo;
+
     @InjectMocks
     private DomainTransferService transferService;
 
@@ -68,15 +70,17 @@ class TransferServiceTest {
 
 
     @Test
-    @DisplayName("CreateTransferShouldPassProperTransferAndUserToSaveMethod")
+    @DisplayName("createTransferShouldPassProperTransferAndUserToSaveMethod")
     void testCreateTransfer() {
-
+        // given
         Mockito.when(transferRepo.add(ArgumentMatchers.any())).thenReturn(transfer);
         Mockito.when(receiptRepo.getById(ArgumentMatchers.any())).thenReturn(Optional.of(receipt));
         ArgumentCaptor<CreateTransferCommand> argumentCaptor = ArgumentCaptor.forClass(CreateTransferCommand.class);
 
+        // when
         transferService.createTransfer(createTransferCommand);
 
+        // then
         Mockito.verify(transferRepo).add(argumentCaptor.capture());
         CreateTransferCommand captured = argumentCaptor.getValue();
 
@@ -93,31 +97,33 @@ class TransferServiceTest {
     }
 
     @Test
-    @DisplayName("CreateTransferShouldReturnEmptyOptionalForNotFoundReceipt")
-    void testCreateTransfer2() {
-
+    @DisplayName("createTransferShouldReturnEmptyOptionalForNotFoundReceipt")
+    void testCreateTransferForNotExistingReceipt() {
+        // given
         Mockito.when(receiptRepo.getById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+        // when
         Optional<Transfer> transferReturned = transferService.createTransfer(createTransferCommand2);
 
+        // then
         Assertions.assertThat(transferReturned).isEmpty();
     }
 
-//	receiptUsedInTransfer test
-
     @Test
-    @DisplayName("getRecentTransfers() shoud giving proper page request and user to repository method")
+    @DisplayName("shouldCreateProperPageRequestToRepositoryForRecentTransfers")
     void testGetRecentTransfers() {
-
+        // given
         Mockito.when(transferRepo.getPageForUser(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(new ArrayList<>());
-
         Integer resultSize = 11;
 
         ArgumentCaptor<User> argumentCaptorUser = ArgumentCaptor.forClass(User.class);
         ArgumentCaptor<PageRequest> argumentCaptorPage = ArgumentCaptor.forClass(PageRequest.class);
 
+        // when
         transferService.getRecentTransfers(userActual, resultSize);
 
+        // then
         Mockito.verify(transferRepo).getPageForUser(argumentCaptorUser.capture(), argumentCaptorPage.capture());
         User capturedUser = argumentCaptorUser.getValue();
         PageRequest capturedPageRequest = argumentCaptorPage.getValue();
@@ -131,53 +137,59 @@ class TransferServiceTest {
     }
 
     @Test
-    @DisplayName("If getById() returning proper transfer for current user")
-    void testIfGetByIdReturnsTransfer() {
-
+    @DisplayName("shouldReturnProperTransferForCurrentUser")
+    void testGetTransferById() {
+        // given
         Mockito.when(transferRepo.getById(1L)).thenReturn(Optional.of(transfer));
 
+        // when
         Transfer transferReturned = transferService.getById(userActual, 1L).get();
 
+        // then
         assertAll(
                 () -> assertEquals(dateTime, transferReturned.getDate()),
                 () -> assertEquals(BigDecimal.valueOf(1200).setScale(2), transferReturned.getAmount()),
                 () -> assertEquals("Bob", transferReturned.getUser().getUsername()),
                 () -> assertEquals(TransferType.IN_TRANSFER, transferReturned.getTransferType())
-
         );
     }
 
     @Test
-    @DisplayName("If getById() returning empty optional when current user dosn't own found transfer")
-    void testIfGetByIdReturnsEmptyOptional() {
-
+    @DisplayName("shouldReturnEmptyOptionalWhenCurrentUserDoesn'tOwnTransfer")
+    void testGetTransferReturnsEmptyOptional() {
+        // given
         Mockito.when(transferRepo.getById(1L)).thenReturn(Optional.of(transfer));
+
+        // when
         Optional<Transfer> receiptReturned = transferService.getById(user2, 1L);
 
+        // then
         Assertions.assertThat(receiptReturned).isEmpty();
     }
 
     @Test
     void testDeleteTransfer() {
-
+        // given
         Mockito.when(transferRepo.getById(1L)).thenReturn(Optional.of(transfer));
 
+        // when
         transferService.deleteTransfer(userActual, 1L);
 
+        // then
         Mockito.verify(transferRepo, Mockito.times(1)).remove(1L);
-
     }
 
     @Test
-    void testDeleteTransfer2() {
-
-
+    @DisplayName("shouldNotTryToDeleteTransferIfCurrentUserNotOwnsIt")
+    void testDeleteTransferForAnotherUser() {
+        // given
         Mockito.when(transferRepo.getById(1L)).thenReturn(Optional.of(transfer));
 
+        // when
         transferService.deleteTransfer(user2, 1L);
 
+        // then
         Mockito.verify(transferRepo, Mockito.times(0)).remove(1L);
-
     }
 
 }

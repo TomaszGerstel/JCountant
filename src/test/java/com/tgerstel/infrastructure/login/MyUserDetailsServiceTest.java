@@ -26,7 +26,8 @@ import java.util.Set;
 class MyUserDetailsServiceTest {
 
 	@Mock
-	private UserRepository userRepo;
+	private UserRepository userRepository;
+
 	@InjectMocks
 	private MyUserDetailsService userDetailsService;
 
@@ -38,13 +39,15 @@ class MyUserDetailsServiceTest {
 	}
 
 	@Test
-	@DisplayName("loadUserByUsernamer shoud return UserDetails with proper fields")
+	@DisplayName("should return UserDetails with proper fields")
 	void testLoadUserByUsername() {
-		
-		Mockito.when(userRepo.findUserByUsername("Stan")).thenReturn(user);
+		// given
+		Mockito.when(userRepository.findUserByUsername("Stan")).thenReturn(user);
 
+		// when
 		UserDetails result = userDetailsService.loadUserByUsername("Stan");
 
+		// then
 		assertAll(				
 				() -> assertNotNull(result),
 				() -> assertEquals("Stan", result.getUsername()),		
@@ -53,14 +56,17 @@ class MyUserDetailsServiceTest {
 	}
 
 	@Test
-	@DisplayName("loadUserByUsernamer shoud return UsernameNotFoundException if there is no User found")
-	void testLoadUserByUsername2() {
+	@DisplayName("should return UsernameNotFoundException if there is no User found")
+	void testLoadUserByUsernameWhenNoUser() {
 
-		Mockito.when(userRepo.findUserByUsername("Stan")).thenReturn(null);
+		// given
+		Mockito.when(userRepository.findUserByUsername("Stan")).thenReturn(null);
 
+		// when
+		// then
 		Assertions.assertThatThrownBy(() -> userDetailsService.loadUserByUsername("Stan"))
 				.isInstanceOf(UsernameNotFoundException.class);
-		Mockito.verify(userRepo, Mockito.times(0)).save(ArgumentMatchers.any());
+		Mockito.verify(userRepository, Mockito.times(0)).save(ArgumentMatchers.any());
 	}
 
 }

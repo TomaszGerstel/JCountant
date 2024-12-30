@@ -44,7 +44,7 @@ class BalanceControllerTest {
 	}
 	
 	@Test
-	void tesCurrentBalance() throws Exception {
+	void testCurrentBalance() throws Exception {
 
 		Mockito.when(balanceCalculator.currentBalance(any())).thenReturn(balanceResult);
 
@@ -56,7 +56,7 @@ class BalanceControllerTest {
 	}
 	
 	@Test
-	void tesBalanceToDataRange() throws Exception {
+	void testBalanceToDataRange() throws Exception {
 
 		Mockito.when(balanceCalculator.balanceToDateRange(any(), any(), any())).thenReturn(balanceResult);
 		
@@ -73,7 +73,7 @@ class BalanceControllerTest {
 	}
 	
 	@Test
-	void tesBalanceToCurrentMonth() throws Exception {
+	void testBalanceToCurrentMonth() throws Exception {
 
 		Mockito.when(balanceCalculator.balanceToCurrentMonth(any())).thenReturn(balanceResult);
 
@@ -85,7 +85,7 @@ class BalanceControllerTest {
 	}
 	
 	@Test
-	void tesBalanceToLastMonth() throws Exception {
+	void testBalanceToLastMonth() throws Exception {
 
 		Mockito.when(balanceCalculator.balanceToLastMonth(any())).thenReturn(balanceResult);
 

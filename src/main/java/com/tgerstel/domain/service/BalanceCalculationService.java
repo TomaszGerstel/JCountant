@@ -40,7 +40,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return calculateBalance(transfers, user);
 	}
 
-	BalanceResults calculateBalance(List<Transfer> transfers, User user) {
+	private BalanceResults calculateBalance(List<Transfer> transfers, User user) {
 		List<Transaction> transactions = createTransactions(transfers);
 
 		BalanceResults balanceResults = new BalanceResults(calculateCosts(transactions),
@@ -50,7 +50,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return balanceResults;
 	}
 
-	protected List<Transaction> createTransactions(List<Transfer> transfers) {
+	private List<Transaction> createTransactions(List<Transfer> transfers) {
 		List<Transaction> transactions = new ArrayList<>();
 		Transaction transaction;
 
@@ -67,7 +67,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return transactions;
 	}
 
-	protected Transaction makeTransactionFromReceipt(Receipt receipt) {
+	private Transaction makeTransactionFromReceipt(Receipt receipt) {
 		Transaction transaction = new Transaction();
 		transaction.setAmount(receipt.getAmount());
 		transaction.setNetAmount(receipt.getNetAmount());
@@ -75,12 +75,12 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return transaction;
 	}
 
-	protected boolean transferTypeWithoutReceipt(Transfer transfer) {
+	private boolean transferTypeWithoutReceipt(Transfer transfer) {
 		TransferType t = transfer.getTransferType();
 		return (t == TransferType.SALARY || t == TransferType.TAX_OUT_TRANSFER || t == TransferType.VAT_OUT_TRANSFER);
 	}
 
-	protected BigDecimal calculateCosts(List<Transaction> transactions) {
+	private BigDecimal calculateCosts(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.OUT_TRANSFER) {
@@ -93,7 +93,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateGrossCosts(List<Transaction> transactions) {
+	private BigDecimal calculateGrossCosts(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.OUT_TRANSFER)
@@ -102,7 +102,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateGrossIncome(List<Transaction> transactions) {
+	private BigDecimal calculateGrossIncome(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER)
@@ -111,7 +111,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateNetIncome(List<Transaction> transactions) {
+	private BigDecimal calculateNetIncome(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.IN_TRANSFER) {
@@ -124,7 +124,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateProfitPaid(List<Transaction> transactions) {
+	private BigDecimal calculateProfitPaid(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.SALARY)
@@ -133,7 +133,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateVatPaid(List<Transaction> transactions) {
+	private BigDecimal calculateVatPaid(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.VAT_OUT_TRANSFER)
@@ -142,7 +142,7 @@ public class BalanceCalculationService implements BalanceCalculator {
 		return sum.setScale(2);
 	}
 
-	protected BigDecimal calculateTaxPaid(List<Transaction> transactions) {
+	private BigDecimal calculateTaxPaid(List<Transaction> transactions) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (Transaction t : transactions) {
 			if (t.getTransferType() == TransferType.TAX_OUT_TRANSFER)

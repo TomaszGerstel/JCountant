@@ -70,11 +70,19 @@ class ReceiptControllerMvcMockTest {
     }
 
     @Test
-    void testAddReceipt() throws Exception {
+    void shouldReturnNewReceipt() throws Exception {
 
         Mockito.when(receiptService.createReceipt(any())).thenReturn(receipt);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt").content(asJsonString(receipt))
+        CreateReceiptRequest request = new CreateReceiptRequest();
+        request.setDate(dateTime);
+        request.setAmount(BigDecimal.valueOf(1200));
+        request.setNetAmount(BigDecimal.valueOf(1000));
+        request.setClient("client1");
+        request.setWorker("worker1");
+        request.setDescription("some description");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/receipt").content(asJsonString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("{'amount': 1200.00}"))
@@ -83,7 +91,7 @@ class ReceiptControllerMvcMockTest {
     }
 
     @Test
-    void testAllReceipts() throws Exception {
+    void shouldReturnAllReceipts() throws Exception {
 
         Mockito.when(receiptService.getRecentReceipts(any(), any()))
                 .thenReturn(receipts);
@@ -95,7 +103,7 @@ class ReceiptControllerMvcMockTest {
     }
 
     @Test
-    void testNoTransferReceipts() throws Exception {
+    void shouldReturnReceiptsNotUsedInTransfer() throws Exception {
 
         Mockito.when(receiptService.receiptsWithoutTransfer(any())).thenReturn(receipts);
 
@@ -103,18 +111,6 @@ class ReceiptControllerMvcMockTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.content().json("[{'amount': 1200.00}, {'amount': 1000.00}]"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    public static String asJsonString(final Object obj) {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        try {
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test
@@ -144,9 +140,6 @@ class ReceiptControllerMvcMockTest {
     @Test
     void testDelete() throws Exception {
 
-//		Mockito.doNothing().when(receiptService).deleteReceiptAndRelatedTransfer(ArgumentMatchers.any(),
-//				ArgumentMatchers.eq(1L));
-
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/receipt/1")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -168,8 +161,8 @@ class ReceiptControllerMvcMockTest {
     }
 
     @Test
-    @DisplayName("SearchReceipt should return ok status i empty result if there no receipts found")
-    void testSearchReceipts2() throws Exception {
+    @DisplayName("SearchReceipt should return ok status and empty result if there no receipts found")
+    void testSearchReceiptsWhenNoResult() throws Exception {
 
         Mockito.when(receiptService.searchReceiptsForClientName(any(), eq("some_client")))
                 .thenReturn(receipts);
@@ -180,5 +173,16 @@ class ReceiptControllerMvcMockTest {
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.content().json("[]"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private String asJsonString(final Object obj) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
