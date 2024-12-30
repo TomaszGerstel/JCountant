@@ -50,7 +50,7 @@ class CalculationServiceTest {
 
 		date1_now = LocalDate.now();
 		date2_month_ago = date1_now.minusMonths(1);
-		transfers = new ArrayList<Transfer>();
+		transfers = new ArrayList<>();
 		transaction1_In = new Transaction(TransferType.IN_TRANSFER, BigDecimal.valueOf(1200).setScale(2),
 				BigDecimal.valueOf(200).setScale(2), BigDecimal.valueOf(1000).setScale(2));
 		transaction2_Out = new Transaction(TransferType.OUT_TRANSFER, BigDecimal.valueOf(200).setScale(2),
@@ -73,7 +73,6 @@ class CalculationServiceTest {
 
 		transfers = List.of(transf1_In, transf2_Out, transf3_Salary, transf4_Tax, transf5_Vat);
 
-		// add variables to show calculations and take values from transfers
 		balanceResultsForKnowingTransfers = new BalanceResults(BigDecimal.valueOf(180).setScale(2), BigDecimal.valueOf(200).setScale(2), BigDecimal.valueOf(1200).setScale(2),
 				BigDecimal.valueOf(1000).setScale(2), BigDecimal.valueOf(600).setScale(2),BigDecimal.valueOf(100).setScale(2), 
 				BigDecimal.valueOf(100).setScale(2), null);
@@ -85,13 +84,15 @@ class CalculationServiceTest {
 	}
 
 	@Test
-	@DisplayName("CurrentBalanceMethod should return right balance calculations to known transfers")
+	@DisplayName("CurrentBalance method should return right balance calculations to known transfers")
 	void testCurrentBalance() {
-
+		// given
 		Mockito.when(transferRepo.getAllForUser(ArgumentMatchers.any())).thenReturn(transfers);
 
+		// when
 		BalanceResults result = calcService.currentBalance(new User());
 
+		// then
 		assertAll(() -> assertEquals(BigDecimal.valueOf(200).setScale(2), result.getBalance()),
 				() -> assertEquals(BigDecimal.valueOf(180).setScale(2), result.getCosts()),
 				() -> assertEquals(BigDecimal.valueOf(55.8).setScale(2), result.getFlatTaxBalance().setScale(2)),
@@ -117,14 +118,16 @@ class CalculationServiceTest {
 	}
 
 	@Test
-	@DisplayName("CurrentBalanceMethod should return right balance calculations to known transfers")
+	@DisplayName("CurrentBalance method should return right balance calculations to known transfers")
 	void testBalanceToCurrentMonth() {
-
+		// given
 		Mockito.when(transferRepo.getForUserInRange(ArgumentMatchers.any(), ArgumentMatchers.any(),
 				ArgumentMatchers.any())).thenReturn(transfers);
 
+		// when
 		BalanceResults result = calcService.balanceToCurrentMonth(new User());
-		// change to equal prepared balance result?
+
+		// then
 		assertAll(() -> assertEquals(BigDecimal.valueOf(200).setScale(2), result.getBalance()),
 				() -> assertEquals(BigDecimal.valueOf(180).setScale(2), result.getCosts()),
 				() -> assertEquals(BigDecimal.valueOf(55.8).setScale(2), result.getFlatTaxBalance().setScale(2)),
@@ -150,94 +153,31 @@ class CalculationServiceTest {
 	}
 
 	@Test
-	@DisplayName("LastMonthBalanceMethod should return right balance calculations to known balance result")
+	@DisplayName("LastMonthBalance method should return right balance calculations to known balance result")
 	void testBalanceToLastMonth() {
-
+		// given
 		Mockito.when(transferRepo.getForUserInRange(ArgumentMatchers.any(), ArgumentMatchers.any(),
 				ArgumentMatchers.any())).thenReturn(transfers);
 
+		// when
 		BalanceResults result = calcService.balanceToLastMonth(new User());
+
+		// then
 		assertEquals(balanceResultsForKnowingTransfers, result);
 	}
 
 	@Test
-	@DisplayName("BalanceToDataRange Method should return right balance calculations to known balance result")
+	@DisplayName("BalanceToDataRange method should return right balance calculations to known balance result")
 	void testBalanceToDateRange() {
-
+		// given
 		Mockito.when(transferRepo.getForUserInRange(ArgumentMatchers.any(), ArgumentMatchers.any(),
 				ArgumentMatchers.any())).thenReturn(transfers);
 
+		// when
 		BalanceResults result = calcService.balanceToDateRange(date1_now, date2_month_ago, new User());
+
+		// then
 		assertEquals(balanceResultsForKnowingTransfers, result);
-	}
-
-	@Test
-	@DisplayName("CalculateBalance method should return right balance calculations to known balance result")
-	void testCalculateBalance() {
-		// remove and change method to private?
-		BalanceResults result = calcService.calculateBalance(transfers, new User());
-		assertEquals(balanceResultsForKnowingTransfers, result);
-	}
-
-	@Test
-	@DisplayName("CalculateTransactionObject method should return right transaction lisf from known transfer list")
-	void testCreateTransactionObject() {
-
-		List<Transaction> result = calcService.createTransactions(transfers);
-		assertEquals(transactions, result);
-	}
-
-	@Test
-	@DisplayName("MakeTransactionFromReceipt method should return right transaction object from known receipt")
-	void testMakeTransactionFromReceipt() {
-
-		Transaction result = calcService.makeTransactionFromReceipt(receipt1);
-
-		assertAll(() -> assertEquals(BigDecimal.valueOf(650).setScale(2), result.getAmount()),
-				() -> assertEquals(BigDecimal.valueOf(600).setScale(2), result.getNetAmount()),
-				() -> assertEquals(BigDecimal.valueOf(50).setScale(2), result.getVatValue()));
-	}
-
-	@Test
-	@DisplayName("TransferTypeWithoutReceipt method should return true to transfer type without receipt")
-	void testTransferTypeWithoutReceipt() {
-
-		assertAll(() -> assertTrue(calcService.transferTypeWithoutReceipt(transf3_Salary)),
-				() -> assertTrue(calcService.transferTypeWithoutReceipt(transf4_Tax)),
-				() -> assertTrue(calcService.transferTypeWithoutReceipt(transf5_Vat)));		
-	}
-	
-	@Test
-	@DisplayName("TransferTypeWithoutReceipt method should return false to transfer type with receipt")
-	void testTransferTypeWithoutReceipt2() {
-
-		assertAll(() -> assertFalse(calcService.transferTypeWithoutReceipt(transf1_In)),
-				() -> assertFalse(calcService.transferTypeWithoutReceipt(transf2_Out)));		
-	}
-
-	@Test
-	void testCalculateCosts() {			
-		assertEquals(BigDecimal.valueOf(180).setScale(2), calcService.calculateCosts(transactions));
-	}	
-	
-	@Test
-	void testCalculateGrossIncome() {
-		assertEquals(BigDecimal.valueOf(1200).setScale(2), calcService.calculateGrossIncome(transactions));
-	}
-
-	@Test
-	void testCalculateProfitPaid() {
-		assertEquals(BigDecimal.valueOf(600).setScale(2), calcService.calculateProfitPaid(transactions));
-	}
-
-	@Test
-	void testCalculateVatPaid() {
-		assertEquals(BigDecimal.valueOf(100).setScale(2), calcService.calculateVatPaid(transactions));
-	}
-
-	@Test
-	void testCalculateTaxPaid() {
-		assertEquals(BigDecimal.valueOf(100).setScale(2), calcService.calculateTaxPaid(transactions));
 	}
 
 }

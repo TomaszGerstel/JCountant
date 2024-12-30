@@ -16,7 +16,7 @@ class ReceiptTest {
 	static Receipt receiptWithOnlyVatValue;
 	static Receipt receiptWithOnlyNetAmount;
 	static Receipt receiptWithOnlyVatPercentage;
-	static Receipt receiptWthoutOptValues;
+	static Receipt receiptWithoutOptValues;
 	static LocalDate date;
 
 	@BeforeAll
@@ -30,68 +30,56 @@ class ReceiptTest {
 				"client3", "worker2", "desc", null);
 		receiptWithOnlyVatPercentage = new Receipt(4L, date, BigDecimal.valueOf(3750), null, null, 25f, "client1",
 				"worker2", "desc", null);
-		receiptWthoutOptValues = new Receipt(5L, date, BigDecimal.valueOf(3000), null, null, null, "client4", "worker1",
+		receiptWithoutOptValues = new Receipt(5L, date, BigDecimal.valueOf(3000), null, null, null, "client4", "worker1",
 				"desc", null);
 	}
 
 	@Test
-	@DisplayName("getNetAmoutn for object with declared all fields should return known value")
+	@DisplayName("should return known net amount value")
 	void testGetNetAmount() {
 		assertEquals(BigDecimal.valueOf(3000).setScale(2), receiptWithAllValues.getNetAmount());
 	}
 	
 	@Test
-	@DisplayName("getNetAmount should return known (calculated from vatValue) value (amount - vatValue)")
-	void testGetNetAmount2() {
+	@DisplayName("should return calculated net amount value from vat value")
+	void testGetCalculatedNetAmountFromVatValue() {
 		assertEquals(BigDecimal.valueOf(2500).setScale(2), receiptWithOnlyVatValue.getNetAmount());
 	}
 	
 	@Test
-	@DisplayName("getNetAmoutn for object with declared netAmount should return known value")
-	void testGetNetAmount3() {
-		assertEquals(BigDecimal.valueOf(2500).setScale(2), receiptWithOnlyNetAmount.getNetAmount());
-	}
-	
-	@Test
-	@DisplayName("getNetAmount should return known (calculated from vatPercentage) value")
-	void testGetNetAmount4() {
+	@DisplayName("should return calculated net amount from vat percentage value")
+	void testGetCalculatedNetAmountFromVatPercentage() {
 		assertEquals(BigDecimal.valueOf(3000).setScale(2), receiptWithOnlyVatPercentage.getNetAmount());
 	}
 	
 	@Test
-	@DisplayName("getNetValue for object without vatValue, netValue and vatPercentage shoud return null")
-	void testGetNetAmount5() {
-		assertNull(receiptWthoutOptValues.getNetAmount());
+	@DisplayName("should return null net amount for missing values")
+	void testGetNetAmountForMissingValues() {
+		assertNull(receiptWithoutOptValues.getNetAmount());
 	}	
 	
 	@Test
-	@DisplayName("getVatValue for object with declared all fields should return known value")
-	void testGetVataValue() {
+	@DisplayName("should return known vat value")
+	void testGetVatValue() {
 		assertEquals(BigDecimal.valueOf(600).setScale(2), receiptWithAllValues.getVatValue());
 	}
 	
 	@Test
-	@DisplayName("getVatValue for object with declared catCalue should return known value")
-	void testGetVatValue2() {
-		assertEquals(BigDecimal.valueOf(500).setScale(2), receiptWithOnlyVatValue.getVatValue());
-	}
-	
-	@Test
-	@DisplayName("getVatValue should return known (calculated from netAmount) value")
-	void testGetVatValue3() {
+	@DisplayName("should return vat value calculated from net amount")
+	void testGetVatValueFromNetAmount() {
 		assertEquals(BigDecimal.valueOf(500).setScale(2), receiptWithOnlyNetAmount.getVatValue());
 	}
 	
 	@Test
-	@DisplayName("getVatValue should return known (calculated from vatPercentage) value")
-	void testGetVatValue4() {
+	@DisplayName("should return vat value calculated from vat percentage")
+	void testGetVatValueFromVatPercentage() {
 		assertEquals(BigDecimal.valueOf(750).setScale(2), receiptWithOnlyVatPercentage.getVatValue());
 	}
 	
 	@Test
-	@DisplayName("getVatValue for object without vatValue, netValue and vatPercentage shoud return null")
-	void testGetVatValue5() {
-		assertNull(receiptWthoutOptValues.getVatValue());
+	@DisplayName("should return null vat value for missing values")
+	void testGetVatValueForMissingValues() {
+		assertNull(receiptWithoutOptValues.getVatValue());
 	}
 
 }

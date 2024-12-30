@@ -29,8 +29,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tgerstel.infrastructure.repository.ReceiptEntity;
-import com.tgerstel.infrastructure.repository.TransferEntity;
 import com.tgerstel.domain.TransferType;
 
 @WebMvcTest(value = TransferController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
@@ -80,8 +78,8 @@ public class TransferControllerMvcMockTest {
 	}
 
 	@Test
-	@DisplayName("AddTransfer with regular transfer type without receipt_id should return 422 status")
-	void addTransferTest2() throws Exception {
+	@DisplayName("adding transfer with regular transfer type without receipt_id should return 422 status")
+	void testAddingTransferWithoutRequiredReceipt() throws Exception {
 
 		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(transfer));
 
@@ -91,8 +89,8 @@ public class TransferControllerMvcMockTest {
 	}
 
 	@Test
-	@DisplayName("AddTransfer with special transfer type without receipt_id should save transfer")
-	void addTransferTest3() throws Exception {
+	@DisplayName("adding transfer with special transfer type without receipt_id should save transfer")
+	void testAddingSpecialTransfer() throws Exception {
 
 		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(specialTransfer));
 
@@ -105,8 +103,8 @@ public class TransferControllerMvcMockTest {
 	}
 
 	@Test
-	@DisplayName("AddTransfer with no valid transfer")
-	void addTransferTest4() throws Exception {
+	@DisplayName("should throw exception when adding invalid transfer")
+	void testAddingInvalidTransfer() throws Exception {
 
 		Mockito.when(transferService.createTransfer(any())).thenReturn(Optional.of(notValidTransfer));
 
@@ -141,8 +139,8 @@ public class TransferControllerMvcMockTest {
 	}
 	
 	@Test
-	@DisplayName("GetTransferById should return not found status if there is no result")
-	void testGetTransferById2() throws Exception {
+	@DisplayName("getTransferById endpoint should return not found status if there is no result")
+	void testGetTransferByIdForNotExistingTransfer() throws Exception {
 
 		Mockito.when(transferService.getById(any(), eq(15L)))
 				.thenReturn(Optional.empty());
@@ -175,8 +173,8 @@ public class TransferControllerMvcMockTest {
 	}
 	
 	@Test
-	@DisplayName("SearchTransfer should return ok status i empty result if there no transfer found")
-	void testSearchReceipts2() throws Exception {
+	@DisplayName("searchTransfer endpoint should return ok status and empty result if there no transfer found")
+	void testSearchTransfersWhenNoResult() throws Exception {
 
 		Mockito.when(transferService.searchTransfersForUserWithSenderData(any(), eq("client_name")))
 				.thenReturn(new ArrayList<>());

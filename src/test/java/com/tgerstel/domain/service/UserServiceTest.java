@@ -28,7 +28,8 @@ import com.tgerstel.domain.UserRole;
 class UserServiceTest {
 
 	@Mock
-	private UserRepository userRepo;
+	private UserRepository userRepository;
+
 	@InjectMocks
 	private DomainUserService userService;
 
@@ -45,36 +46,39 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("saveUser should return (and pass to repository) proper User object")
+	@DisplayName("should save and return proper User object")
 	void testSaveUser() {
 
+		// given
 		ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
-		Mockito.when(userRepo.findRoleByName("USER")).thenReturn(Optional.of(userRole));
+		Mockito.when(userRepository.findRoleByName("USER")).thenReturn(Optional.of(userRole));
 
+		// when
 		userService.saveUser(registrationCommand, passEncoder);
 
-		Mockito.verify(userRepo).save(argumentCaptor.capture());
+		Mockito.verify(userRepository).save(argumentCaptor.capture());
+
+		// then
 		User capturedUser = argumentCaptor.getValue();
-
 		assertAll(
-
 				() -> assertTrue(capturedUser.getRoles().contains(userRole)),
 				() -> assertTrue(passEncoder.matches(registrationCommand.getPassword(), capturedUser.getPassword())),
 				() -> assertEquals("Stan", capturedUser.getUsername()),
 				() -> assertEquals(12, capturedUser.getLumpSumTaxRate())
-
 		);
 	}
 
 	@Test
-	@DisplayName("saveUser should return NoSuchElementException if there is no UserRole")
-	void testSaveUser2() {
+	@DisplayName("should throw NoSuchElementException if there is no default UserRole")
+	void testSaveUserWhenNoUserRole() {
+		// given
+		Mockito.when(userRepository.findRoleByName("USER")).thenReturn(Optional.empty());
 
-		Mockito.when(userRepo.findRoleByName("USER")).thenReturn(Optional.empty());
-
+		// when
+		// then
 		Assertions.assertThatThrownBy(() -> userService.saveUser(registrationCommand, passEncoder))
 				.isInstanceOf(NoSuchElementException.class);
-		Mockito.verify(userRepo, Mockito.times(0)).save(ArgumentMatchers.any());
+		Mockito.verify(userRepository, Mockito.times(0)).save(ArgumentMatchers.any());
 	}
 
 }
