@@ -30,7 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import com.tgerstel.domain.TransferType;
 
 @ExtendWith(MockitoExtension.class)
-class TransferServiceTest {
+class TransferDomainServiceTest {
 
     @Mock
     private TransferRepository transferRepo;
