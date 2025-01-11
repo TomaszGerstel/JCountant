@@ -1,4 +1,4 @@
-#konsola h2: localhost:8080/h2-console
+#h2 console: localhost:8080/h2-console
 spring:
   datasource:    
     url: jdbc:h2:mem:jcountant;DATABASE_TO_UPPER=false
@@ -16,7 +16,7 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/master.xml
-    contexts: all, h2
+    contexts: all, h2, dev
     driver-class-name: h2
   h2:
     console:      
@@ -25,7 +25,6 @@ spring:
     user:
       name: admin
       password: pass1
-      
   jackson:
     serialization:
       fail-on-empty-beans: false
