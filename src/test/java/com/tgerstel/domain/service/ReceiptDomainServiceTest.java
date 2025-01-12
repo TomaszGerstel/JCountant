@@ -31,7 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import com.tgerstel.domain.TransferType;
 
 @ExtendWith(MockitoExtension.class)
-class ReceiptServiceTest {
+class ReceiptDomainServiceTest {
 
     @Mock
     private ReceiptRepository receiptRepo;

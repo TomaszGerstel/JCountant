@@ -12,5 +12,5 @@
     <include file="0006_create_enum_transfer_type_postgres.xml" relativeToChangelogFile="true" context="postgres"/>
     <include file="0007_create_table_transfer_postgres.xml" relativeToChangelogFile="true" context="postgres"/>
     <include file="1001_data.xml" relativeToChangelogFile="true" context="all"/>
-    <include file="1002_data.xml" relativeToChangelogFile="true" context="all"/>
+    <include file="1002_data.xml" relativeToChangelogFile="true" context="dev"/>
 </databaseChangeLog>
