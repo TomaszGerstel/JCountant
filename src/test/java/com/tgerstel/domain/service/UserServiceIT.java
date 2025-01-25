@@ -6,7 +6,6 @@ import com.tgerstel.domain.service.command.RegistrationCommand;
 import com.tgerstel.infrastructure.repository.UserEntity;
 import com.tgerstel.infrastructure.repository.UserSpringRepository;
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

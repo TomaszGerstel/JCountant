@@ -21,7 +21,7 @@ public class ComponentConfiguration {
     }
 
     @Bean
-    TransferService transferService(final TransferRepository transferRepository, ReceiptRepository receiptRepository) {
+    TransferService transferService(final TransferRepository transferRepository, final ReceiptRepository receiptRepository) {
         return new DomainTransferService(transferRepository, receiptRepository);
     }
 

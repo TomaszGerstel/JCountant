@@ -11,22 +11,22 @@ import java.time.LocalDate;
 public class Receipt {
 
     @Getter
-    private Long id;
+    private final Long id;
     @Getter
-    private LocalDate date;
-    private BigDecimal amount;
-    private BigDecimal netAmount;
-    private BigDecimal vatValue;
+    private final LocalDate date;
+    private final BigDecimal amount;
+    private final BigDecimal netAmount;
+    private final BigDecimal vatValue;
     @Getter
-    private Float vatPercentage;
+    private final Float vatPercentage;
     @Getter
-    private String client;
+    private final String client;
     @Getter
-    private String worker;
+    private final String worker;
     @Getter
-    private String description;
+    private final String description;
     @Getter
-    private User user;
+    private final User user;
 
     public BigDecimal getAmount() {
         return amount.setScale(2, RoundingMode.HALF_EVEN);

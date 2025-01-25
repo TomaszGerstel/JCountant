@@ -28,7 +28,7 @@ public class ReceiptRepositoryImpl implements ReceiptRepository {
     }
 
     @Override
-    public Receipt add(CreateReceiptCommand command) {
+    public Receipt add(final CreateReceiptCommand command) {
         ReceiptEntity receiptToSave = new ReceiptEntity(command.date(), command.amount(), command.netAmount(),
                 command.vatValue(), command.vatPercentage(), command.client(), command.worker(), command.description(),
                 new UserEntity(command.user()));

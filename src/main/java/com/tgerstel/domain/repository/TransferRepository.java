@@ -20,7 +20,7 @@ public interface TransferRepository {
 
     List<Transfer> getAllForUser(User user);
 
-    Optional<Transfer> getForReceipt(Receipt receipt);;
+    Optional<Transfer> getForReceipt(Receipt receipt);
 
     List<Transfer> getForSenderData(String key);
 

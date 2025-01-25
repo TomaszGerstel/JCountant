@@ -9,6 +9,7 @@ import com.tgerstel.domain.Receipt;
 import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.ReceiptService;
 import com.tgerstel.domain.service.command.CreateReceiptCommand;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,17 +36,14 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "basicAuth")
 @RequestMapping(path = "/api/receipt", produces = "application/json")
 @CrossOrigin(origins = "*")
+@AllArgsConstructor
 public class ReceiptController {
 
     private final ReceiptService receiptService;
 
-    public ReceiptController(ReceiptService receiptService) {
-        this.receiptService = receiptService;
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addReceipt(@RequestBody @Valid CreateReceiptRequest request, Errors errors,
-                                        @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> addReceipt(@RequestBody @Valid final CreateReceiptRequest request, final Errors errors,
+                                        @AuthenticationPrincipal final User user) {
 
         if (errors.hasErrors()) {
             List<String> errorMessage = errors.getFieldErrors().stream()
@@ -53,51 +51,48 @@ public class ReceiptController {
             return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        CreateReceiptCommand command = new CreateReceiptCommand(request.getDate(), request.getAmount(),
+        final CreateReceiptCommand command = new CreateReceiptCommand(request.getDate(), request.getAmount(),
                 request.getNetAmount(), request.getVatValue(), request.getVatPercentage(), request.getClient(),
                 request.getWorker(), request.getDescription(), user);
 
-        Receipt saved = receiptService.createReceipt(command);
+        final Receipt saved = receiptService.createReceipt(command);
 
-        URI savedReceiptLocation = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        final URI savedReceiptLocation = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(saved.getId()).toUri();
         return ResponseEntity.created(savedReceiptLocation).body(saved);
     }
 
     @GetMapping(path = "/recent", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Receipt>> allReceipts(@RequestParam(defaultValue = "10") Integer resultSize,
-                                                           @AuthenticationPrincipal User user) {
+    public ResponseEntity<List<Receipt>> allReceipts(@RequestParam(defaultValue = "10") final Integer resultSize,
+                                                           @AuthenticationPrincipal final User user) {
 
-        List<Receipt> allReceipts = receiptService.getRecentReceipts(user, resultSize);
+        final List<Receipt> allReceipts = receiptService.getRecentReceipts(user, resultSize);
         return ResponseEntity.ok(allReceipts);
     }
 
     @GetMapping(path = "/no_transfer_receipts", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Receipt>> allReceiptsWithoutTransfer(@AuthenticationPrincipal User user) {
-        List<Receipt> allReceipts = receiptService.receiptsWithoutTransfer(user);
+    public ResponseEntity<List<Receipt>> allReceiptsWithoutTransfer(@AuthenticationPrincipal final User user) {
+        final List<Receipt> allReceipts = receiptService.receiptsWithoutTransfer(user);
         return ResponseEntity.ok(allReceipts);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Receipt> getReceiptById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Receipt> getReceiptById(@PathVariable final Long id, @AuthenticationPrincipal final User user) {
 
-        Optional<Receipt> result = receiptService.getById(user, id);
-        if (result.isPresent())
-            return new ResponseEntity<>(result.get(), HttpStatus.OK);
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//		return receiptService.getById(user, id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        final Optional<Receipt> result = receiptService.getById(user, id);
+        return result.map(receipt -> new ResponseEntity<>(receipt, HttpStatus.OK)).orElseGet(()
+                -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> delete(@PathVariable final Long id, @AuthenticationPrincipal final User user) {
         receiptService.deleteReceiptAndRelatedTransfer(user, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Receipt>> searchReceipts(@RequestParam(defaultValue = "") String key,
-                                                              @AuthenticationPrincipal User user) {
-
+    public ResponseEntity<List<Receipt>> searchReceipts(@RequestParam(defaultValue = "") final String key,
+                                                              @AuthenticationPrincipal final User user) {
         List<Receipt> allReceipts = receiptService.searchReceiptsForClientName(user, key);
         return ResponseEntity.ok(allReceipts);
     }

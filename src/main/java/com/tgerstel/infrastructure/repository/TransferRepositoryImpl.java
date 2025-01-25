@@ -19,37 +19,36 @@ public class TransferRepositoryImpl implements TransferRepository {
     private final TransferSpringRepository transferSpringRepository;
     private final ReceiptSpringRepository receiptSpringRepository;
 
-    public TransferRepositoryImpl(final TransferSpringRepository transferSpringRepository, ReceiptSpringRepository receiptSpringRepository) {
+    public TransferRepositoryImpl(final TransferSpringRepository transferSpringRepository,
+                                  final ReceiptSpringRepository receiptSpringRepository) {
         this.transferSpringRepository = transferSpringRepository;
         this.receiptSpringRepository = receiptSpringRepository;
     }
 
     @Override
     public Optional<Transfer> getById(Long id) {
-        Optional<TransferEntity> entity = transferSpringRepository.findById(id);
+        final Optional<TransferEntity> entity = transferSpringRepository.findById(id);
         return entity.map(TransferEntity::toTransfer);
     }
 
     @Override
     public Transfer add(CreateTransferCommand command) {
-        Long receiptId = command.receiptId();
-        ReceiptEntity receipt =
+        final Long receiptId = command.receiptId();
+        final ReceiptEntity receipt =
                 receiptId == null ? null : receiptSpringRepository.findById(receiptId).orElse(null);
-        TransferEntity transferEntity = new TransferEntity(command.transferType(), command.amount(), command.from(),
+        final TransferEntity transferEntity = new TransferEntity(command.transferType(), command.amount(), command.from(),
                 command.to(), command.date(), command.description(), receipt, new UserEntity(command.user()));
         return transferSpringRepository.save(transferEntity).toTransfer();
     }
 
     @Override
     public List<Transfer> getPageForUser(final User user, final PageRequest page) {
-        UserEntity userEntity = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword(), user.getLumpSumTaxRate());
         return transferSpringRepository.findAllByUserId(user.getId(), page)
                 .stream().map(TransferEntity::toTransfer).toList();
     }
 
     @Override
     public List<Transfer> getAllForUser(final User user) {
-        UserEntity userEntity = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword(), user.getLumpSumTaxRate());
         return transferSpringRepository.findAllByUserId(user.getId())
                 .stream().map(TransferEntity::toTransfer).toList();
     }
@@ -72,7 +71,7 @@ public class TransferRepositoryImpl implements TransferRepository {
     }
 
     @Override
-    public void remove(Long id) {
+    public void remove(final Long id) {
         transferSpringRepository.deleteById(id);
     }
 }

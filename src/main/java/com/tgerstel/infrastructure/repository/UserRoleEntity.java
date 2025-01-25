@@ -18,9 +18,9 @@ public class UserRoleEntity {
 	private String description;
 
 	public UserRoleEntity(UserRole useRole) {
-		this.id = useRole.getId();
-		this.name = useRole.getName();
-		this.description = useRole.getDescription();
+		this.id = useRole.id();
+		this.name = useRole.name();
+		this.description = useRole.description();
 	}
 
 	public UserRole toUserRole() {
