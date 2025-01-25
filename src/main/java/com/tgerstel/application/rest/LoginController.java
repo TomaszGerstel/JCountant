@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 public class LoginController {
 	
 	@PostMapping("/login")
-	 public Principal user(Principal user) {
+	 public Principal user(final Principal user) {
 	    return user;
 	  }
 }

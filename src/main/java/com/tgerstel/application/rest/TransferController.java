@@ -9,6 +9,7 @@ import com.tgerstel.domain.Transfer;
 import com.tgerstel.domain.User;
 import com.tgerstel.domain.service.TransferService;
 import com.tgerstel.domain.service.command.CreateTransferCommand;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,74 +38,66 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "basicAuth")
 @RequestMapping(path = "/api/transfer", produces = "application/json")
 @CrossOrigin(origins = "*")
+@AllArgsConstructor
 public class TransferController {
 
     private final TransferService transferService;
-
-    public TransferController(TransferService transferService) {
-        super();
-        this.transferService = transferService;
-    }
+    private static final List<TransferType> TRANSFER_REQUIRED_RECEIPT =
+            List.of(TransferType.IN_TRANSFER, TransferType.OUT_TRANSFER);
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addTransfer(@RequestBody @Valid CreateTransferRequest request, Errors errors, Long receiptId,
-                                         @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> addTransfer(@RequestBody @Valid final CreateTransferRequest request, final Errors errors,
+                                         final Long receiptId, @AuthenticationPrincipal final User user) {
 
-        // method or different types (classes) of Transfer
-        if (receiptId == null && (request.getTransferType() == TransferType.IN_TRANSFER
-                || request.getTransferType() == TransferType.OUT_TRANSFER))
+        if (receiptId == null && TRANSFER_REQUIRED_RECEIPT.contains(request.getTransferType()))
             errors.rejectValue("transferType", "422", request.getTransferType() + " must include a receipt");
 
         if (errors.hasErrors()) {
-            List<String> errorMessage = errors.getFieldErrors().stream()
+            final List<String> errorMessage = errors.getFieldErrors().stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage()).collect(Collectors.toList());
             return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        CreateTransferCommand command = new CreateTransferCommand(request.getTransferType(), request.getAmount(),
+        final CreateTransferCommand command = new CreateTransferCommand(request.getTransferType(), request.getAmount(),
                 request.getFrom(), request.getTo(), request.getDate(), request.getDescription(), receiptId, user);
 
-        Optional<Transfer> saved = transferService.createTransfer(command);
+        final Optional<Transfer> saved = transferService.createTransfer(command);
 
         if (saved.isEmpty())
             return new ResponseEntity<>(List.of("selected receipt is unavailable"), HttpStatus.UNPROCESSABLE_ENTITY);
 
-        URI savedTransferLocation = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        final URI savedTransferLocation = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(saved.get().getId()).toUri();
 
         return ResponseEntity.created(savedTransferLocation).body(saved);
     }
 
     @GetMapping(path = "/recent", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Transfer>> allTransfers(@RequestParam(defaultValue = "10") Integer resultSize,
-                                                       @AuthenticationPrincipal User user) {
+    public ResponseEntity<List<Transfer>> allTransfers(@RequestParam(defaultValue = "10") final Integer resultSize,
+                                                       @AuthenticationPrincipal final User user) {
 
-        List<Transfer> allTransfers = transferService.getRecentTransfers(user, resultSize);
+        final List<Transfer> allTransfers = transferService.getRecentTransfers(user, resultSize);
         return ResponseEntity.ok(allTransfers);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transfer> getTransferById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Transfer> getTransferById(@PathVariable final Long id, @AuthenticationPrincipal final User user) {
 
-        Optional<Transfer> result = transferService.getById(user, id);
-        if (result.isPresent())
-            return new ResponseEntity<>(result.get(), HttpStatus.OK);
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        final Optional<Transfer> result = transferService.getById(user, id);
+        return result.map(transfer -> new ResponseEntity<>(transfer, HttpStatus.OK)).orElseGet(()
+                -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> delete(@PathVariable final Long id, @AuthenticationPrincipal final User user) {
         transferService.deleteTransfer(user, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Transfer>> searchTransfers(@RequestParam(defaultValue = "") String key,
-                                                          @AuthenticationPrincipal User user) {
-
-        System.out.println("kontr key: " + key);
-
-        List<Transfer> allTransfers = transferService.searchTransfersForUserWithSenderData(user, key);
+    public ResponseEntity<List<Transfer>> searchTransfers(@RequestParam(defaultValue = "") final String key,
+                                                          @AuthenticationPrincipal final User user) {
+        final List<Transfer> allTransfers = transferService.searchTransfersForUserWithSenderData(user, key);
         return ResponseEntity.ok(allTransfers);
     }
 

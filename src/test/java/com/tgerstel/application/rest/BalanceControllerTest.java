@@ -60,7 +60,7 @@ class BalanceControllerTest {
 
 		Mockito.when(balanceCalculator.balanceToDateRange(any(), any(), any())).thenReturn(balanceResult);
 		
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("from", "2022-12-01");
 		map.add("to", "2022-12-31");
 				

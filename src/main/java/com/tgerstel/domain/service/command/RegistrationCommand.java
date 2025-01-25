@@ -16,13 +16,12 @@ public class RegistrationCommand {
     private String password;
     private Integer lumpSumTaxRate;
 
-    public User toUser(PasswordEncoder passEncoder) {
+    public User toUser(final PasswordEncoder passEncoder) {
         return new User(null, username, email, passEncoder.encode(password), lumpSumTaxRate, new HashSet<>());
     }
 
-	public RegistrationCommand(String username, String email, String password,
-							   @Nullable Integer lumpSumTaxRate) {
-		super();
+	public RegistrationCommand(final String username, final String email, final String password,
+							   @Nullable final Integer lumpSumTaxRate) {
 		this.username = username;
 		this.email = email;
 		this.password = password;

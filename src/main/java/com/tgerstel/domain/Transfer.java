@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 public class Transfer {
 
     @Getter
-    private Long id;
+    private final Long id;
     @Getter
-    private TransferType transferType;
-    private BigDecimal amount;
+    private final TransferType transferType;
+    private final BigDecimal amount;
     @Getter
     @Setter
     private String from;
@@ -27,14 +27,14 @@ public class Transfer {
     @Setter
     private LocalDate date;
     @Getter
-    private LocalDateTime baseDate;
+    private final LocalDateTime baseDate;
     @Getter
     @Setter
     private String description;
     @Getter
-    private Receipt receipt;
+    private final Receipt receipt;
     @Getter
-    private User user;
+    private final User user;
 
     public BigDecimal getAmount() {
         return amount.setScale(2, RoundingMode.HALF_EVEN);

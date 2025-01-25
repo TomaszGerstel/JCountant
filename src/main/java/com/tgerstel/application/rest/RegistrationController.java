@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.tgerstel.domain.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +23,14 @@ import jakarta.validation.Valid;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "api/register", produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class RegistrationController {
 
-    private UserService userService;
-    private PasswordEncoder passEncoder;
-
-    public RegistrationController(UserService userService, PasswordEncoder passEncoder) {
-        super();
-        this.userService = userService;
-        this.passEncoder = passEncoder;
-    }
+    private final UserService userService;
+    private final PasswordEncoder passEncoder;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequest request, Errors errors) {
+    public ResponseEntity<?> register(@RequestBody @Valid final RegistrationRequest request, final Errors errors) {
         if (errors.hasErrors()) {
             List<String> errorMessage = errors.getFieldErrors().stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -42,12 +38,12 @@ public class RegistrationController {
             return ResponseEntity.unprocessableEntity().body(errorMessage);
         }
 
-        RegistrationCommand command = new RegistrationCommand(
+        final RegistrationCommand command = new RegistrationCommand(
                         request.getUsername(), request.getEmail(), request.getPassword(), request.getLumpSumTaxRate()
                 );
 
         if (userService.userExists(command)) {
-            List<String> mess = List.of("this username already exists");
+            final List<String> mess = List.of("this username already exists");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(mess);
         }
 

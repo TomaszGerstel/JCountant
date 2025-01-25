@@ -1,6 +1,5 @@
 package com.tgerstel.infrastructure.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,8 +15,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	public UserDetailsService userService;
+	public SecurityConfig(final UserDetailsService userService) {
+		this.userService = userService;
+	}
+
+	public final UserDetailsService userService;
 
 	@Bean
 	public PasswordEncoder encoder() {
@@ -25,8 +27,8 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public DaoAuthenticationProvider provider() throws Exception {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+	public DaoAuthenticationProvider provider() {
+		final DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(encoder());
 		provider.setUserDetailsService(userService);
 		return provider;
@@ -37,29 +39,10 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/home", "/login", "/api/register", "/h2-console", "/h2-console/**").permitAll()
 				.requestMatchers("/openapi/swagger-ui/**","/v3/api-docs/**").permitAll()
-				.anyRequest().authenticated()).httpBasic().and()	
-		
-//    			.formLogin()
-//				.and()
+				.anyRequest().authenticated()).httpBasic().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable()
 				.headers().frameOptions().disable().and().cors();
-//				.and()
-//				.logout()
-//				.logoutSuccessUrl("/");
 		return http.build();
 	}
-	
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().requestMatchers("/v2/api-docs",
-//                                   "/configuration/ui",
-//                                   "/swagger-resources/**",
-//                                   "/configuration/security",
-//                                   "/swagger-ui.html",
-//                                   "/webjars/**");
-//    }
-    
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers("/openapi/swagger-ui/**", "/v3/api-docs/**");
-//    }
+
 }

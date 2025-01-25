@@ -1,23 +1,35 @@
 package com.tgerstel.domain;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class BalanceResults {
 
+    @Getter
     private final Float flatTaxRate = 19.0f;
-    private Integer defaultLumpTaxRate = 12;
+    private final Integer defaultLumpTaxRate = 12;
 
-    private BigDecimal costs;
-    private BigDecimal grossCosts;
-    private BigDecimal grossIncome;
-    private BigDecimal netIncome;
-    private Integer lumpTaxRate;
-    private BigDecimal profitPaid;
-    private BigDecimal vatPaid;
-    private BigDecimal taxPaid;
+    @Getter
+    private final BigDecimal costs;
+    @Getter
+    private final BigDecimal grossCosts;
+    @Getter
+    private final BigDecimal grossIncome;
+    @Getter
+    private final BigDecimal netIncome;
+    private final Integer lumpTaxRate;
+    @Getter
+    private final BigDecimal profitPaid;
+    @Getter
+    private final BigDecimal vatPaid;
+    @Getter
+    private final BigDecimal taxPaid;
 
-    public BalanceResults(BigDecimal costs, BigDecimal grossCosts, BigDecimal grossIncome, BigDecimal netIncome,
-                          BigDecimal profitPaid, BigDecimal vatPaid, BigDecimal taxPaid, Integer lumpTaxRate) {
+    public BalanceResults(final BigDecimal costs, final BigDecimal grossCosts, final BigDecimal grossIncome,
+                          final  BigDecimal netIncome, final BigDecimal profitPaid, final BigDecimal vatPaid,
+                          final BigDecimal taxPaid, final Integer lumpTaxRate) {
         super();
         this.costs = costs;
         this.grossCosts = grossCosts;
@@ -29,36 +41,8 @@ public class BalanceResults {
         this.lumpTaxRate = lumpTaxRate;
     }
 
-    public BigDecimal getCosts() {
-        return costs;
-    }
-
-    public BigDecimal getGrossCosts() {
-        return grossCosts;
-    }
-
-    public BigDecimal getGrossIncome() {
-        return grossIncome;
-    }
-
-    public BigDecimal getNetIncome() {
-        return netIncome;
-    }
-
-    public BigDecimal getProfitPaid() {
-        return profitPaid;
-    }
-
-    public BigDecimal getVatPaid() {
-        return vatPaid;
-    }
-
-    public BigDecimal getTaxPaid() {
-        return taxPaid;
-    }
-
     public BigDecimal getNetBalance() {
-        return getNetIncome().subtract(getCosts()).setScale(2);
+        return getNetIncome().subtract(getCosts()).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public Integer getLumpTaxRate() {
@@ -67,56 +51,52 @@ public class BalanceResults {
     }
 
     public BigDecimal getLumpSumTaxDue() {
-        return netIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100)).setScale(2);
+        return netIncome.multiply(BigDecimal.valueOf(getLumpTaxRate())).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getFlatTaxDue() {
         return getNetBalance().multiply(BigDecimal.valueOf(flatTaxRate.intValue()))
-                .divide(BigDecimal.valueOf(100)).setScale(2);
+                .divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getVatBalance() {
-        return getVatDue().subtract(vatPaid).setScale(2);
+        return getVatDue().subtract(vatPaid).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getFlatTaxBalance() {
-        return getFlatTaxDue().subtract(taxPaid).setScale(2);
+        return getFlatTaxDue().subtract(taxPaid).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getLumpSumTaxBalance() {
-        return getLumpSumTaxDue().subtract(taxPaid).setScale(2);
+        return getLumpSumTaxDue().subtract(taxPaid).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getProfitDueFlat() {
-        return getNetBalance().subtract(getFlatTaxDue()).setScale(2);
+        return getNetBalance().subtract(getFlatTaxDue()).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getProfitRemainingFlat() {
-        return getProfitDueFlat().subtract(profitPaid).setScale(2);
+        return getProfitDueFlat().subtract(profitPaid).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getProfitDueLump() {
-        return getNetBalance().subtract(getLumpSumTaxDue()).setScale(2);
+        return getNetBalance().subtract(getLumpSumTaxDue()).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getProfitRemainingLump() {
-        return getProfitDueLump().subtract(profitPaid).setScale(2);
-    }
-
-    public Float getFlatTaxRate() {
-        return flatTaxRate;
+        return getProfitDueLump().subtract(profitPaid).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getOtherCosts() {
-        return vatPaid.add(taxPaid).add(profitPaid).setScale(2);
+        return vatPaid.add(taxPaid).add(profitPaid).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getBalance() {
-        return grossIncome.subtract(grossCosts).subtract(getOtherCosts()).setScale(2);
+        return grossIncome.subtract(grossCosts).subtract(getOtherCosts()).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getVatDue() {
-        return getGrossIncome().subtract(getGrossCosts()).subtract(getNetBalance()).setScale(2);
+        return getGrossIncome().subtract(getGrossCosts()).subtract(getNetBalance()).setScale(2, RoundingMode.HALF_EVEN);
     }
 
 
@@ -125,7 +105,7 @@ public class BalanceResults {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((costs == null) ? 0 : costs.hashCode());
-        result = prime * result + ((defaultLumpTaxRate == null) ? 0 : defaultLumpTaxRate.hashCode());
+        result = prime * result + defaultLumpTaxRate.hashCode();
         result = prime * result + flatTaxRate.hashCode();
         result = prime * result + ((netIncome == null) ? 0 : netIncome.hashCode());
         result = prime * result + ((lumpTaxRate == null) ? 0 : lumpTaxRate.hashCode());
@@ -149,10 +129,7 @@ public class BalanceResults {
                 return false;
         } else if (!costs.equals(other.costs))
             return false;
-        if (defaultLumpTaxRate == null) {
-            if (other.defaultLumpTaxRate != null)
-                return false;
-        } else if (!defaultLumpTaxRate.equals(other.defaultLumpTaxRate))
+        if (!defaultLumpTaxRate.equals(other.defaultLumpTaxRate))
             return false;
         if (!flatTaxRate.equals(other.flatTaxRate))
             return false;
@@ -195,6 +172,5 @@ public class BalanceResults {
                 + getFlatTaxRate() + ", getOtherCosts()=" + getOtherCosts() + ", getBalance()=" + getBalance()
                 + ", getVatDue()=" + getVatDue() + ", hashCode()=" + hashCode() + "]";
     }
-
 
 }
